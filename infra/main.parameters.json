@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "${AZURE_ENV_NAME}"
+    },
+    "location": {
+      "value": "${AZURE_LOCATION=westeurope}"
+    },
+    "aiProvider": {
+      "value": "${BOOKRPG_AI_PROVIDER=openai}"
+    },
+    "aiApiKey": {
+      "value": "${BOOKRPG_AI_API_KEY}"
+    },
+    "aiModel": {
+      "value": "${BOOKRPG_AI_MODEL=}"
+    },
+    "indexModel": {
+      "value": "${BOOKRPG_INDEX_MODEL=}"
+    },
+    "enableSocialAuth": {
+      "value": "${BOOKRPG_ENABLE_SOCIAL_AUTH=false}"
+    },
+    "entraClientId": {
+      "value": "${BOOKRPG_ENTRA_CLIENT_ID=}"
+    },
+    "entraClientSecret": {
+      "value": "${BOOKRPG_ENTRA_CLIENT_SECRET=}"
+    },
+    "githubClientId": {
+      "value": "${BOOKRPG_GITHUB_CLIENT_ID=}"
+    },
+    "githubClientSecret": {
+      "value": "${BOOKRPG_GITHUB_CLIENT_SECRET=}"
+    }
+  }
+}

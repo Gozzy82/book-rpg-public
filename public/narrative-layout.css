@@ -1,0 +1,37 @@
+.narrative.narrative-split {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.narrative-split .narrative-part {
+  padding: 1.15rem 1.2rem;
+  border: 1px solid rgba(23, 29, 53, 0.09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.52);
+  box-shadow: 0 10px 28px rgba(23, 29, 53, 0.05);
+}
+
+.narrative-split .narrative-part p {
+  margin: 0;
+}
+
+.narrative-part-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1rem;
+  color: rgba(23, 29, 53, 0.42);
+  font-size: 0.72rem;
+  letter-spacing: 0.45em;
+}
+
+@media (max-width: 680px) {
+  .narrative.narrative-split {
+    gap: 0.9rem;
+  }
+
+  .narrative-split .narrative-part {
+    padding: 1rem;
+    border-radius: 15px;
+  }
+}

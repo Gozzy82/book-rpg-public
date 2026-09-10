@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="BookRPG">
+  <rect width="512" height="512" rx="116" fill="#171d35"/>
+  <circle cx="402" cy="110" r="58" fill="#ef6a4b"/>
+  <path d="M106 142c55-20 105-11 150 28v232c-45-39-95-48-150-28V142Z" fill="#fffaf0"/>
+  <path d="M406 142c-55-20-105-11-150 28v232c45-39 95-48 150-28V142Z" fill="#f5ead8"/>
+  <path d="M256 170v232" stroke="#d8c6a9" stroke-width="12" stroke-linecap="round"/>
+  <path d="m335 219 13 27 29 4-21 20 5 29-26-14-26 14 5-29-21-20 29-4 13-27Z" fill="#ef6a4b"/>
+</svg>

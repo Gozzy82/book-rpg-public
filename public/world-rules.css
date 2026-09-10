@@ -1,0 +1,152 @@
+.world-rules-panel {
+  margin: 1rem 0;
+  border: 1px solid rgba(23, 29, 53, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  overflow: hidden;
+}
+
+.world-rules-panel > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.world-rules-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.world-rules-title {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.world-rules-title small {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  opacity: 0.58;
+}
+
+.world-rules-title strong {
+  font-size: 0.98rem;
+}
+
+.world-rules-count {
+  min-width: 1.8rem;
+  height: 1.8rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(23, 29, 53, 0.08);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.world-rules-body {
+  border-top: 1px solid rgba(23, 29, 53, 0.08);
+  padding: 0.45rem 1rem 0.9rem;
+}
+
+.world-rules-intro {
+  margin: 0;
+  padding: 0.65rem 0 0.35rem;
+  opacity: 0.68;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.world-rule-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(23, 29, 53, 0.07);
+}
+
+.world-rule-row:last-of-type {
+  border-bottom: 0;
+}
+
+.world-rule-row p,
+.world-rules-empty,
+.world-rule-error {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.world-rule-remove {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.world-rule-remove:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+
+.world-rules-empty {
+  padding: 0.65rem 0;
+  opacity: 0.62;
+  font-size: 0.88rem;
+}
+
+.world-rule-add {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  padding-top: 0.75rem;
+}
+
+.world-rule-add input {
+  min-width: 0;
+  border: 1px solid rgba(23, 29, 53, 0.18);
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: inherit;
+  font: inherit;
+}
+
+.world-rule-add button {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  background: rgba(23, 29, 53, 0.1);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.world-rule-add input:disabled,
+.world-rule-add button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.world-rule-error {
+  grid-column: 1 / -1;
+  font-size: 0.8rem;
+  color: #9b2c2c;
+}
+
+@media (max-width: 560px) {
+  .world-rule-add {
+    grid-template-columns: 1fr;
+  }
+
+  .world-rule-add button {
+    justify-self: start;
+  }
+}

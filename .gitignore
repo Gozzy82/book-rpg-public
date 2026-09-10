@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.azure/*/.env
+.copilot-azure/
+data/books/*.json
+data/games/*.json
+data/kindle/**
+data/ai-provider-calls.jsonl
+!data/books/.gitkeep
+!data/games/.gitkeep
+!data/kindle/.gitkeep
+
+
+# Local gameplay flow logs
+data/logs/

@@ -1,0 +1,11 @@
+name: bookrpg
+metadata:
+  template: bookrpg-mobile@0.1.0
+services:
+  web:
+    project: .
+    language: ts
+    host: containerapp
+    docker:
+      path: Dockerfile
+      remoteBuild: true

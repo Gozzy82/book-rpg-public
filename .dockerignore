@@ -1,0 +1,11 @@
+.azure
+.env
+.git
+.github
+data
+dist
+node_modules
+*.epub
+*.log
+*.jsonl
+README.md

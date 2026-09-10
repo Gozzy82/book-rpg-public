@@ -1,0 +1,14 @@
+{
+  "url": "http://127.0.0.1:8787/",
+  "bookTitle": "The Wonderful Wizard of Oz",
+  "clicksPerCharacter": 20,
+  "characters": [],
+  "turnTimeoutMs": 300000,
+  "headless": false,
+  "selectors": {
+    "character": ".player-option",
+    "characterName": ".player-option-copy strong",
+    "choice": ".scene-panel .choice-button",
+    "narrative": ".scene-panel .narrative"
+  }
+}
