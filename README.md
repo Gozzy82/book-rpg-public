@@ -1,10 +1,24 @@
 # BookRPG
 
-BookRPG is a source-grounded AI engine that turns books into interactive role-playing experiences while trying to preserve narrative continuity, character identity and player agency.
+An experimental TypeScript application that turns EPUB books into interactive stories. Players choose a character and take actions while the engine tracks story progression and game state.
+
+The project explores how generated scenes can stay consistent with the book without making decisions for the player.
+
+[Case study](https://gerko.amsterdam/book-rpg/) · [Portfolio](https://gerko.amsterdam/) · [LinkedIn](https://nl.linkedin.com/in/gerko-schrieken-b1853246)
 
 This repository is a **sanitized public source snapshot** of the implementation. It is exported from the private development repository with fresh Git history and excludes local data, logs, credentials and other operational artifacts.
 
-## What this demonstrates
+**Status:** experimental source snapshot. This published snapshot builds successfully and its deterministic test suite is green; see [Validation of this snapshot](#validation-of-this-snapshot).
+
+## Why I started
+
+I started BookRPG after jailbreaking my e-reader. I wanted to try an interactive story on it while keeping the client as small as possible.
+
+That led to a client/server split: the client displays scenes, collects choices and sends requests over HTTP/JSON. Book import and indexing, AI calls, story progression and saved games stay on the server. A future device client should use that API rather than reimplement the story engine in Lua.
+
+The current clients are a browser interface and a Node.js terminal client. The terminal client exercises the API without a browser; a KOReader/Lua client is still a future step. This is a thin-client architecture in terms of responsibilities, not a claim that the current web interface is optimised or tested for an e-reader. New AI-generated turns require a connection to the server.
+
+## Main components
 
 - EPUB ingestion and indexing into reusable story context;
 - source-grounded significant events and beat progression;
@@ -43,6 +57,12 @@ Book analysis / source index
 ```
 
 The implementation deliberately separates **what the source says should happen** from **what the player is allowed to do now**. The game state advances through source-grounded beats while still allowing generated prose and player choices to vary.
+
+## Where to start
+
+For a code review, start with [`src/books/`](src/books/) for book import and indexing, [`src/ai/`](src/ai/) for generation and review, and [`src/games/`](src/games/) for game state and persistence.
+
+For the client/server boundary, compare [`src/client/cli.ts`](src/client/cli.ts), [`src/server/index.ts`](src/server/index.ts) and [`src/shared/contracts.ts`](src/shared/contracts.ts).
 
 ## Project structure
 
@@ -119,6 +139,12 @@ BookRPG processes books supplied by the operator. This public source snapshot do
 
 ## Validation of this snapshot
 
-The existing public export and an additional credential/data check completed without findings. Application source and tests are unchanged from the development snapshot.
+This exported snapshot was validated on September 21, 2026 using Node.js 24.20.0 on Ubuntu:
 
-Validation with Node.js 24 and cached dependencies matching the source lockfile found existing TypeScript errors and failing regression tests. The build and test suite are **not currently green**. This snapshot is provided for code review; it is not a validated release.
+- `npm ci --ignore-scripts --no-audit --no-fund`: passed;
+- `npm run build`: passed;
+- `npm test`: **1,120 passed, 0 failed, 0 skipped**.
+
+The same 1,120-test suite also passed in the private development tree before export. The export's credential-pattern scan completed successfully, and the published tree was checked to exclude private data, repair directories, logs and Git history.
+
+These deterministic results do not prove that every live AI-generated story behaves correctly. Live-model evaluations and real e-reader testing are separate concerns.

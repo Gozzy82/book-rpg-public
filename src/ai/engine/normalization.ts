@@ -20,9 +20,9 @@ export const EMBEDDED_INLINE_CHOICE_MENU_ITEM =
 // Models sometimes leak the decision point as natural prose instead of a numbered
 // menu, e.g. "Choice set before me: stay here, or follow Dorothy." Keep this
 // separate from the normal menu regexes so ordinary narrative uses of "choice"
-// are not stripped unless they clearly present alternatives.
+// are not stripped unless they clearly present a decision-point prompt.
 export const EMBEDDED_PROSE_CHOICE_PROMPT =
-  /^\s*(?:(?:the\s+)?choice\s+set\s+before\s+(?:me|us)|(?:my|our)\s+choices?|choices?\s+before\s+(?:me|us)|options?\s+before\s+(?:me|us))\s*:\s*.+\bor\b.+$/i;
+  /^\s*(?:(?:the\s+)?choice\s+set\s+before\s+(?:me|us)|choices?\s+before\s+(?:me|us)|options?\s+before\s+(?:me|us))\s*:\s*.+\bor\b.+$/i;
 
 export function embeddedChoiceMenuRun(
   lines: readonly string[],
@@ -82,6 +82,11 @@ export function stripEmbeddedChoiceMenu(text: string): string {
 
   for (let index = 0; index < lines.length;) {
     const line = lines[index]!;
+    if (/^\s*Choice:\s+\S.*$/u.test(line) && lines.slice(index + 1).every(line => !line.trim())) {
+      changed = true;
+      while (cleaned.length > 0 && !cleaned.at(-1)!.trim()) cleaned.pop();
+      break;
+    }
     if (EMBEDDED_PROSE_CHOICE_PROMPT.test(line)) {
       changed = true;
       while (cleaned.length > 0 && !cleaned.at(-1)!.trim()) cleaned.pop();

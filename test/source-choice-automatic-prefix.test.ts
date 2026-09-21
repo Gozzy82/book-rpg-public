@@ -5,6 +5,7 @@ import {
   sourceEventCanOccurWithoutPlayerChoice,
   sourceEventNextPlayerChoiceBeats,
   sourceEventRequiresExplicitPlayerChoice,
+  sourceEventHasPendingAutomaticPrefix,
   type SourceChoiceNavigationEvent,
 } from "../src/ai/engine/source-navigation.js";
 
@@ -77,6 +78,8 @@ test("involuntary source beats may bridge to the next meaningful player decision
     "Dorothy",
     [dorothyProfile],
   );
+  assert.equal(sourceEventHasPendingAutomaticPrefix(cycloneEvent, "Dorothy", [dorothyProfile]), true);
+  assert.equal(sourceEventHasPendingAutomaticPrefix({...cycloneEvent, beats: cycloneEvent.beats!.slice(2)}, "Dorothy", [dorothyProfile]), false);
   assert.equal(choices.length, 1);
   assert.match(choices[0]!.action, /^Pulls Toto back/);
   assert.equal(
@@ -137,4 +140,19 @@ test("an intentional NPC beat remains a hard boundary before a later player beat
     ),
     true,
   );
+});
+
+
+test("menu cannot force a future wait action before the house-lift prefix", async () => {
+  const {sourceEventHasReadyPlayerChoice, buildRequiredPlayerChoiceFallback} = await import('../src/ai/engine/source-navigation.js');
+  const airborne=event([
+    beat(null,'The house rises and is carried away.','external','critical'),
+    beat('Dorothy','Remains seated and waits.','intentional','significant'),
+  ]);
+  assert.equal(sourceEventRequiresExplicitPlayerChoice(airborne,'Dorothy'),true);
+  assert.equal(sourceEventHasReadyPlayerChoice(airborne,'Dorothy'),false);
+  assert.equal(buildRequiredPlayerChoiceFallback(airborne,'Dorothy'),undefined);
+  const afterLift={...airborne,beats:airborne.beats!.slice(1)};
+  assert.equal(sourceEventHasReadyPlayerChoice(afterLift,'Dorothy'),true);
+  assert.ok(buildRequiredPlayerChoiceFallback(afterLift,'Dorothy'));
 });

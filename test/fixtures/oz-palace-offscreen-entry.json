@@ -1,0 +1,66 @@
+{
+  "player": "Cowardly Lion",
+  "current_scene": {
+    "title": "Rooms in the Palace",
+    "text": "The Guardian of the Gates led us through the streets of the Emerald City to the Palace of Oz. Dorothy walked with Toto, and the Scarecrow, the Tin Woodman, and I followed close behind. At last we came to the entrance, where a soldier with green whiskers admitted us.\n\nHe told us that he would carry our message to Oz. We waited inside the Palace while he went to speak with the Wizard. When he returned, he brought Oz’s condition: each of us must enter alone, one person each day. We were to remain in the Palace for several days, and the soldier arranged rooms for us.\n\nThen a Green Girl showed Dorothy to a comfortable room, with Toto beside her. The Scarecrow, the Tin Woodman, and I were lodged in separate rooms. I entered mine still wearing the green spectacles locked upon my face, and there I remained, waiting for the day when I might stand alone before Oz and ask him for courage.",
+    "sceneScope": {
+      "currentLocation": "the Cowardly Lion's room in the Palace of Oz",
+      "peoplePresent": [
+        "Cowardly Lion"
+      ],
+      "peopleWithinSpeakingDistance": [
+        "Cowardly Lion"
+      ]
+    },
+    "outcome": "active",
+    "outcomeReason": "The travelers have reached the Palace, but their visits with Oz have not yet occurred.",
+    "storyMemory": {
+      "summary": "The Guardian led the travelers to Oz’s Palace. The Soldier with the Green Whiskers admitted them, agreed to carry their message, and returned with Oz’s condition that they enter alone, one per day. Rooms were arranged in the Palace. Dorothy and Toto occupy a comfortable room, while the Scarecrow, Tin Woodman, and Cowardly Lion have separate rooms.",
+      "openThreads": [
+        "The travelers must meet Oz one at a time.",
+        "The Cowardly Lion seeks courage from Oz.",
+        "The Scarecrow seeks brains from Oz.",
+        "The Tin Woodman seeks a heart from Oz.",
+        "Dorothy seeks a way back to Kansas with Toto."
+      ],
+      "canonFacts": [
+        "The travelers are inside Oz’s Palace.",
+        "The Soldier with the Green Whiskers agreed to deliver their message to Oz.",
+        "Oz will see each traveler alone, one per day.",
+        "The travelers must remain in the Palace for several days.",
+        "Dorothy and Toto occupy a comfortable room in the Palace.",
+        "The Scarecrow, Tin Woodman, and Cowardly Lion have separate rooms in the Palace.",
+        "The green spectacles remain locked upon the Cowardly Lion.",
+        "The Cowardly Lion seeks courage from Oz.",
+        "The Scarecrow seeks brains from Oz.",
+        "The Tin Woodman seeks a heart from Oz.",
+        "Dorothy seeks a way back to Kansas with Toto."
+      ]
+    },
+    "choices": []
+  },
+  "entry_source": "Palace. Of course this politeness was wasted on the Scarecrow; for when he\nfound himself alone in his room he stood stupidly in one spot, just within the\ndoorway, to wait till morning. It would not rest him to lie down, and he could\nnot close his eyes; so he remained all night staring at a little spider which\nwas weaving its web in a corner of the room, just as if it were not one of the\nmost wonderful rooms in the world. The Tin Woodman lay down on his bed from\nforce of habit, for he remembered when he was made of flesh; but not being able\nto sleep, he passed the night moving his joints up and down to make sure they\nkept in good working order. The Lion would have preferred a bed of dried leaves\nin the forest, and did not like being shut up in a room; but he had too much\nsense to let this worry him, so he sprang upon the bed and rolled himself up\nlike a cat and purred himself asleep in a minute.",
+  "entry_action_source": "The next morning, after breakfast, the green maiden came to fetch Dorothy, and\nshe dressed her in one of the prettiest gowns, made of green brocaded satin.\nDorothy put on a green silk apron and tied a green ribbon around Toto’s\nneck, and they started for the Throne Room of the Great Oz.\nFirst they came to a great hall in which were many ladies and gentlemen of the\ncourt, all dressed in rich costumes. These people had nothing to do but talk to\neach other, but they always came to wait outside the Throne Room every morning,\nalthough they were never permitted to see Oz. As Dorothy entered they looked at\nher curiously, and one of them whispered:\n“Are you really going to look upon the face of Oz the Terrible?”\n“Of course,” answered the girl, “if he will see me.”\n“Oh, he will see you,” said the soldier who had taken her message\nto the Wizard, “although he does not like to have people ask to see him.\nIndeed, at first he was angry and said I should send you back where you came\nfrom. Then he asked me what you looked like, and when I mentioned your silver\nshoes he was very much interested. At last I told him about the mark upon your\nforehead, and he decided he would admit you to his presence.”\nJust then a bell rang, and the green girl said to Dorothy, “That is the\nsignal. You must go into the Throne Room alone.”",
+  "next_event": {
+    "eventId": "event_aebe82da1de28c7156ed",
+    "actions": [
+      {
+        "actor": "Green Girl",
+        "action": "Fetches and dresses Dorothy, then leads her toward the Throne Room."
+      }
+    ],
+    "entry_action": {
+      "beatIndex": 0,
+      "actor": "Green Girl",
+      "action": "Fetches and dresses Dorothy, then leads her toward the Throne Room.",
+      "targets": [
+        "Dorothy"
+      ],
+      "requiresPlayerDecision": false,
+      "readiness": "begin_first_step",
+      "goal": null,
+      "indexedPreconditions": []
+    },
+    "entry_preconditions": []
+  }
+}

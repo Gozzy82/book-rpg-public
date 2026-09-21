@@ -18,10 +18,13 @@ test("opening player decision boundary keeps the Scarecrow wink wholly future", 
     sourceReferences: [],
   } as any).join("\n");
 
-  assert.match(instruction, /OPENING PLAYER DECISION BOUNDARY/i);
+  assert.match(instruction, /structured player-decision boundary/i);
+  assert.match(instruction, /"kind":"first_unselected_player_beat"/i);
+  assert.match(instruction, /"mustRemainUnperformed":true/i);
   assert.match(instruction, /Winks and nods at Dorothy from his pole/i);
-  assert.match(instruction, /not part of this opening scene/i);
-  assert.match(instruction, /whole action still future/i);
+  assert.match(instruction, /must remain wholly future/i);
+  assert.doesNotMatch(instruction, /STOP BEFORE PLAYER BEAT/i);
+  assert.doesNotMatch(instruction, /PENDING PLAYER BEAT/i);
 });
 
 test("direct source continuation requires an NPC retrieval beat to reach its result", () => {

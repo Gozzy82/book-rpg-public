@@ -1,0 +1,73 @@
+/* Direct choices are the primary action. The dock only opens named editors. */
+.action-dock.direct-action-dock {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.direct-action-dock > .toolbar-log-panel {
+  grid-column: 1 / -1;
+}
+
+.direct-action-dock .dock-button {
+  min-width: 0;
+  min-height: 44px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.custom-composer,
+.world-rules-panel {
+  scroll-margin-block: 6rem 12rem;
+}
+
+.custom-heading {
+  gap: 1rem;
+}
+
+.custom-heading > h2 {
+  margin: 0;
+}
+
+.world-rule-add > p {
+  grid-column: 1 / -1;
+  flex-basis: 100%;
+}
+
+.world-rule-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+
+.world-rule-row,
+.world-rule-row > p {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.world-rules-panel button:disabled,
+.world-rules-panel input:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+/* Do not let component display rules override native hidden error messages. */
+.custom-composer [hidden],
+.world-rules-panel [hidden] {
+  display: none !important;
+}
+
+@media (max-width: 540px) {
+  .action-dock.direct-action-dock {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .game-view .safe-area-spacer {
+    min-height: calc(11rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .world-rule-row {
+    flex-wrap: wrap;
+  }
+}

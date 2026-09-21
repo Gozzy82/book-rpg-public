@@ -1,3 +1,4 @@
+import {readFileSync} from 'node:fs';
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
@@ -103,4 +104,25 @@ test("model memory replaces resolved threads and retains durable canon facts", (
     "Person Alpha carries the silver key.",
     "The outer archive door is locked.",
   ]);
+});
+
+test('replacement memory removes superseded state and an explicit empty list clears facts', () => {
+  const game = gameState({storyMemory:{summary:'Before rescue',openThreads:[],canonFacts:['The trapdoor is open.','Dorothy is not holding Toto.']}});
+  const scene = {...game.scene,text:'Dorothy rescues Toto and closes the trapdoor.'};
+  applyStoryMemory(game,scene,{summary:'After rescue',openThreads:[],canonFacts:['The trapdoor is closed.','Dorothy is holding Toto.']});
+  assert.deepEqual(game.storyMemory!.canonFacts,['The trapdoor is closed.','Dorothy is holding Toto.']);
+  applyStoryMemory(game,scene);
+  assert.deepEqual(game.storyMemory!.canonFacts,['The trapdoor is closed.','Dorothy is holding Toto.']);
+  applyStoryMemory(game,scene,{summary:'No retained facts',openThreads:[],canonFacts:[]});
+  assert.deepEqual(game.storyMemory!.canonFacts,[]);
+});
+
+// Actual before/after memory from Dorothy's rejected continuation, not a model stub.
+test('recorded Dorothy replacement removes contradictory open-trapdoor and unheld-Toto facts',()=>{
+ const fixture=JSON.parse(readFileSync(new URL('./fixtures/dorothy-memory-replacement.json',import.meta.url),'utf8'));
+ const game=gameState({storyMemory:fixture.prior});
+ applyStoryMemory(game,{...game.scene,text:fixture.scene},fixture.replacement);
+ assert.deepEqual(game.storyMemory,fixture.replacement);
+ assert.ok(!game.storyMemory!.canonFacts.includes('Dorothy is not holding Toto.'));
+ assert.ok(game.storyMemory!.canonFacts.includes('The trapdoor is closed.'));
 });

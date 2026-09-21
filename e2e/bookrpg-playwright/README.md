@@ -27,6 +27,25 @@ npm.cmd run headless
 De `.cmd`-varianten vermijden PowerShell-problemen met `npm.ps1`. In cmd/bash
 kunnen gewone `npm`/`npx` commando's worden gebruikt.
 
+## Een opgeslagen game hervatten
+
+Gebruik het gameId uit de vorige `summary.json` of de naam van het game-log:
+
+```powershell
+npm.cmd start -- --resume game_a2cbe9b2d03e4ad09cc1ce97267c9cee
+```
+
+Dit opent precies die bestaande game via de hervatknop in de UI. Het start geen
+nieuwe game en negeert voor deze run de personage- en boekselectie uit config.
+`clicksPerCharacter` bepaalt het aantal **extra** keuzes vanaf de opgeslagen
+situatie. Automatische vervolgen en gesprekken worden zoals gewoonlijk verwerkt.
+De bestaande game wordt verder opgeslagen; dit maakt geen kopie. Nieuwe testlogs
+komen in een nieuwe results-map. De summary vermeldt het gameId, `resumed` en
+`startingTurnNumber`. Een ontbrekende of niet-hervatbare game geeft een fout;
+de runner valt niet terug op een nieuw spel.
+
+Herstart na een code-update ook de BookRPG-server voordat je hervat.
+
 ## Wat doet de test?
 
 De runner:
@@ -159,3 +178,4 @@ npm.cmd run dev 2>&1 | Tee-Object -FilePath server-session.log
 
 Resultaten en flowlogs kunnen boektekst, prompts, game state en modeloutput
 bevatten. Controleer ze voordat je ze openbaar deelt.
+

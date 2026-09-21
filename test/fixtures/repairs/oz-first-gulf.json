@@ -1,0 +1,142 @@
+{
+  "eventId": "event_2ba4b4247bb0adcd74e3",
+  "source": {
+    "chapterIndex": 9,
+    "lineStart": 32,
+    "text": "This was to be an eventful day for the travelers. They had hardly been walking\nan hour when they saw before them a great ditch that crossed the road and\ndivided the forest as far as they could see on either side. It was a very wide\nditch, and when they crept up to the edge and looked into it they could see it\nwas also very deep, and there were many big, jagged rocks at the bottom. The\nsides were so steep that none of them could climb down, and for a moment it\nseemed that their journey must end.\n“What shall we do?” asked Dorothy despairingly.\n“I haven’t the faintest idea,” said the Tin Woodman, and the\nLion shook his shaggy mane and looked thoughtful.\nBut the Scarecrow said, “We cannot fly, that is certain. Neither can we\nclimb down into this great ditch. Therefore, if we cannot jump over it, we must\nstop where we are.”\n“I think I could jump over it,” said the Cowardly Lion, after\nmeasuring the distance carefully in his mind.\n“Then we are all right,” answered the Scarecrow, “for you can\ncarry us all over on your back, one at a time.”\n“Well, I’ll try it,” said the Lion. “Who will go\nfirst?”\n“I will,” declared the Scarecrow, “for, if you found that you\ncould not jump over the gulf, Dorothy would be killed, or the Tin Woodman badly\ndented on the rocks below. But if I am on your back it will not matter so much,\nfor the fall would not hurt me at all.”\n“I am terribly afraid of falling, myself,” said the Cowardly Lion,\n“but I suppose there is nothing to do but try it. So get on my back and\nwe will make the attempt.”\nThe Scarecrow sat upon the Lion’s back, and the big beast walked to the\nedge of the gulf and crouched down.\n“Why don’t you run and jump?” asked the Scarecrow.\n“Because that isn’t the way we Lions do these things,” he\nreplied. Then giving a great spring, he shot through the air and landed safely\non the other side. They were all greatly pleased to see how easily he did it,\nand after the Scarecrow had got down from his back the Lion sprang across the\nditch again.\nDorothy thought she would go next; so she took Toto in her arms and climbed on\nthe Lion’s back, holding tightly to his mane with one hand. The next\nmoment it seemed as if she were flying through the air; and then, before she\nhad time to think about it, she was safe on the other side. The Lion went back\na third time and got the Tin Woodman, and then they all sat down for a few\nmoments to give the beast a chance to rest, for his great leaps had made his\nbreath short, and he panted like a big dog that has been running too long."
+  },
+  "beats": [
+    {
+      "expected": {
+        "actor": "The Scarecrow",
+        "action": "Proposes that the Lion carry the travelers over the gulf.",
+        "references": [
+          {
+            "chapterIndex": 9,
+            "lineStart": 42,
+            "lineEnd": 48
+          }
+        ]
+      },
+      "start": {
+        "line": 47,
+        "column": 0,
+        "quote": "“Then we are all right,”"
+      },
+      "resultingState": "The Scarecrow has proposed that the Lion carry the travelers across one at a time. Everyone remains on the original side; the Lion has not yet committed to the attempt.",
+      "decisionBoundaryBefore": "Propose that the Lion carry everyone across the gulf one at a time.",
+      "playerAction": {
+        "choiceText": "Propose that the Lion carry everyone across the gulf one at a time.",
+        "completion": "The Scarecrow has voiced the carrying proposal; the Lion’s decision to attempt it remains open.",
+        "boundaryReason": "Proposing the plan ends before the Lion makes his own commitment to execute it.",
+        "preconditions": [
+          "The travelers are at a gulf they cannot cross on foot.",
+          "The Lion has said he thinks he can jump across."
+        ],
+        "interruptWhen": [
+          "The proposal is interrupted before it can be stated."
+        ]
+      }
+    },
+    {
+      "expected": {
+        "actor": "The Cowardly Lion",
+        "action": "Carries the Scarecrow over the gulf and returns for the others.",
+        "references": [
+          {
+            "chapterIndex": 9,
+            "lineStart": 49,
+            "lineEnd": 65
+          }
+        ]
+      },
+      "start": {
+        "line": 49,
+        "column": 0,
+        "quote": "“Well, I’ll try it,”"
+      },
+      "resultingState": "The Scarecrow is on the far side. The Lion has returned to the original side, where Dorothy, Toto and the Tin Woodman remain.",
+      "decisionBoundaryBefore": "Try carrying the Scarecrow across the gulf, then return for the others.",
+      "playerAction": {
+        "choiceText": "Try carrying the Scarecrow across the gulf, then return for the others.",
+        "completion": "The Scarecrow is safely across and the Lion has returned for the others.",
+        "boundaryReason": "The selected goal includes commitment, passenger selection, boarding, crossing and return; carrying the next passenger is a later goal.",
+        "preconditions": [
+          "The party is at the gulf with the proposal to cross on the Lion one at a time.",
+          "The Scarecrow is available on the original side.",
+          "The Lion can reach the edge and attempt the jump."
+        ],
+        "interruptWhen": [
+          "The Lion cannot complete the crossing or return.",
+          "The Scarecrow falls or is injured."
+        ]
+      }
+    },
+    {
+      "expected": {
+        "actor": "Dorothy",
+        "action": "Rides across the gulf with Toto in her arms.",
+        "references": [
+          {
+            "chapterIndex": 9,
+            "lineStart": 66,
+            "lineEnd": 69
+          }
+        ]
+      },
+      "start": {
+        "line": 66,
+        "column": 0,
+        "quote": "Dorothy thought she would go next;"
+      },
+      "resultingState": "Dorothy, Toto, the Scarecrow and the Lion are on the far side. The Tin Woodman remains on the original side; the Lion has not yet returned to fetch him.",
+      "decisionBoundaryBefore": "Ride across the gulf on the Lion while holding Toto securely.",
+      "playerAction": {
+        "choiceText": "Ride across the gulf on the Lion while holding Toto securely.",
+        "completion": "Dorothy and Toto have arrived safely with the Lion on the far side.",
+        "boundaryReason": "Dorothy’s ride ends at arrival; the Lion’s return to fetch the Tin Woodman remains a later goal.",
+        "preconditions": [
+          "The Lion has returned to the original side after carrying the Scarecrow.",
+          "Dorothy and Toto are on that side and can mount the Lion."
+        ],
+        "interruptWhen": [
+          "Dorothy or Toto falls.",
+          "The Lion cannot complete the crossing."
+        ]
+      }
+    },
+    {
+      "expected": {
+        "actor": "The Cowardly Lion",
+        "action": "Carries the Tin Woodman across and rests afterward.",
+        "references": [
+          {
+            "chapterIndex": 9,
+            "lineStart": 70,
+            "lineEnd": 72
+          }
+        ]
+      },
+      "start": {
+        "line": 69,
+        "column": 60,
+        "quote": "The Lion went back"
+      },
+      "resultingState": "Dorothy, Toto, the Scarecrow, the Tin Woodman and the Lion are on the far side. The Lion is resting after the crossings; none of the party remains on the original side.",
+      "decisionBoundaryBefore": "Return for the Tin Woodman, bring him across the gulf, then rest.",
+      "playerAction": {
+        "choiceText": "Return for the Tin Woodman, bring him across the gulf, then rest.",
+        "completion": "The Tin Woodman has been brought across; everyone is on the far side and the Lion is resting.",
+        "boundaryReason": "The selected goal includes returning to fetch the Tin Woodman, boarding, the final crossing and immediate rest.",
+        "preconditions": [
+          "The Tin Woodman remains on the original side.",
+          "The Lion has delivered Dorothy and Toto to the far side and can attempt further crossings."
+        ],
+        "interruptWhen": [
+          "The Lion cannot return or complete the final crossing.",
+          "The Tin Woodman falls."
+        ]
+      }
+    }
+  ]
+}

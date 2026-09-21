@@ -1,6 +1,11 @@
+import { createWorldRulesController } from "./world-rules.js";
+
 const FREE_ACTION_CHOICE_ID = "__bookrpg_free_action__";
+const SOURCE_ANCHOR_CHOICE_ID = "__bookrpg_source_anchor__";
 const SOURCE_CONTINUATION_CHOICE_ID = "__bookrpg_source_continuation__";
 const MAX_CHARACTER_CHOICES = 5;
+// Keep aligned with MAX_TURN_TEXT_LENGTH in games/service/turn-input.ts.
+const MAX_TURN_TEXT_LENGTH = 1000;
 const LOG_POLL_INTERVAL_MS = 1200;
 
 const app = document.querySelector("#app");
@@ -44,16 +49,21 @@ const state = {
   customDrafts: {
     action: "",
     event: "",
-    parameter: "",
   },
   customError: "",
   busy: false,
-  selectedChoiceId: null,
   pendingChoiceId: null,
   logs: [],
   logError: "",
   logsLoaded: false,
 };
+
+const worldRules = createWorldRulesController({
+  getGame: () => state.game,
+  isBusy: () => state.busy,
+  beforeOpen: () => { state.customOpen = false; state.customError = ""; },
+  request, runTask, render: renderGame, notify: showToast, element, append, makeButton,
+});
 
 let logPollingId = 0;
 
@@ -76,7 +86,7 @@ const customModes = {
   action: {
     label: "Custom action",
     title: "What do you want to do?",
-    hint: "Describe what your character tries to do or say.",
+    hint: "Describe what your character tries to do or say. Sending this action advances the story.",
     placeholder: "For example: I search the room for hidden clues.",
     submit: "Take this action",
     loading: "Your action is changing the story...",
@@ -84,19 +94,12 @@ const customModes = {
   event: {
     label: "World event",
     title: "What happens in the world?",
-    hint: "This happens independently of your character and can change the whole story.",
+    hint: "An external event, not your character's action. Applying it advances the story and can have lasting consequences.",
     placeholder: "For example: A power outage shuts down the entire city.",
-    submit: "Make this happen",
+    submit: "Apply world event",
     loading: "The world is shifting...",
   },
-  parameter: {
-    label: "World rule",
-    title: "Which rule should persist?",
-    hint: "Save a lasting trait or rule for future scenes.",
-    placeholder: "For example: No one in the village can lie.",
-    submit: "Save this rule",
-    loading: "The new world rule is being saved...",
-  },
+
 };
 
 function element(tag, className, text) {
@@ -116,7 +119,9 @@ function append(parent, ...children) {
 function makeButton(label, className, onClick) {
   const button = element("button", className, label);
   button.type = "button";
-  button.addEventListener("click", onClick);
+  button.addEventListener("click", (event) => {
+    if (!state.busy) onClick(event);
+  });
   return button;
 }
 
@@ -155,6 +160,14 @@ async function runTask(label, task, handleError, options = {}) {
   try {
     await task();
   } catch (error) {
+    if (
+      error instanceof ApiError
+      && error.code === "TURN_LIMIT_REACHED"
+      && error.details?.membership
+      && state.user
+    ) {
+      state.user = { ...state.user, membership: error.details.membership };
+    }
     if (handleError?.(error)) return;
     showToast(errorMessage(error), "error");
   } finally {
@@ -199,6 +212,23 @@ async function request(path, options = {}) {
     throw new ApiError(message, response.status, code, body);
   }
   return body;
+}
+
+function membershipLabel(membership) {
+  if (!membership) return "";
+  if (membership.plan === "unlimited") return "Unlimited turns";
+  const remaining = Number(membership.turnsRemaining ?? 0);
+  return `${remaining} free turn${remaining === 1 ? "" : "s"} left`;
+}
+
+async function refreshMembership() {
+  try {
+    state.user = await request("/api/me");
+  } catch {
+    // The mutation already succeeded. Never keep the old scene available for
+    // resubmission just because this secondary, read-only request failed.
+    showToast("Your action succeeded, but account usage could not be refreshed.", "info");
+  }
 }
 
 function showToast(message, kind = "info") {
@@ -408,14 +438,13 @@ function renderSignIn() {
     element(
       "p",
       "",
-      "Sign in to open the book library and keep every adventure private to your account.",
+      "Sign in or create a BookRPG account with your email address. Your adventures stay private to that account.",
     ),
     append(
       element("div", "sign-in-actions"),
-      createSignInLink("Continue with Microsoft", "aad", "button button-primary button-wide"),
-      createSignInLink("Continue with GitHub", "github", "button button-github button-wide"),
+      createSignInLink("Sign in or create account", "aad", "button button-primary button-wide"),
     ),
-    element("small", "", "Your books are managed centrally. Your saved games belong only to you."),
+    element("small", "", "New accounts receive free turns. Your saved games belong only to you."),
   );
   setPage(page, "sign-in-view");
   focusPageTitle();
@@ -458,7 +487,11 @@ function renderHome() {
         append(
           pill,
           element("span", "connection-dot"),
-          document.createTextNode(state.user.displayName || "Signed in"),
+          document.createTextNode(
+            [state.user.displayName || "Signed in", membershipLabel(state.user.membership)]
+              .filter(Boolean)
+              .join(" · "),
+          ),
         );
         const logout = element("a", "logout-link", "Sign out");
         logout.href = "/.auth/logout?post_logout_redirect_uri=/";
@@ -573,6 +606,7 @@ function renderHome() {
 
 function createJourneyCard(game) {
   const card = makeButton("", "journey-card", () => resumeGame(game));
+  card.dataset.gameId = game.gameId;
   card.setAttribute("aria-label", `Continue ${game.book.title} as ${game.playerName}`);
   const miniCover = createBookCover(game.book, "mini");
   const copy = element("span", "journey-copy");
@@ -815,7 +849,6 @@ async function resumeGame(summary) {
 
 function enterGame(result, book, playerName) {
   setBusy(false);
-  state.selectedChoiceId = null;
   state.pendingChoiceId = null;
   state.game = {
     ...result,
@@ -826,7 +859,8 @@ function enterGame(result, book, playerName) {
   state.dialogueDraft = "";
   state.customOpen = false;
   state.customError = "";
-  state.customDrafts = { action: "", event: "", parameter: "" };
+  state.customDrafts = { action: "", event: "" };
+  worldRules.reset(result.gameId);
   renderGame(true);
 }
 
@@ -847,6 +881,7 @@ function renderGame(scrollToTop = false) {
   const headerInner = element("div", "game-header-inner content-game");
   const libraryButton = makeButton("Library", "game-back", loadHome);
   libraryButton.setAttribute("aria-label", "Return to the library");
+  libraryButton.disabled = state.busy;
   const gameBook = element("div", "game-book-label");
   append(
     gameBook,
@@ -857,6 +892,13 @@ function renderGame(scrollToTop = false) {
     headerInner,
     libraryButton,
     gameBook,
+    state.user?.membership
+      ? append(
+          element("div", "autosave-pill"),
+          element("span", "connection-dot"),
+          document.createTextNode(membershipLabel(state.user.membership)),
+        )
+      : null,
     append(
       element("div", "autosave-pill"),
       element("span", "connection-dot"),
@@ -867,6 +909,7 @@ function renderGame(scrollToTop = false) {
 
   const main = element("div", "game-main content-game");
   main.append(createGameIdentity(game));
+  main.append(worldRules.createPanel());
   if (state.conversation) {
     append(main, createTurnHistoryPanel(game));
     main.append(createConversationPanel(game, state.conversation));
@@ -887,7 +930,7 @@ function renderGame(scrollToTop = false) {
 
   append(page, header, main);
   setPage(page, "game-view");
-  focusPageTitle(scrollToTop);
+  if (scrollToTop) focusPageTitle(true);
 }
 
 function createGameIdentity(game) {
@@ -965,9 +1008,21 @@ function createTurnHistoryPanel(game) {
     element("span", "details-toggle", "+"),
   );
 
+  // A continuation can replace the current scene immediately in an automated
+  // run. Keep the last chosen action and its result readable beside the sequel.
+  const latest = turns[turns.length - 1];
+  const precedingChoice = latest.kind === "continuation"
+    ? [...turns].reverse().find((turn) => turn.kind === "choice")
+    : null;
+  if (precedingChoice) details.open = true;
+  const exportLink = element("a", "", "Export story for AI");
+  exportLink.href = `/api/games/${encodeURIComponent(game.gameId)}/story-trace`;
+  exportLink.download = `${game.gameId}-story-trace.txt`;
+  details.append(exportLink);
   const list = element("div", "turn-history-list");
   for (const turn of turns) {
     const item = element("details", "turn-history-item");
+    if (turn === precedingChoice) item.open = true;
     const itemSummary = element("summary");
     append(
       itemSummary,
@@ -982,7 +1037,7 @@ function createTurnHistoryPanel(game) {
     const scene = element("div", "turn-history-scene");
     append(
       scene,
-      element("small", "", "RESULTING SCENE"),
+      element("small", "", turn.kind === "choice" ? "RESULT OF THIS CHOICE" : "RESULTING SCENE"),
       element("h3", "", turn.scene.title),
     );
     const narrative = element("div", "turn-history-narrative");
@@ -1074,14 +1129,20 @@ function createScenePanel(game) {
         append(
           element("div"),
           element("h2", "", "What do you do?"),
-          element("p", "", "Your choice writes the next scene."),
+          element("p", "", hasOpenEditor()
+            ? "Finish or close the editor before choosing a story action."
+            : "Click a choice to act immediately. There is no extra Continue step."),
         ),
       ),
     );
     const list = element("div", "choice-list");
     scene.choices.forEach((choice, index) => list.append(createChoiceButton(choice, index)));
     if (scene.choices.length === 0) {
-      list.append(element("p", "empty-choices", "Continue to open the next story moment."));
+      list.append(element("p", "empty-choices", "No prepared choices here. Open the next story moment or write a custom action."));
+      const next = makeButton("Next story moment", "button button-primary", continueStory);
+      next.dataset.nextStoryMoment = "";
+      next.disabled = state.busy || hasOpenEditor();
+      list.append(next);
     }
     choices.append(list);
     article.append(choices);
@@ -1114,8 +1175,8 @@ function createServerLogPanel() {
     summary,
     append(
       element("span"),
-      element("strong", "", "Server log"),
-      element("small", "", "Recent generation messages"),
+      element("strong", "", "Live progress"),
+      element("small", "", "Privacy-safe generation status"),
     ),
     element("span", "server-log-status", state.busy ? "Live" : `${state.logs.length} recent`),
   );
@@ -1133,12 +1194,12 @@ function createServerLogPanel() {
 
 function createToolbarLogPanel() {
   const panel = element("section", "toolbar-log-panel");
-  panel.setAttribute("aria-label", "Live server log");
+  panel.setAttribute("aria-label", "Live generation progress");
   append(
     panel,
     append(
       element("div", "toolbar-log-heading"),
-      element("strong", "", "Server log"),
+      element("strong", "", "Live progress"),
       element("span", "server-log-status", state.logError || "Live"),
     ),
     (() => {
@@ -1153,26 +1214,30 @@ function createToolbarLogPanel() {
 }
 
 function createChoiceButton(choice, index) {
-  const sourceChoice = choice.id === SOURCE_CONTINUATION_CHOICE_ID;
-  const selected = state.selectedChoiceId === choice.id || state.pendingChoiceId === choice.id;
+  const sourceContinuation = choice.id === SOURCE_CONTINUATION_CHOICE_ID;
+  const bridgeStep = Boolean(choice.bridgeStepId);
+  const sourceAnchor = choice.id === SOURCE_ANCHOR_CHOICE_ID || Boolean(choice.bridgeId);
+  const sourceChoice = sourceContinuation || bridgeStep || sourceAnchor;
+  const selected = state.pendingChoiceId === choice.id;
   const button = makeButton(
     "",
     `choice-button${selected ? " choice-button-selected" : ""}${choice.type === "talk" ? " choice-talk" : ""}${sourceChoice ? " choice-source" : ""}`,
     () => chooseSceneChoice(choice),
   );
-  if (state.busy) {
-    button.disabled = true;
-  }
+  button.disabled = state.busy || hasOpenEditor();
+  button.dataset.choiceId = choice.id;
   const label = choice.type === "talk" && choice.character
     ? `Talk to ${choice.character}`
-    : choice.text;
+    : choice.text.trim().replace(/^(?:\d{1,2}[.)]|\(\d{1,2}\))\s+(?=\p{L})/u, '');
   const meta = choice.type === "talk"
     ? "CONVERSATION"
-    : sourceChoice
-      ? "FOLLOW THE BOOK"
-      : choice.stakes === "critical"
-        ? "DECISIVE ACTION"
-        : "ACTION";
+    : bridgeStep
+      ? "RETURN TO STORY"
+      : sourceAnchor || sourceContinuation
+        ? "FOLLOW THE BOOK"
+        : choice.stakes === "critical"
+          ? "DECISIVE ACTION"
+          : "ACTION";
   append(
     button,
     element("span", "choice-number", String(index + 1).padStart(2, "0")),
@@ -1181,114 +1246,123 @@ function createChoiceButton(choice, index) {
       element("small", "", meta),
       element("strong", "", label),
     ),
-    element("span", "choice-arrow", selected ? "✓" : ">"),
+    element("span", "choice-arrow", selected ? "…" : ">"),
   );
   return button;
 }
 
+function hasOpenEditor() {
+  return state.customOpen || worldRules.isOpen();
+}
+
+function isActiveGame() {
+  return Boolean(state.game && (state.game.scene?.outcome || state.game.status) === "active");
+}
+
+function focusEditor(selector) {
+  requestAnimationFrame(() => {
+    const target = document.querySelector(selector);
+    target?.scrollIntoView({ behavior: "smooth", block: "center" });
+    target?.focus({ preventScroll: true });
+  });
+}
+
+function closeCustomComposer() {
+  if (state.busy) return;
+  state.customOpen = false;
+  state.customError = "";
+  renderGame();
+  focusEditor(`[data-custom-mode="${state.customMode}"]`);
+}
+
+function openCustomComposer(modeKey) {
+  if (state.busy || !isActiveGame() || state.conversation || !customModes[modeKey]) return;
+  worldRules.close(false);
+  state.customMode = modeKey;
+  state.customOpen = true;
+  state.customError = "";
+  renderGame();
+  focusEditor("#custom-turn-text");
+}
+
 function createActionDock() {
-  const dock = element("nav", `action-dock${state.busy ? " action-dock-busy" : ""}`);
+  const dock = element("nav", `action-dock direct-action-dock${state.busy ? " action-dock-busy" : ""}`);
   dock.setAttribute("aria-label", "Additional game actions");
+  if (state.busy) dock.append(createToolbarLogPanel());
   const undo = makeButton("Undo", "dock-button", undoChoice);
-  const continueButton = makeButton("Continue", "dock-button dock-button-primary", continueStory);
-  const custom = makeButton(
-    state.customOpen ? "Close custom move" : "Custom move",
-    `dock-button${state.customOpen ? " dock-button-active" : ""}`,
-    () => {
-      state.customOpen = !state.customOpen;
-      state.customError = "";
-      renderGame();
-      if (state.customOpen) {
-        requestAnimationFrame(() => {
-          document.querySelector("#custom-turn")?.scrollIntoView({ behavior: "smooth", block: "center" });
-          document.querySelector("#custom-turn textarea")?.focus({ preventScroll: true });
-        });
-      }
-    },
-  );
-  custom.setAttribute("aria-expanded", String(state.customOpen));
-  undo.disabled = state.busy;
-  continueButton.disabled = state.busy;
-  custom.disabled = state.busy;
-  return append(dock, state.busy ? createToolbarLogPanel() : null, undo, continueButton, custom);
+  undo.disabled = state.busy || hasOpenEditor();
+  dock.append(undo);
+  for (const [key, mode] of Object.entries(customModes)) {
+    const opened = state.customOpen && state.customMode === key;
+    const button = makeButton(mode.label,
+      `dock-button${opened ? " dock-button-active" : ""}`, () => openCustomComposer(key));
+    button.dataset.customMode = key;
+    button.setAttribute("aria-expanded", String(opened));
+    button.setAttribute("aria-controls", "custom-turn");
+    button.disabled = state.busy;
+    dock.append(button);
+  }
+  const rules = makeButton("World rules", "dock-button", () => worldRules.open());
+  rules.dataset.openWorldRules = "";
+  rules.setAttribute("aria-controls", "world-rules");
+  rules.setAttribute("aria-expanded", String(worldRules.isOpen()));
+  rules.disabled = state.busy;
+  dock.append(rules);
+  return dock;
 }
 
 function createCustomComposer() {
+  const modeKey = state.customMode;
+  const mode = customModes[modeKey];
   const section = element("section", "custom-composer");
   section.id = "custom-turn";
-  const heading = element("div", "custom-heading");
-  append(
-    heading,
-    append(
-      element("div"),
-      element("span", "eyebrow eyebrow-dark", "WRITE IT YOURSELF"),
-      element("h2", "", "Create your own move"),
-    ),
-    makeButton("Close", "text-button", () => {
-      state.customOpen = false;
-      state.customError = "";
-      renderGame();
-    }),
-  );
-  heading.querySelector("button")?.toggleAttribute("disabled", state.busy);
-
-  const tabs = element("div", "composer-tabs");
-  tabs.setAttribute("role", "tablist");
-  Object.entries(customModes).forEach(([key, mode]) => {
-    const selected = state.customMode === key;
-    const tab = makeButton(
-      mode.label,
-      `composer-tab${selected ? " composer-tab-selected" : ""}`,
-      () => {
-        state.customMode = key;
-        state.customError = "";
-        renderGame();
-        requestAnimationFrame(() => document.querySelector("#custom-turn textarea")?.focus());
-      },
-    );
-    tab.setAttribute("role", "tab");
-    tab.setAttribute("aria-selected", String(selected));
-    tab.disabled = state.busy;
-    tabs.append(tab);
-  });
-
-  const mode = customModes[state.customMode];
+  section.setAttribute("aria-labelledby", "custom-heading");
+  const title = element("h2", "", mode.label);
+  title.id = "custom-heading";
+  const heading = append(element("div", "custom-heading"), title,
+    makeButton("Cancel", "text-button", closeCustomComposer));
+  heading.querySelector("button").disabled = state.busy;
   const form = element("form", "composer-form");
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    submitCustomTurn();
+    void submitCustomTurn(modeKey);
   });
   const label = element("label", "field");
   label.htmlFor = "custom-turn-text";
-  append(
-    label,
-    element("strong", "", mode.title),
-    element("span", "field-hint", mode.hint),
-  );
+  const hint = element("span", "field-hint", mode.hint);
+  hint.id = "custom-turn-hint";
+  append(label, element("strong", "", mode.title), hint);
   const textarea = element("textarea", "text-input text-area");
   textarea.id = "custom-turn-text";
   textarea.name = "customTurn";
   textarea.rows = 4;
+  textarea.required = true;
+  textarea.maxLength = MAX_TURN_TEXT_LENGTH;
+  textarea.setAttribute("aria-describedby", "custom-turn-hint custom-turn-error");
   textarea.placeholder = mode.placeholder;
-  textarea.value = state.customDrafts[state.customMode];
+  textarea.value = state.customDrafts[modeKey];
   textarea.disabled = state.busy;
-  textarea.addEventListener("input", () => {
-    state.customDrafts[state.customMode] = textarea.value;
-    state.customError = "";
-  });
-  label.append(textarea);
-  form.append(label);
-  if (state.customError) {
-    const error = element("p", "inline-error", state.customError);
-    error.setAttribute("role", "alert");
-    form.append(error);
-  }
+  const error = element("p", "inline-error", state.customError);
+  error.id = "custom-turn-error";
+  error.setAttribute("role", "alert");
+  error.hidden = !state.customError;
   const submit = element("button", "button button-primary button-wide", mode.submit);
   submit.type = "submit";
-  submit.disabled = state.busy;
-  form.append(submit);
-
-  return append(section, heading, tabs, form);
+  const sync = () => {
+    const text = textarea.value.trim();
+    submit.disabled = state.busy || !text || text.length > MAX_TURN_TEXT_LENGTH;
+  };
+  textarea.addEventListener("input", () => {
+    state.customDrafts[modeKey] = textarea.value;
+    state.customError = "";
+    error.hidden = true;
+    sync();
+  });
+  sync();
+  append(label, textarea);
+  append(form, label, error, submit,
+    element("p", "save-note", "Nothing is sent until you press the button above. Cancel keeps your draft for this game."));
+  return append(section, heading, form);
 }
 
 function createConversationPanel(game, conversation) {
@@ -1325,7 +1399,7 @@ function createConversationPanel(game, conversation) {
   const suggestionList = element("div", "suggestion-list");
   conversation.suggestions.forEach((suggestion, index) => {
     const button = makeButton("", "suggestion-button", () => sendDialogue(suggestion));
-    button.disabled = state.busy;
+    button.disabled = state.busy || worldRules.isOpen();
     append(
       button,
       element("span", "choice-number", String(index + 1).padStart(2, "0")),
@@ -1347,16 +1421,21 @@ function createConversationPanel(game, conversation) {
   const textarea = element("textarea", "text-input text-area");
   textarea.id = "dialogue-reply";
   textarea.rows = 3;
+  textarea.required = true;
+  textarea.maxLength = MAX_TURN_TEXT_LENGTH;
   textarea.placeholder = `What do you want to say to ${conversation.character}?`;
   textarea.value = state.dialogueDraft;
-  textarea.disabled = state.busy;
+  textarea.disabled = state.busy || worldRules.isOpen();
   textarea.addEventListener("input", () => {
     state.dialogueDraft = textarea.value;
+    submit.disabled = state.busy || worldRules.isOpen() || !textarea.value.trim()
+      || textarea.value.trim().length > MAX_TURN_TEXT_LENGTH;
   });
   field.append(textarea);
   const submit = element("button", "button button-primary", "Say this");
   submit.type = "submit";
-  submit.disabled = state.busy;
+  submit.disabled = state.busy || worldRules.isOpen() || !state.dialogueDraft.trim()
+    || state.dialogueDraft.trim().length > MAX_TURN_TEXT_LENGTH;
   append(form, field, submit);
   suggestions.append(form);
 
@@ -1367,7 +1446,7 @@ function createConversationDock() {
   const dock = element("nav", `action-dock conversation-dock${state.busy ? " action-dock-busy" : ""}`);
   dock.setAttribute("aria-label", "Conversation actions");
   const undo = makeButton("Undo conversation", "dock-button dock-button-wide", undoChoice);
-  undo.disabled = state.busy;
+  undo.disabled = state.busy || hasOpenEditor();
   return append(
     dock,
     state.busy ? createToolbarLogPanel() : null,
@@ -1412,7 +1491,6 @@ function isConversation(result) {
 }
 
 function handleTurnResult(result) {
-  state.selectedChoiceId = null;
   state.pendingChoiceId = null;
   state.customOpen = false;
   state.customError = "";
@@ -1437,13 +1515,14 @@ function handleTurnResult(result) {
 }
 
 async function chooseSceneChoice(choice) {
-  if (state.busy) return;
-  state.selectedChoiceId = choice.id;
-  state.customOpen = false;
-  renderGame();
+  await submitSelectedChoice(choice);
 }
 
 async function submitSelectedChoice(choice) {
+  // Check object identity too: canonical IDs can recur in later turns, so a
+  // detached button from an old scene must not submit that ID again.
+  if (state.busy || hasOpenEditor() || !isActiveGame() || state.conversation
+    || !state.game.scene.choices.includes(choice)) return;
   const label = choice.type === "talk"
     ? `Opening the conversation with ${choice.character || "this character"}...`
     : "Your choice is changing the story...";
@@ -1456,6 +1535,7 @@ async function submitSelectedChoice(choice) {
         body: JSON.stringify({ choiceId: choice.id }),
       });
       handleTurnResult(result);
+      await refreshMembership();
     }, undefined, { showLoader: false, trackLogs: true, onBusyChange: renderGame });
   } finally {
     if (state.pendingChoiceId) {
@@ -1466,36 +1546,36 @@ async function submitSelectedChoice(choice) {
 }
 
 async function continueStory() {
-  const selectedChoice = state.selectedChoiceId && state.game?.scene?.choices.find(
-    (choice) => choice.id === state.selectedChoiceId,
-  );
-  if (selectedChoice) {
-    await submitSelectedChoice(selectedChoice);
-    return;
-  }
-
+  // Only the explicit empty-menu recovery button may advance without a choice.
+  if (state.busy || hasOpenEditor() || !isActiveGame() || state.conversation
+    || state.game.scene.choices.length !== 0) return;
   await runTask("Writing the next scene...", async () => {
     const result = await request(gamePath("/continue"), { method: "POST" });
     handleTurnResult(result);
+    await refreshMembership();
   }, undefined, { showLoader: false, trackLogs: true, onBusyChange: renderGame });
 }
 
 async function undoChoice() {
+  if (state.busy || hasOpenEditor() || !state.game) return;
   await runTask("Undoing your latest choice...", async () => {
     const result = await request(gamePath("/undo"), { method: "POST" });
     applyGameResponse(result);
+    worldRules.reset(result.gameId);
+    state.pendingChoiceId = null;
     state.conversation = null;
     state.dialogueDraft = "";
     state.customOpen = false;
     renderGame(true);
     showToast("Your latest choice was undone.", "success");
-  });
+  }, undefined, { onBusyChange: renderGame });
 }
 
 async function sendDialogue(rawText) {
+  if (state.busy || worldRules.isOpen() || !state.conversation || !isActiveGame()) return;
   const text = String(rawText || "").trim();
-  if (!text) {
-    showToast("First write what you want to say.", "error");
+  if (!text || text.length > MAX_TURN_TEXT_LENGTH) {
+    showToast(`Write a reply of 1–${MAX_TURN_TEXT_LENGTH} characters.`, "error");
     document.querySelector("#dialogue-reply")?.focus();
     return;
   }
@@ -1506,61 +1586,36 @@ async function sendDialogue(rawText) {
       body: JSON.stringify({ text }),
     });
     handleTurnResult(result);
+    await refreshMembership();
   }, undefined, { showLoader: false, trackLogs: true, onBusyChange: renderGame });
 }
 
-async function submitCustomTurn() {
-  const modeKey = state.customMode;
+async function submitCustomTurn(modeKey = state.customMode) {
+  if (state.busy || !state.customOpen || worldRules.isOpen() || !isActiveGame()
+    || state.conversation || modeKey !== state.customMode || !customModes[modeKey]) return;
   const mode = customModes[modeKey];
   const text = state.customDrafts[modeKey].trim();
-  if (!text) {
-    state.customError = "First describe what should happen.";
+  if (!text || text.length > MAX_TURN_TEXT_LENGTH) {
+    state.customError = `Describe your ${modeKey === "event" ? "world event" : "action"} in 1–${MAX_TURN_TEXT_LENGTH} characters.`;
     renderGame();
-    requestAnimationFrame(() => document.querySelector("#custom-turn textarea")?.focus());
+    focusEditor("#custom-turn-text");
     return;
   }
 
-  await runTask(
-    mode.loading,
-    async () => {
-      if (modeKey === "parameter") {
-        const result = await request(gamePath("/parameters"), {
+  await runTask(mode.loading, async () => {
+    const result = modeKey === "event"
+      ? await request(gamePath("/events"), { method: "POST", body: JSON.stringify({ text }) })
+      : await request(gamePath("/choices"), {
           method: "POST",
-          body: JSON.stringify({ text }),
+          body: JSON.stringify({ choiceId: FREE_ACTION_CHOICE_ID, actionText: text }),
         });
-        state.customDrafts.parameter = "";
-        state.customOpen = false;
-        state.customError = "";
-        renderGame();
-        showToast(
-          `World rule saved (${result.parameters.length}/20).`,
-          "success",
-        );
-        return;
-      }
-
-      const result = modeKey === "event"
-        ? await request(gamePath("/events"), {
-            method: "POST",
-            body: JSON.stringify({ text }),
-          })
-        : await request(gamePath("/choices"), {
-            method: "POST",
-            body: JSON.stringify({
-              choiceId: FREE_ACTION_CHOICE_ID,
-              actionText: text,
-            }),
-          });
-      state.customDrafts[modeKey] = "";
-      handleTurnResult(result);
-    },
-    (error) => {
-      state.customError = errorMessage(error);
-      renderGame();
-      return true;
-    },
-    { showLoader: modeKey === "parameter", trackLogs: modeKey !== "parameter", onBusyChange: renderGame },
-  );
+    state.customDrafts[modeKey] = "";
+    handleTurnResult(result);
+    await refreshMembership();
+  }, (error) => {
+    state.customError = errorMessage(error);
+    return true;
+  }, { showLoader: false, trackLogs: true, onBusyChange: renderGame });
 }
 
 window.addEventListener("offline", () => {
@@ -1572,10 +1627,9 @@ window.addEventListener("online", () => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key !== "Escape" || !state.customOpen) return;
-  state.customOpen = false;
-  state.customError = "";
-  renderGame();
+  if (event.key !== "Escape" || state.busy) return;
+  if (state.customOpen) closeCustomComposer();
+  else if (worldRules.isOpen()) worldRules.close();
 });
 
 loadHome();

@@ -19,6 +19,7 @@ import type {
 import {
   nextSignificantEventForCandidate,
   sourceEventCanOccurWithoutPlayerChoice,
+  sourceEventFirstPlayerChoiceBeatIndex,
 } from "./source-navigation.js";
 
 export function buildSourceEventBlocks(
@@ -115,6 +116,22 @@ export function buildSourceContinuationInstruction(
     && sourceEventCanOccurWithoutPlayerChoice(requiredEvent, playerName, profiles),
   );
   const nextRequiredBeat = requiredEvent?.beats?.[0];
+  const firstPlayer = playerName ? sourceEventFirstPlayerChoiceBeatIndex(requiredEvent, playerName, profiles) : -1;
+  if (firstPlayer > 0 && requiredEvent?.beats) {
+    // A mixed event's title often describes the player's later resolution. Sending it as
+    // REQUIRED NEXT EVENT competes with the automatic-only execution contract.
+    const automatic = requiredEvent.beats.slice(0, firstPlayer);
+    return [
+      "SOURCE-GUIDED AUTOMATIC CONTINUATION:",
+      "The player requested continuation, not the future player choice. Perform only this ordered automatic prefix; the event's later resolution remains unselected.",
+      `AUTOMATIC ACTIONS TO COMPLETE NOW: ${JSON.stringify(automatic.map(beat => ({actor: beat.actor, action: beat.action, resultingState: beat.resultingState ?? null})))}`,
+      `STOP STATE: ${automatic.at(-1)!.resultingState ?? "The final listed automatic action has occurred."}`,
+      "Show the transition from the current visible state into those actions. Do not skip the triggering accident, approach or NPC speech and begin with its aftermath or the player's response.",
+      "Use the ORDERED TURN SCRIPT for source evidence and the subsequent decision boundary. Do not complete the overall event, act on the next menu choice, or import later events from chapter summaries.",
+      "Preserve the player's identity and established state. Existing possession may change when a listed automatic action visibly causes that change; do not keep the target in the player's arms after its specified escape or fall.",
+      "This is not a PLAYER ACTION. Use empty playerAction and actionResult, and actionOutcome 'none'.",
+    ].join("\n");
+  }
   const sourceLocation = candidate.recovery
     ? `A compatible recovery route was found in chapter ${candidate.chapterPosition + 1}, ${JSON.stringify(candidate.chapterTitle)}.`
     : `The next compatible source material is in chapter ${candidate.chapterPosition + 1}, ${JSON.stringify(candidate.chapterTitle)}.`;

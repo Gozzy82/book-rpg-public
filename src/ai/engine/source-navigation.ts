@@ -1,4 +1,6 @@
+import { playerControlsBeat } from "../../shared/turn-policy.js";
 import { flowDiagnostic } from "../../util/flow-trace.js";
+import { SOURCE_ANCHOR_CHOICE_ID } from "../../shared/contracts.js";
 import type {
   BookStoryEvent,
   SceneScope,
@@ -96,6 +98,7 @@ export interface SourceChoiceNavigationContext extends SourceChoiceNavigationEve
 }
 
 export interface SourceEventBeatProgressContext {
+  startBeatIndex: number;
   eventId: string | null;
   completedBeatIndexes: number[];
   completedBeats: StoryEventBeat[];
@@ -106,15 +109,16 @@ export interface SourceEventBeatProgressContext {
 export function normalizeCompletedSourceEventBeatIndexes(
   indexes: readonly number[],
   beatCount: number,
+  startBeatIndex = 0,
 ): number[] {
   const validIndexes = indexes.filter((index) =>
-    Number.isInteger(index) && index >= 0 && index < beatCount
+    Number.isInteger(index) && index >= startBeatIndex && index < beatCount
   );
   const latestCompletedBeatIndex = validIndexes
-    .reduce((latest, index) => Math.max(latest, index), -1);
+    .reduce((latest, index) => Math.max(latest, index), startBeatIndex - 1);
   const normalizedIndexes = Array.from(
-    { length: latestCompletedBeatIndex + 1 },
-    (_value, index) => index,
+    { length: latestCompletedBeatIndex - startBeatIndex + 1 },
+    (_value, index) => startBeatIndex + index,
   );
   flowDiagnostic(
     "OpenAI source beat index normalization: "
@@ -131,6 +135,7 @@ export function normalizeCompletedSourceEventBeatIndexes(
 export function nextRequiredSourceEventBeatReviewContext(
   event: SourceChoiceNavigationEvent | null | undefined,
   completedBeatIndexes: readonly number[],
+  startBeatIndex = 0,
 ): (ReturnType<typeof sourceBeatDebugEntry>) | null {
   const beats = event?.beats ?? [];
   const completed = new Set(
@@ -138,7 +143,7 @@ export function nextRequiredSourceEventBeatReviewContext(
       Number.isInteger(index) && index >= 0 && index < beats.length
     ),
   );
-  const index = beats.findIndex((_beat, beatIndex) => !completed.has(beatIndex));
+  const index = beats.findIndex((_beat, beatIndex) => beatIndex >= startBeatIndex && !completed.has(beatIndex));
   return index >= 0 ? sourceBeatDebugEntry(beats[index]!, index) : null;
 }
 
@@ -147,12 +152,13 @@ export function reviewedSourceEventIdForBeatProgress(
   reportedEventId: string | null,
   completedBeatIndexes: readonly number[],
   beatCount: number,
+  startBeatIndex = 0,
 ): string | null {
   if (
     targetEventId
     && reportedEventId === targetEventId
     && beatCount > 0
-    && completedBeatIndexes.length < beatCount
+    && completedBeatIndexes.length + startBeatIndex < beatCount
   ) {
     return null;
   }
@@ -169,14 +175,17 @@ export function buildSourceEventBeatProgressContext(
   }
   const beats = event.beats ?? [];
   const progressMatchesEvent = progress?.eventId === event.eventId;
+  const startBeatIndex = progressMatchesEvent ? progress.startBeatIndex ?? 0 : 0;
   const completedBeatIndexes = progressMatchesEvent
     ? normalizeCompletedSourceEventBeatIndexes(
         progress.completedBeatIndexes,
         beats.length,
+        startBeatIndex,
       )
     : [];
-  const nextIndex = completedBeatIndexes.length;
+  const nextIndex = startBeatIndex + completedBeatIndexes.length;
   const context = {
+    startBeatIndex,
     eventId: event.eventId,
     completedBeatIndexes,
     completedBeats: completedBeatIndexes.map((index) => beats[index]!),
@@ -191,6 +200,7 @@ export function buildSourceEventBeatProgressContext(
       stored_progress_event_id: progress?.eventId ?? null,
       stored_completed_beat_indexes: progress?.completedBeatIndexes ?? [],
       stored_progress_matches_event: progressMatchesEvent,
+      source_start_beat_index: startBeatIndex,
       completed_beats: context.completedBeats.map((beat, index) =>
         sourceBeatDebugEntry(beat, completedBeatIndexes[index] ?? index)
       ),
@@ -256,10 +266,7 @@ function isMeaningfulPlayerChoiceBeat(
   beat: StoryEventBeat,
   playerIdentities: ReadonlySet<string>,
 ): boolean {
-  return beat.actor !== null
-    && playerIdentities.has(normalizedScopeIdentity(beat.actor))
-    && (beat.agency === "intentional" || beat.agency === "ambiguous")
-    && beat.stakes !== "routine";
+  return playerControlsBeat(beat, [...playerIdentities]);
 }
 
 function isAutomaticBridgeBeat(beat: StoryEventBeat): boolean {
@@ -320,6 +327,16 @@ export function sourceEventNextPlayerChoiceBeats(
   return nextBeat && isMeaningfulPlayerChoiceBeat(nextBeat, playerIdentities)
     ? [nextBeat]
     : [];
+}
+
+/** Inspect the unperformed prefix, not the decision reachable after automatic beats. */
+export function sourceEventHasPendingAutomaticPrefix(
+  event: SourceChoiceNavigationEvent | null | undefined,
+  playerName: string,
+  profiles: readonly CharacterProfile[] = [],
+): boolean {
+  const first = event?.beats?.[0];
+  return Boolean(first && !isMeaningfulPlayerChoiceBeat(first, playerIdentityKeys(playerName, profiles)));
 }
 
 function baseFormOfActionVerb(word: string): string {
@@ -386,9 +403,10 @@ export function buildRequiredPlayerChoiceFallback(
   playerName: string,
   profiles: readonly CharacterProfile[] = [],
   sceneScope?: SceneScope,
+  playerActionChoiceText?: string,
 ): GameChoice | undefined {
   const beat = sourceEventNextPlayerChoiceBeats(event, playerName, profiles)[0];
-  if (!event || !beat) return undefined;
+  if (!event || !beat || sourceEventHasPendingAutomaticPrefix(event, playerName, profiles)) return undefined;
   const playerProfile = findPlayerCharacterProfile(playerName, profiles);
   const playerIdentities = [
     playerName,
@@ -407,13 +425,13 @@ export function buildRequiredPlayerChoiceFallback(
         normalizedScopeIdentity(candidate) === normalizedScopeIdentity(actor),
     ) === index
   );
-  const text = playerBeatAsSelectableAction(beat, playerIdentities, presentListeners);
+  const text = playerActionChoiceText ?? playerBeatAsSelectableAction(beat, playerIdentities, presentListeners);
   if (!text) return undefined;
   return {
-    id: "__bookrpg_required_player_choice_fallback__",
+    id: SOURCE_ANCHOR_CHOICE_ID,
     type: "action",
     text,
-    requiredPresentCharacters: presentListeners,
+    requiredPresentCharacters: playerActionChoiceText ? beat.targets.filter(t => !playerKeys.has(normalizedScopeIdentity(t))) : presentListeners,
     requiredAbsentCharacters: [],
     ...(event.eventId
       ? {
@@ -476,20 +494,40 @@ export function sourceEventRequiresExplicitPlayerChoice(
 ): boolean {
   if (!event) return false;
   const playerIdentities = playerIdentityKeys(playerName, profiles);
+
+  // Arrival events may contain a player decision before later visitors arrive.
+  // Only the immediately pending player beat bypasses later absent participants;
+  // an automatic/world/NPC prefix must still be played first.
+  if (
+    event.beats?.length
+    && !sourceEventHasPendingAutomaticPrefix(event, playerName, profiles)
+    && sourceEventNextPlayerChoiceBeats(event, playerName, profiles).length > 0
+  ) {
+    return true;
+  }
+
+  const absentArrivalParticipant = Boolean(
+    event.category === "arrival"
+    && sceneScope
+    && sourceEventHasAbsentNonPlayerParticipant(
+      event,
+      playerName,
+      profiles,
+      sceneScope,
+    )
+  );
   const hasPlayerChoiceBeat = event.beats?.length
-    ? sourceEventNextPlayerChoiceBeats(event, playerName, profiles).length > 0
+    ? (
+        event.category === "arrival" && sceneScope && !absentArrivalParticipant
+          ? sourceEventPlayerChoiceBeats(event, playerName, profiles).length > 0
+          : sourceEventNextPlayerChoiceBeats(event, playerName, profiles).length > 0
+      )
     : event.actors?.some(
         (actor) => playerIdentities.has(normalizedScopeIdentity(actor)),
       ) ?? false;
   if (!hasPlayerChoiceBeat) return false;
   if (event.category !== "arrival" || !sceneScope) return true;
-
-  return !sourceEventHasAbsentNonPlayerParticipant(
-    event,
-    playerName,
-    profiles,
-    sceneScope,
-  );
+  return !absentArrivalParticipant;
 }
 
 export function sourceEventHasAbsentNonPlayerParticipant(
@@ -544,6 +582,25 @@ export function sourceEventCanOccurWithoutPlayerChoice(
   sceneScope?: SceneScope,
 ): boolean {
   if (event?.beats?.length) {
+    if (
+      event.category === "arrival"
+      && sceneScope
+      && sourceEventHasAbsentNonPlayerParticipant(
+        event,
+        playerName,
+        profiles,
+        sceneScope,
+      )
+    ) {
+      return false;
+    }
+    if (
+      event.category === "arrival"
+      && sceneScope
+      && sourceEventPlayerChoiceBeats(event, playerName, profiles).length > 0
+    ) {
+      return false;
+    }
     return sourceEventNextPlayerChoiceBeats(event, playerName, profiles).length === 0;
   }
   return sourceEventHasReliableNonPlayerActors(event, playerName, profiles)
@@ -583,7 +640,7 @@ export function selectedAnchorRequiresSourceEvent(
       );
   }
   if (route === "transition") {
-    return canAdvanceWithoutPlayerChoice;
+    return false;
   }
   return canAdvanceWithoutPlayerChoice;
 }
@@ -699,4 +756,16 @@ export function reviewedVisibleSourceEvent(
     }),
   );
   return event;
+}
+
+
+/** Menu readiness is narrower than whether an event eventually needs a choice. */
+export function sourceEventHasReadyPlayerChoice(
+  event: SourceChoiceNavigationEvent | null | undefined,
+  playerName: string,
+  profiles: readonly CharacterProfile[] = [],
+  sceneScope?: SceneScope,
+): boolean {
+  return !sourceEventHasPendingAutomaticPrefix(event, playerName, profiles)
+    && sourceEventRequiresExplicitPlayerChoice(event, playerName, profiles, sceneScope);
 }

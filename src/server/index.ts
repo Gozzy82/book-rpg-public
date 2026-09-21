@@ -1,3 +1,6 @@
+import {startReturnPlanningWorker, drainReturnPlanning} from '../games/bridge-planner.js';
+import {exportStoryTrace} from '../games/return-bridges.js';
+import { runWithTurnBudget, TurnExecutionError } from "../ai/engine/turn-contract.js";
 import http from "node:http";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { countBookPages, getBookPage } from "../books/pages.js";
@@ -36,10 +39,22 @@ import {
   authenticatedUser,
   runAsUser,
 } from "../auth/user-context.js";
+import {
+  TurnLimitReachedError,
+  commitMemberTurn,
+  getCurrentMembership,
+  releaseMemberTurn,
+  reserveMemberTurn,
+} from "../members/service.js";
 import { loadAiApiKey, loadDotEnv } from "../util/env.js";
 import { json, readJson } from "./http.js";
-import { installConsoleLogCapture, recentWebLogs } from "./logs.js";
+import { recentWebLogs, runWithLiveTurnLog } from "./logs.js";
+import type { LiveTurnOperation } from "./logs.js";
 import { serveWebAsset } from "./web.js";
+import {
+  autoAdvanceSourceContinuations,
+  isStaleSourceContinuationRequest,
+} from "./auto-source-continuation.js";
 
 loadDotEnv();
 loadAiApiKey();
@@ -51,7 +66,50 @@ const webLogsEnabled = process.env.BOOKRPG_WEB_LOGS === "1"
     && ["127.0.0.1", "localhost", "::1"].includes(host)
   );
 
-installConsoleLogCapture();
+
+async function runMeteredGameTurn<T>(
+  gameId: string,
+  operation: () => Promise<T>,
+): Promise<T> {
+  const before = await getGame(gameId);
+  if (!before) return operation();
+
+  const completedTurnsBefore = before.turnHistory?.length ?? 0;
+  const reservation = await reserveMemberTurn();
+  let operationCompleted = false;
+  try {
+    const result = await operation();
+    operationCompleted = true;
+    const after = await getGame(gameId);
+    const completedTurnsAfter = after?.turnHistory?.length ?? completedTurnsBefore;
+    if (completedTurnsAfter > completedTurnsBefore) {
+      await commitMemberTurn(reservation);
+    } else {
+      await releaseMemberTurn(reservation);
+    }
+    return result;
+  } catch (error) {
+    if (!operationCompleted) {
+      try {
+        await releaseMemberTurn(reservation);
+      } catch (releaseError) {
+        console.error("Could not release member turn reservation", releaseError);
+      }
+    }
+    throw error;
+  }
+}
+
+async function runMeteredLoggedGameTurn<T>(
+  gameId: string,
+  logOperation: LiveTurnOperation,
+  operation: () => Promise<T>,
+): Promise<T> {
+  return await runWithLiveTurnLog(
+    logOperation,
+    () => runMeteredGameTurn(gameId, operation),
+  );
+}
 
 async function handleApiRequest(
   request: IncomingMessage,
@@ -60,12 +118,26 @@ async function handleApiRequest(
   url: URL,
 ): Promise<void> {
   const user = authenticatedUser(request.headers);
+  response.once('finish', () => { void drainReturnPlanning(); });
   await runAsUser(user, async () => {
+    const traceMatch = url.pathname.match(/^\/api\/games\/([a-zA-Z0-9_-]+)\/story-trace$/);
+    if (method === 'GET' && traceMatch) {
+      const game = await getGame(traceMatch[1]!);
+      if (!game) return json(response, 404, {error: 'Game not found'});
+      const book = await getBook(game.book.bookId);
+      if (!book) return json(response, 404, {error: 'Book not found'});
+      response.writeHead(200, {'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store',
+        'content-disposition': `attachment; filename="${game.gameId}-story-trace.txt"`});
+      response.end(exportStoryTrace(game, book));
+      return;
+    }
     if (method === "GET" && url.pathname === "/api/me") {
       return json(response, 200, {
         displayName: user.displayName,
         provider: user.provider,
+        ...(user.email ? { email: user.email } : {}),
         migrationOwnerId: user.userId,
+        membership: await getCurrentMembership(),
       });
     }
 
@@ -117,7 +189,11 @@ async function handleApiRequest(
     }
 
     if (method === "POST" && url.pathname === "/api/games") {
-      return json(response, 201, await startGame(await readJson<StartGameRequest>(request)));
+      const startRequest = await readJson<StartGameRequest>(request);
+      const result = await runWithLiveTurnLog("start", async () => (
+        await autoAdvanceSourceContinuations(await startGame(startRequest))
+      ));
+      return json(response, 201, result);
     }
 
     const resumeMatch = url.pathname.match(/^\/api\/games\/([a-zA-Z0-9_-]+)\/resume$/);
@@ -139,7 +215,24 @@ async function handleApiRequest(
 
     const choiceMatch = url.pathname.match(/^\/api\/games\/([a-zA-Z0-9_-]+)\/choices$/);
     if (method === "POST" && choiceMatch) {
-      return json(response, 200, await makeChoice(choiceMatch[1]!, await readJson<MakeChoiceRequest>(request)));
+      const gameId = choiceMatch[1]!;
+      const choiceRequest = await readJson<MakeChoiceRequest>(request);
+      const result = await runMeteredLoggedGameTurn(gameId, "choice", async () => {
+        const currentGame = await getGame(gameId);
+        if (
+          currentGame
+          && isStaleSourceContinuationRequest(
+            choiceRequest.choiceId,
+            currentGame.scene.choices,
+          )
+        ) {
+          return await autoAdvanceSourceContinuations(await resumeGame(gameId));
+        }
+        return await autoAdvanceSourceContinuations(
+          await makeChoice(gameId, choiceRequest),
+        );
+      });
+      return json(response, 200, result);
     }
 
     const undoMatch = url.pathname.match(/^\/api\/games\/([a-zA-Z0-9_-]+)\/undo$/);
@@ -149,10 +242,16 @@ async function handleApiRequest(
 
     const eventMatch = url.pathname.match(/^\/api\/games\/([a-zA-Z0-9_-]+)\/events$/);
     if (method === "POST" && eventMatch) {
+      const gameId = eventMatch[1]!;
+      const eventRequest = await readJson<InitiateEventRequest>(request);
       return json(
         response,
         200,
-        await initiateEvent(eventMatch[1]!, await readJson<InitiateEventRequest>(request)),
+        await runMeteredLoggedGameTurn(
+          gameId,
+          "event",
+          () => initiateEvent(gameId, eventRequest),
+        ),
       );
     }
 
@@ -200,19 +299,37 @@ async function handleApiRequest(
 
     const storyMatch = url.pathname.match(/^\/api\/games\/([a-zA-Z0-9_-]+)\/story$/);
     if (method === "POST" && storyMatch) {
-      return json(response, 200, await continueFromSource(storyMatch[1]!));
+      const gameId = storyMatch[1]!;
+      const result = await runMeteredLoggedGameTurn(gameId, "story", async () => (
+        await autoAdvanceSourceContinuations(await continueFromSource(gameId))
+      ));
+      return json(response, 200, result);
     }
 
     const continuationMatch = url.pathname.match(
       /^\/api\/games\/([a-zA-Z0-9_-]+)\/continue$/,
     );
     if (method === "POST" && continuationMatch) {
-      return json(response, 200, await continueScene(continuationMatch[1]!));
+      const gameId = continuationMatch[1]!;
+      const result = await runMeteredLoggedGameTurn(gameId, "continue", async () => (
+        await autoAdvanceSourceContinuations(await continueScene(gameId))
+      ));
+      return json(response, 200, result);
     }
 
     const dialogueMatch = url.pathname.match(/^\/api\/games\/([a-zA-Z0-9_-]+)\/dialogue$/);
     if (method === "POST" && dialogueMatch) {
-      return json(response, 200, await say(dialogueMatch[1]!, await readJson<DialogueRequest>(request)));
+      const gameId = dialogueMatch[1]!;
+      const dialogueRequest = await readJson<DialogueRequest>(request);
+      return json(
+        response,
+        200,
+        await runMeteredLoggedGameTurn(
+          gameId,
+          "dialogue",
+          () => say(gameId, dialogueRequest),
+        ),
+      );
     }
     return json(response, 404, { error: "Not found" });
   });
@@ -229,7 +346,7 @@ const server = http.createServer(async (request, response) => {
 
     if (await serveWebAsset(method, url.pathname, response)) return;
     if (url.pathname.startsWith("/api/")) {
-      return await handleApiRequest(request, response, method, url);
+      return await runWithTurnBudget(() => handleApiRequest(request, response, method, url));
     }
     return json(response, 404, { error: "Not found" });
   } catch (error) {
@@ -237,6 +354,13 @@ const server = http.createServer(async (request, response) => {
       return json(response, error.status, {
         error: error.message,
         code: "AUTHENTICATION_REQUIRED",
+      });
+    }
+    if (error instanceof TurnLimitReachedError) {
+      return json(response, error.status, {
+        error: error.message,
+        code: error.code,
+        membership: error.membership,
       });
     }
     if (error instanceof PlayerUnavailableError) {
@@ -247,11 +371,15 @@ const server = http.createServer(async (request, response) => {
         reason: error.reason,
       });
     }
+    if (error instanceof TurnExecutionError) {
+      return json(response, 503, { error: error.message, code: error.code });
+    }
     console.error(error);
     return json(response, 400, { error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 
+const stopReturnPlanningWorker = startReturnPlanningWorker();
 server.listen(port, host, () => {
   const browserHost = host === "0.0.0.0" ? "localhost" : host;
   console.log(`BookRPG web app: http://${browserHost}:${port}`);
@@ -261,6 +389,7 @@ server.listen(port, host, () => {
 });
 
 function shutdown(signal: NodeJS.Signals): void {
+  stopReturnPlanningWorker();
   console.log(`Received ${signal}; closing BookRPG server`);
   server.close((error) => {
     if (error) {

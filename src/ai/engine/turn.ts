@@ -17,7 +17,6 @@ import {
   extractLeakedExternalDevelopment,
   stripLeakedSceneMetadata,
   textMentionsCharacter,
-  sceneDirectlyInteractsWithCharacter,
 } from "./scene-text.js";
 
 export type ImmediateTurnInputKind =
@@ -46,7 +45,9 @@ export function openingCharacterContinuityFailures(
     "playerName" | "characterProfiles" | "sourceIntroducedCharacters"
   >,
   sourceCandidates: readonly SourceContinuationCandidate[],
+  sceneScope?: SceneScope,
 ): string[] {
+  if (sourceCandidates.length === 0 && !state.sourceIntroducedCharacters?.length) return [];
   const profiles = state.characterProfiles ?? [];
   const playerProfile = findPlayerCharacterProfile(state.playerName, profiles);
   const playerIdentities = [
@@ -74,12 +75,8 @@ export function openingCharacterContinuityFailures(
     .filter((description): description is string => Boolean(description?.trim()))
     .join("\n");
 
-  // Keep this deterministic opening check focused on source-introduction
-  // continuity. Perspective is natural-language semantics and should not be
-  // approximated here with an ever-growing list of verbs or other grammar
-  // heuristics. Opening generation already receives the authoritative
-  // first-person player-perspective rules; ordinary later turns additionally
-  // receive the semantic continuity review.
+  // Check source introduction against AI-reviewed presence, never against
+  // verbs in the prose. Mentioning an offscreen person does not introduce them.
   return profiles.flatMap((profile) => {
     const identities = [profile.name, ...profile.aliases];
     const isAllowed = identities.some((identity) =>
@@ -88,8 +85,9 @@ export function openingCharacterContinuityFailures(
     );
     if (
       isAllowed
-      || !textMentionsCharacter(sceneText, profile.name, profiles)
-      || !sceneDirectlyInteractsWithCharacter(sceneText, profile.name, profiles)
+      || !(sceneScope?.peoplePresent ?? []).some(person =>
+        identities.some(identity => normalizeComparableChoiceText(identity) === normalizeComparableChoiceText(person))
+      )
     ) {
       return [];
     }
@@ -255,3 +253,4 @@ export function buildAnchorChoiceInstruction(
     "Other choices may pursue locally meaningful alternatives, but none may repeat the consumed action or recent choices.",
   ].join("\n");
 }
+

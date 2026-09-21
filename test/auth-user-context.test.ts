@@ -36,7 +36,69 @@ test("Azure authentication derives a stable opaque owner from the trusted princi
       .digest("hex"),
     displayName: "reader@example.test",
     provider: "github",
+    email: "reader@example.test",
   });
+});
+
+test("Azure authentication reads an email claim from EasyAuth", () => {
+  const user = authenticatedUser({
+    "x-ms-client-principal": encodedPrincipal({
+      identityProvider: "aad",
+      userId: "external-id-subject",
+      userDetails: "Reader",
+      userRoles: ["authenticated"],
+      claims: [
+        { typ: "email", val: "reader@example.test" },
+      ],
+    }),
+  }, "azure");
+
+  assert.equal(user.email, "reader@example.test");
+  assert.equal(user.displayName, "Reader");
+});
+
+test("Azure Container Apps EasyAuth accepts claims-based principals and identity headers", () => {
+  const user = authenticatedUser({
+    "x-ms-client-principal": encodedPrincipal({
+      auth_typ: "aad",
+      name_typ: "name",
+      role_typ: "roles",
+      claims: [
+        { typ: "name", val: "External Reader" },
+        { typ: "email", val: "reader@example.test" },
+        { typ: "http://schemas.microsoft.com/identity/claims/objectidentifier", val: "object-123" },
+      ],
+    }),
+    "x-ms-client-principal-id": "object-123",
+    "x-ms-client-principal-name": "reader@example.test",
+    "x-ms-client-principal-idp": "aad",
+  }, "azure");
+
+  assert.deepEqual(user, {
+    userId: crypto.createHash("sha256")
+      .update("aad:object-123")
+      .digest("hex"),
+    displayName: "reader@example.test",
+    provider: "aad",
+    email: "reader@example.test",
+  });
+});
+
+test("Azure Container Apps EasyAuth can derive subject and provider from claims payload", () => {
+  const user = authenticatedUser({
+    "x-ms-client-principal": encodedPrincipal({
+      auth_typ: "aad",
+      claims: [
+        { typ: "sub", val: "external-subject" },
+        { typ: "email", val: "reader2@example.test" },
+        { typ: "name", val: "Reader Two" },
+      ],
+    }),
+  }, "azure");
+
+  assert.equal(user.provider, "aad");
+  assert.equal(user.displayName, "Reader Two");
+  assert.equal(user.email, "reader2@example.test");
 });
 
 test("Azure authentication rejects missing, malformed, and anonymous principals", () => {
@@ -58,6 +120,27 @@ test("Azure authentication rejects missing, malformed, and anonymous principals"
     }, "azure"),
     AuthenticationRequiredError,
   );
+});
+
+test("hosted member mode rejects authenticated principals without an email", () => {
+  const previous = process.env.BOOKRPG_REQUIRE_MEMBER_EMAIL;
+  process.env.BOOKRPG_REQUIRE_MEMBER_EMAIL = "1";
+  try {
+    assert.throws(
+      () => authenticatedUser({
+        "x-ms-client-principal": encodedPrincipal({
+          identityProvider: "aad",
+          userId: "subject-without-email",
+          userDetails: "Reader",
+          userRoles: ["authenticated"],
+        }),
+      }, "azure"),
+      AuthenticationRequiredError,
+    );
+  } finally {
+    if (previous === undefined) delete process.env.BOOKRPG_REQUIRE_MEMBER_EMAIL;
+    else process.env.BOOKRPG_REQUIRE_MEMBER_EMAIL = previous;
+  }
 });
 
 test("request user context is available only inside its asynchronous operation", async () => {

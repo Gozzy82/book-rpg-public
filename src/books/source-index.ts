@@ -11,10 +11,10 @@ export type {
   ChapterPartBounds,
 } from "./source-index/chapter-index.js";
 export {
-  classifyStoryEventCategory,
   buildBookStoryEvents,
 } from "./source-index/story-events.js";
 export {
   selectCoreCharacterProfiles,
   parseWorldBibleOutput,
 } from "./source-index/profiles.js";
+

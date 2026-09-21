@@ -39,3 +39,11 @@ test("import arguments reject unknown options and missing paths", () => {
     /Usage: npm run import -- path\/to\/book\.epub \[--reanalyze\]/,
   );
 });
+
+
+test("import accepts one saved source review but cannot discard checkpoints simultaneously", () => {
+  assert.equal(parseImportArguments(["book.epub", "--source-review", "result.json"]).sourceReview, "result.json");
+  assert.throws(() => parseImportArguments(["book.epub", "--source-review"]));
+  assert.throws(() => parseImportArguments(["book.epub", "--source-review", "one", "--source-review", "two"]));
+  assert.throws(() => parseImportArguments(["book.epub", "--source-review", "result.json", "--reanalyze"]));
+});

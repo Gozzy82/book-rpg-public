@@ -1,0 +1,630 @@
+{
+  "version": 3,
+  "provenance": "Assistant-curated against the numbered source excerpt; pending independent human semantic review. No goal annotations are supplied to the model.",
+  "sourceSha256": "1edf12f5593a0873127a8c51f19a0927fd62f7ac8ab95ebf7e362bbe6f22d81f",
+  "timeline": {
+    "summary": "oil source excerpt",
+    "characters": [
+      {
+        "name": "Dorothy",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 7
+          }
+        ]
+      },
+      {
+        "name": "Tin Woodman",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 8,
+            "lineEnd": 8
+          }
+        ]
+      },
+      {
+        "name": "Scarecrow",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 9,
+            "lineEnd": 10
+          }
+        ]
+      }
+    ],
+    "significantEvents": [
+      {
+        "description": "Asks what she can do for the man, moved by his sad voice.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 2
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Asks what she can do for the man, moved by his sad voice.",
+            "resultingState": "Dorothy has offered help and awaits his answer.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 1,
+                "lineEnd": 2
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Asks for the oil-can and oil on his joints; explains that rust prevents movement and locates the can in his cottage.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 5
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Asks for the oil-can and oil on his joints; explains that rust prevents movement and locates the can in his cottage.",
+            "resultingState": "The requested help and location of the oil-can are known; his joints remain rusted.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 3,
+                "lineEnd": 5
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Runs back to the cottage and finds the oil-can.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 6
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Runs back to the cottage and finds the oil-can.",
+            "resultingState": "Dorothy has found the oil-can in the cottage.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 6,
+                "lineEnd": 6
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Returns with the oil-can.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 7
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Returns with the oil-can.",
+            "resultingState": "Dorothy is back with the oil-can.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 6,
+                "lineEnd": 7
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Asks where his joints are.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 7,
+            "lineEnd": 7
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Asks where his joints are.",
+            "resultingState": "Dorothy has asked for the location of the joints before oiling.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 7,
+                "lineEnd": 7
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Asks for his neck to be oiled first.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 8,
+            "lineEnd": 8
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Asks for his neck to be oiled first.",
+            "resultingState": "The neck is specified as the first joint to oil.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 8,
+                "lineEnd": 8
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Oils his neck.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 8,
+            "lineEnd": 8
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Oils his neck.",
+            "resultingState": "His neck is oiled but still needs loosening.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 8,
+                "lineEnd": 8
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Gently moves the tin head from side to side until it works freely.",
+        "actors": [
+          "Scarecrow"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 9,
+            "lineEnd": 11
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Scarecrow",
+            "action": "Gently moves the tin head from side to side until it works freely.",
+            "resultingState": "The Tin Woodman can now turn his head himself; no actual head-turn by him is asserted.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 9,
+                "lineEnd": 11
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Requests oil on his arm joints.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 12,
+            "lineEnd": 12
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Requests oil on his arm joints.",
+            "resultingState": "The arm joints are the next requested part of the treatment.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 12,
+                "lineEnd": 12
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Oils his arms.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 12,
+            "lineEnd": 12
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Oils his arms.",
+            "resultingState": "The arm joints are oiled.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 12,
+                "lineEnd": 12
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Carefully bends the arms until free from rust.",
+        "actors": [
+          "Scarecrow"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 13,
+            "lineEnd": 14
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Scarecrow",
+            "action": "Carefully bends the arms until free from rust.",
+            "resultingState": "His arms work as well as new.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 13,
+                "lineEnd": 14
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Sighs with satisfaction and lowers his axe against the tree.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 15,
+            "lineEnd": 16
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Sighs with satisfaction and lowers his axe against the tree.",
+            "resultingState": "The axe is no longer held in the air; it rests against the tree.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 15,
+                "lineEnd": 16
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Expresses relief and asks for oil on his leg joints.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 17,
+            "lineEnd": 20
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Expresses relief and asks for oil on his leg joints.",
+            "resultingState": "He is relieved to lower the axe; his legs still require oil.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 17,
+                "lineEnd": 20
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Participates with the Scarecrow in oiling his legs (the same joint act represented in the next beat).",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Participates with the Scarecrow in oiling his legs (the same joint act represented in the next beat).",
+            "resultingState": "Dorothy and Scarecrow have jointly oiled the legs; the Tin Woodman can move them freely.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 21,
+                "lineEnd": 21
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "leg_oiling",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow"
+                ],
+                "resultingState": "Dorothy and Scarecrow have jointly oiled the legs; the Tin Woodman can move them freely."
+              }
+            }
+          }
+        ]
+      },
+      {
+        "description": "Participates with Dorothy in the same joint oiling of his legs, as joint participation with no separate temporal order established.",
+        "actors": [
+          "Scarecrow"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Scarecrow",
+            "action": "Participates with Dorothy in the same joint oiling of his legs, as joint participation with no separate temporal order established.",
+            "resultingState": "Dorothy and Scarecrow have jointly oiled the legs; the Tin Woodman can move them freely.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 21,
+                "lineEnd": 21
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "leg_oiling",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow"
+                ],
+                "resultingState": "Dorothy and Scarecrow have jointly oiled the legs; the Tin Woodman can move them freely."
+              }
+            }
+          }
+        ]
+      },
+      {
+        "description": "Thanks them repeatedly for his release.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Thanks them repeatedly for his release.",
+            "resultingState": "He is released from the rust and has expressed gratitude.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 21,
+                "lineEnd": 23
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      }
+    ],
+    "actions": [],
+    "relationships": []
+  },
+  "expectedPrimaryGoal": {
+    "actor": "Dorothy",
+    "playerBeatIndexes": [
+      2,
+      3,
+      4,
+      6,
+      9,
+      13
+    ],
+    "endBeatIndex": 14
+  }
+}

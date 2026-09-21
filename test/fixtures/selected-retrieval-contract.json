@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "sourceBeatSelection": {
+    "actionId": "character_action_23a994f6052cb18462f0",
+    "playerBeatIndexes": [
+      3,
+      5
+    ],
+    "eventId": "event_5b3afb6e1e10b0544fd3",
+    "beatIndex": 3,
+    "endBeatIndex": 5,
+    "kind": "player_action"
+  },
+  "selectedPlayerAction": {
+    "id": "character_action_23a994f6052cb18462f0",
+    "kind": "player_action",
+    "endBeatIndex": 5,
+    "boundaryReason": "This choice ends when Dorothy\u2019s shelter attempt is interrupted by the house shaking and her involuntary loss of footing.",
+    "choiceText": "Retrieve Toto and get toward the cellar",
+    "completion": "Dorothy is holding Toto and is halfway across the room toward the open trapdoor; Aunt Em is in the cellar.",
+    "playerBeatIndexes": [
+      3,
+      5
+    ],
+    "preconditions": [],
+    "interruptWhen": []
+  },
+  "sourceProgression": "required",
+  "contextJson": "{\"character_runtime\":{\"current_event_sequence\":null,\"player\":{\"name\":\"Dorothy\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_d9be05ce34de89db8723\",\"event_a620e1fa4310a43cccf9\",\"event_65874a43749b7b982026\",\"event_3ed72d65bc4e4fcbaeee\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"Homesick Kansas child living with Aunt Em, Uncle Henry, and Toto; dependent on familiar guardians and not yet aware of Oz.\",\"traits\":[\"loyal\",\"practical\",\"compassionate\"],\"goals\":[\"remain safe with Toto\"],\"fears\":[\"the cyclone\",\"separation from Aunt Em and Uncle Henry\"],\"beliefs\":[\"Kansas is home\"],\"known_facts\":[\"she lives on a Kansas prairie\",\"Toto is her dog\"],\"relationships\":[{\"character\":\"Toto\",\"description\":\"beloved constant companion\"},{\"character\":\"Aunt Em\",\"description\":\"caretaker\"},{\"character\":\"Uncle Henry\",\"description\":\"caretaker\"}]}},\"characters\":[{\"name\":\"Dorothy\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_d9be05ce34de89db8723\",\"event_a620e1fa4310a43cccf9\",\"event_65874a43749b7b982026\",\"event_3ed72d65bc4e4fcbaeee\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"Homesick Kansas child living with Aunt Em, Uncle Henry, and Toto; dependent on familiar guardians and not yet aware of Oz.\",\"traits\":[\"loyal\",\"practical\",\"compassionate\"],\"goals\":[\"remain safe with Toto\"],\"fears\":[\"the cyclone\",\"separation from Aunt Em and Uncle Henry\"],\"beliefs\":[\"Kansas is home\"],\"known_facts\":[\"she lives on a Kansas prairie\",\"Toto is her dog\"],\"relationships\":[{\"character\":\"Toto\",\"description\":\"beloved constant companion\"},{\"character\":\"Aunt Em\",\"description\":\"caretaker\"},{\"character\":\"Uncle Henry\",\"description\":\"caretaker\"}]}},{\"name\":\"Tin Woodman\",\"aliases\":[\"Woodman\",\"The Tin Woodman\",\"The Woodman\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_13c38b29b37ba87191c5\",\"event_8e1654a7b6078c34ee06\",\"event_a29c60ffc1b393f12b24\",\"event_e389d12f27257ce541fc\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":7,\"state_summary\":\"A rusted tin woodman immobilized in the forest, believing he has lost his human body and heart.\",\"traits\":[\"compassionate\",\"sensitive\",\"industrious\"],\"goals\":[\"be freed from rust\",\"recover a heart\"],\"fears\":[\"remaining immobilized\",\"having no heart\"],\"beliefs\":[\"without a heart he cannot love\"],\"known_facts\":[\"he is rusted beside a tree\",\"Dorothy and the Scarecrow are nearby\"],\"relationships\":[]}},{\"name\":\"Toto\",\"aliases\":[],\"speech\":{\"mode\":\"nonverbal\",\"communicationModes\":[\"barking\",\"growling\",\"whining\",\"biting\"],\"evidenceEventIds\":[\"event_7461f5ec9814a38eedd4\",\"event_65874a43749b7b982026\",\"event_13c38b29b37ba87191c5\",\"event_cb63061b051301cf9602\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"Dorothy's small Kansas dog and constant companion, alert and dependent on her protection.\",\"traits\":[\"loyal\",\"alert\",\"playful\"],\"goals\":[\"stay with Dorothy\"],\"fears\":[\"the cyclone\",\"separation from Dorothy\"],\"beliefs\":[],\"known_facts\":[\"Dorothy is his companion\",\"the farmhouse is threatened by a cyclone\"],\"relationships\":[{\"character\":\"Dorothy\",\"description\":\"constant companion and protector\"}]}},{\"name\":\"Scarecrow\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_65874a43749b7b982026\",\"event_0dffb4eae86e20f19da8\",\"event_e1c9e6c416a64a6f5ee5\",\"event_1592358f3bc5ff687141\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":5,\"state_summary\":\"A living scarecrow fixed to a pole, convinced that his straw stuffing means he lacks brains.\",\"traits\":[\"humble\",\"lonely\",\"hopeful\"],\"goals\":[\"be freed from the pole\",\"obtain brains\"],\"fears\":[\"fire\",\"being permanently unintelligent\"],\"beliefs\":[\"he has no brains\"],\"known_facts\":[\"he was made by a farmer and left in a cornfield\"],\"relationships\":[]}},{\"name\":\"Cowardly Lion\",\"aliases\":[\"The Lion\",\"Lion\",\"The Cowardly Lion\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\",\"roaring\",\"growling\"],\"evidenceEventIds\":[\"event_f104ad2b60745673c2e7\",\"event_54016523b1b9070e36da\",\"event_fe92fd5fada9af567bfd\",\"event_9b03cc0b2a618858c0c2\",\"event_3eb2174f8c4640851c75\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":8,\"state_summary\":\"A physically powerful lion who fears danger and believes himself cowardly; he is not yet connected to Dorothy\u2019s company.\",\"traits\":[\"Fearful\",\"Powerful\"],\"goals\":[\"Avoid danger\"],\"fears\":[\"Danger\",\"Being exposed as cowardly\"],\"beliefs\":[\"He is cowardly despite being the King of Beasts\"],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Oz\",\"aliases\":[\"Great Oz\",\"The Great Oz\",\"Wonderful Wizard\",\"Wizard Oz\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\",\"ventriloquism\"],\"evidenceEventIds\":[\"event_aebe82da1de28c7156ed\",\"event_f6310ecd2457b26e5fc2\",\"event_10ea01e054a8dff3f928\",\"event_3fef4d342c3fd67b8744\",\"event_bfffec305e23fe0b2bb6\",\"event_e0843ffaed0e1cb11bc2\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":5,\"state_summary\":\"A powerful but unseen ruler known to travelers as the Great Oz; his public persona and private motives have not yet been encountered by the company.\",\"traits\":[\"Mysterious\",\"Authoritative\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Wicked Witch of the West\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\",\"commands\"],\"evidenceEventIds\":[\"event_1592358f3bc5ff687141\",\"event_74a5e26115283d27ab2e\",\"event_9b03cc0b2a618858c0c2\",\"event_518b97c7c30c0e57b566\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":10,\"state_summary\":\"A powerful western ruler whose country and threat are known to the travelers, but who has not yet directly confronted them.\",\"traits\":[\"Powerful\",\"Tyrannical\"],\"goals\":[\"Maintain control of the western country\"],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Guardian of the Gates\",\"aliases\":[\"Guardian of the Gate\",\"The Guardian of the Gates\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\",\"formal questioning\",\"instructions\"],\"evidenceEventIds\":[\"event_5df98e176a89acb768a8\",\"event_391359251f8ef58d718a\",\"event_73a096d8733371be2eb7\",\"event_f14a51d2c5c3a4a25fab\",\"event_e02847a4c2e3dfd8d1f4\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":12,\"state_summary\":\"A cautious Emerald City gatekeeper responsible for controlling entry and enforcing the city\u2019s procedures.\",\"traits\":[\"Cautious\",\"Orderly\",\"Obedient\"],\"goals\":[\"Control access to Emerald City\"],\"fears\":[],\"beliefs\":[\"Visitors must follow the city\u2019s rules\"],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Aunt Em\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_5b3afb6e1e10b0544fd3\",\"event_3ed72d65bc4e4fcbaeee\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"Lives as Dorothy\u2019s practical and caring guardian in the Kansas farmhouse.\",\"traits\":[\"practical\",\"caring\",\"anxious\",\"affectionate\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Wicked Witch of the East\",\"aliases\":[\"Witch of the East\",\"The Witch of the East\"],\"speech\":{\"mode\":\"unknown\",\"communicationModes\":[],\"evidenceEventIds\":[]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":0,\"state_summary\":\"A deceased eastern witch whose former rule over the Munchkins is known through the story\u2019s account of her death and oppression.\",\"traits\":[\"oppressive\",\"magical\",\"cruel\",\"absent after death\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"The Scarecrow\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_54016523b1b9070e36da\",\"event_e6e2da71693d83a7dc8e\",\"event_e389d12f27257ce541fc\",\"event_2ba4b4247bb0adcd74e3\",\"event_66f4807e4ea612d15b5e\",\"event_33e3e72b3ddec0ac53f6\",\"event_a0529625e0c10a77d7e5\",\"event_ce0809cceda84c380a9c\",\"event_966dd296c826a2a3c61c\",\"event_02de3b7e53252b11210a\",\"event_5df98e176a89acb768a8\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":8,\"state_summary\":\"A resourceful traveling scarecrow whose practical abilities are present but whose wish for brains has not yet been established in the supplied earliest event.\",\"traits\":[\"resourceful\",\"strategic\",\"helpful\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Uncle Henry\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_5b3afb6e1e10b0544fd3\",\"event_f933263803e602b34dff\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"A hardworking and reserved Kansas farmer living with Dorothy and Aunt Em.\",\"traits\":[\"hardworking\",\"practical\",\"responsible\",\"reserved\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Winged Monkeys\",\"aliases\":[\"the Monkeys\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_fef7bd299629f9edb8cf\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":14,\"state_summary\":\"A powerful magical flying group whose service can be obtained through the Golden Cap.\",\"traits\":[\"Able to fly\",\"Strong enough to carry travelers\",\"Powerful\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Soldier with the Green Whiskers\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_391359251f8ef58d718a\",\"event_f6310ecd2457b26e5fc2\",\"event_0b59d5807301e7ee4497\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":13,\"state_summary\":\"A dutiful soldier serving at Oz\u2019s Palace in the Emerald City, with official duties connected to admitting visitors and assisting the palace.\",\"traits\":[\"Dutiful\",\"Helpful to visitors\",\"Connected with Oz\u2019s Palace\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}}]},\"current_scene\":{\"title\":\"The Kansas Windbreach (Turn 1)\",\"text\":\"I hear Uncle Henry shout from the living room, his voice sharp with alarm. He\u2019s already on his feet, feet thudding on the wooden floor as he points toward the back of the house and yells that a cyclone is coming. A moment later he\u2019s sprinting toward the sheds, toward the stock pens where the cows and horses graze out of sight, the door to the yard banging shut behind him as he rushes outside to warn the cattle and secure what he can. The air itself seems to tilt, a sudden chill lifting the hairs on my arms as the room grows louder with the wind-whoosh around the shutters. Aunt Em\u2019s hands flutter like the curtain itself, but she drops the dishcloth, skids to the door, and cuts through the noise with quick, practical fear in her eyes.\\n\\n\u201cQuick, Dorothy!\u201d she snaps, voice cracking with strain. \u201cRun for the cellar!\u201d I cling to Toto for a heartbeat too long, the little dog squirming in my arms as the cyclone\u2019s breath seems to press at the window. My heart tumbles, but I nod, turning toward the door with Toto tucked close, trying to keep him calm as the house creaks and the wind rumbles through the frame. And then\u2014Toto explodes from my grip in one scolding, tiny leap\u2014he darts from my hands, a dark blur under the bed where dust motes float and the floor seems to sigh. He disappears from sight, and the bed\u2019s shadow swallows the pawprints of my dog as I stand frozen for a breath, the cellar call echoing in my ears, drawing me toward safety and to Aunt Em\u2019s steady, insistent command that I move now.\",\"sceneScope\":{\"currentLocation\":\"Kansas farmhouse interior, near doorway to cellar\",\"peoplePresent\":[\"Dorothy\",\"Aunt Em\",\"Uncle Henry\",\"Toto\"],\"peopleWithinSpeakingDistance\":[\"Dorothy\",\"Aunt Em\",\"Uncle Henry\",\"Toto\"]}},\"recent_history\":[{\"kind\":\"start\",\"text\":\"The Wonderful Wizard of Oz\"},{\"kind\":\"scene\",\"text\":\"I hear Uncle Henry shout from the living room, his voice sharp with alarm. He\u2019s already on his feet, feet thudding on the wooden floor as he points toward the back of the house and yells that a cyclone is coming. A moment later he\u2019s sprinting toward the sheds, toward the stock pens where the cows and horses graze out of sight, the door to the yard banging shut behind him as he rushes outside to warn the cattle and secure what he can. The air itself seems to tilt, a sudden chill lifting the hairs on my arms as the room grows louder with the wind-whoosh around the shutters. Aunt Em\u2019s hands flutter like the curtain itself, but she drops the dishcloth, skids to the door, and cuts through the noise with quick, practical fear in her eyes.\\n\\n\u201cQuick, Dorothy!\u201d she snaps, voice cracking with strain. \u201cRun for the cellar!\u201d I cling to Toto for a heartbeat too long, the little dog squirming in my arms as the cyclone\u2019s breath seems to press at the window. My heart tumbles, but I nod, turning toward the door with Toto tucked close, trying to keep him calm as the house creaks and the wind rumbles through the frame. And then\u2014Toto explodes from my grip in one scolding, tiny leap\u2014he darts from my hands, a dark blur under the bed where dust motes float and the floor seems to sigh. He disappears from sight, and the bed\u2019s shadow swallows the pawprints of my dog as I stand frozen for a breath, the cellar call echoing in my ears, drawing me toward safety and to Aunt Em\u2019s steady, insistent command that I move now.\",\"development\":\"0\",\"sceneScope\":{\"currentLocation\":\"Kansas farmhouse interior, near doorway to cellar\",\"peoplePresent\":[\"Dorothy\",\"Aunt Em\",\"Uncle Henry\",\"Toto\"],\"peopleWithinSpeakingDistance\":[\"Dorothy\",\"Aunt Em\",\"Uncle Henry\",\"Toto\"]}},{\"kind\":\"choice\",\"text\":\"Retrieve Toto and get toward the cellar\"}],\"story_memory\":{\"summary\":\"Uncle Henry warns of an imminent cyclone and races to the sheds; Aunt Em orders Dorothy to the cellar; Toto slips from Dorothy\u2019s grasp and vanishes under the bed. Dorothy remains in the doorway, torn between safety and Toto, as the family prepares to hunker down.\",\"openThreads\":[\"Uncle Henry\u2019s protective actions and timing with the cyclone threat.\",\"Aunt Em\u2019s imperative to reach the cellar and the possible delay before Dorothy complies.\",\"Toto\u2019s sudden move to hide under the bed and its implications for Dorothy\u2019s immediate plan.\"],\"canonFacts\":[\"Cyclone threat imminent to the Kansas farmhouse.\",\"Dorothy is with Aunt Em and Uncle Henry; Toto is present.\",\"Toto temporarily escapes Dorothy\u2019s hold and hides under the bed.\"]},\"player_profile\":{\"name\":\"Dorothy\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_d9be05ce34de89db8723\",\"event_a620e1fa4310a43cccf9\",\"event_65874a43749b7b982026\",\"event_3ed72d65bc4e4fcbaeee\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"Homesick Kansas child living with Aunt Em, Uncle Henry, and Toto; dependent on familiar guardians and not yet aware of Oz.\",\"traits\":[\"loyal\",\"practical\",\"compassionate\"],\"goals\":[\"remain safe with Toto\"],\"fears\":[\"the cyclone\",\"separation from Aunt Em and Uncle Henry\"],\"beliefs\":[\"Kansas is home\"],\"known_facts\":[\"she lives on a Kansas prairie\",\"Toto is her dog\"],\"relationships\":[{\"character\":\"Toto\",\"description\":\"beloved constant companion\"},{\"character\":\"Aunt Em\",\"description\":\"caretaker\"},{\"character\":\"Uncle Henry\",\"description\":\"caretaker\"}]},\"description\":\"Homesick Kansas child living with Aunt Em, Uncle Henry, and Toto; dependent on familiar guardians and not yet aware of Oz.\",\"traits\":[\"loyal\",\"practical\",\"compassionate\"],\"relationships\":[{\"character\":\"Toto\",\"description\":\"beloved constant companion\"},{\"character\":\"Aunt Em\",\"description\":\"caretaker\"},{\"character\":\"Uncle Henry\",\"description\":\"caretaker\"}]}}",
+  "sourceEvidence": {
+    "3": "Toto jumped out of Dorothy\u2019s arms and hid under the bed, and the girl\nstarted to get him.",
+    "4": "Aunt Em, badly frightened, threw open the trap door in the\nfloor and climbed down the ladder into the small, dark hole.",
+    "5": "Dorothy caught\nToto at last and started to follow her aunt.",
+    "6": "Toto at last and started to follow her aunt. When she was halfway across the\nroom there came a great shriek from the wind, and the house shook so hard that\nshe lost her footing and sat down suddenly upon the floor."
+  },
+  "turnNumber": 1,
+  "mode": "action",
+  "player": "Dorothy",
+  "playerAliases": [
+    "Dorothy"
+  ],
+  "selectedIntent": "Retrieve Toto and get toward the cellar",
+  "worldRules": [],
+  "eventId": "event_5b3afb6e1e10b0544fd3",
+  "completedBeatIndexes": [
+    0,
+    1,
+    2
+  ],
+  "allowedPlayerBeatIndexes": [
+    3,
+    5
+  ],
+  "requiredAutomaticBeatIndexes": [
+    4,
+    6
+  ],
+  "nextPlayerDecision": null,
+  "beats": [
+    {
+      "actor": "Uncle Henry",
+      "action": "Warns Aunt Em that a cyclone is coming and runs toward the sheds to look after the stock.",
+      "decisionBoundaryBefore": "Uncle Henry chooses to protect the livestock after recognizing the approaching cyclone.",
+      "resultingState": "Uncle Henry is running toward the sheds; Aunt Em remains in the house; Dorothy holds Toto at the doorway.",
+      "targets": [
+        "Aunt Em"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 3,
+          "chapterIndex": 3,
+          "lineStart": 50,
+          "lineEnd": 53
+        }
+      ]
+    },
+    {
+      "actor": "Aunt Em",
+      "action": "Drops her work, sees the danger, and orders Dorothy to run for the cellar.",
+      "decisionBoundaryBefore": "Aunt Em responds to the immediate danger by directing Dorothy to shelter.",
+      "resultingState": "Aunt Em has stopped washing dishes and has ordered Dorothy toward the cellar; Dorothy still holds Toto.",
+      "targets": [
+        "Dorothy"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 3,
+          "chapterIndex": 3,
+          "lineStart": 54,
+          "lineEnd": 56
+        }
+      ]
+    },
+    {
+      "actor": "Toto",
+      "action": "Jumps from Dorothy's arms and hides under the bed.",
+      "decisionBoundaryBefore": "Toto reacts to the emergency by fleeing from Dorothy.",
+      "resultingState": "Toto is under the bed and Dorothy is no longer holding him.",
+      "targets": [
+        "Dorothy"
+      ],
+      "agency": "involuntary",
+      "stakes": "significant",
+      "sourceReferences": [
+        {
+          "chapterPosition": 3,
+          "chapterIndex": 3,
+          "lineStart": 57,
+          "lineEnd": 57
+        }
+      ]
+    },
+    {
+      "actor": "Dorothy",
+      "action": "Starts trying to retrieve Toto from under the bed.",
+      "decisionBoundaryBefore": "Dorothy chooses to retrieve Toto rather than immediately descend to the cellar.",
+      "resultingState": "Dorothy has begun trying to get Toto; Toto remains under the bed; Aunt Em has not yet descended.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 3,
+        "boundaryReason": "The retrieval attempt is interrupted by Aunt Em opening the trapdoor and descending.",
+        "choiceText": "Retrieve Toto from under the bed before taking shelter.",
+        "completion": "Dorothy begins reaching for Toto, but the source interrupts before she catches him.",
+        "playerBeatIndexes": [
+          3
+        ],
+        "preconditions": [
+          "Toto is under the bed.",
+          "Dorothy is inside the house."
+        ],
+        "interruptWhen": [
+          "Aunt Em opens the trapdoor and descends."
+        ]
+      },
+      "targets": [
+        "Toto"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 3,
+          "chapterIndex": 3,
+          "lineStart": 57,
+          "lineEnd": 58
+        }
+      ],
+      "automaticPreludeSourceExcerpt": "Suddenly Uncle Henry stood up.\n\u201cThere\u2019s a cyclone coming, Em,\u201d he called to his wife.\n\u201cI\u2019ll go look after the stock.\u201d Then he ran toward the sheds\nwhere the cows and horses were kept.\nAunt Em dropped her work and came to the door. One glance told her of the\ndanger close at hand.\n\u201cQuick, Dorothy!\u201d she screamed. \u201cRun for the cellar!\u201d\nToto jumped out of Dorothy\u2019s arms and hid under the bed, and the girl",
+      "automaticPreludeEndState": "Toto is under the bed and Dorothy is no longer holding him.",
+      "characterActionGroup": {
+        "kind": "player_action",
+        "endBeatIndex": 5,
+        "playerBeatIndexes": [
+          3,
+          5
+        ],
+        "choiceText": "Retrieve Toto and get toward the cellar",
+        "boundaryReason": "This choice ends when Dorothy\u2019s shelter attempt is interrupted by the house shaking and her involuntary loss of footing.",
+        "completion": "Dorothy is holding Toto and is halfway across the room toward the open trapdoor; Aunt Em is in the cellar.",
+        "preconditions": [],
+        "interruptWhen": [],
+        "id": "character_action_23a994f6052cb18462f0"
+      }
+    },
+    {
+      "actor": "Aunt Em",
+      "action": "Throws open the trapdoor and climbs down the ladder into the cyclone cellar.",
+      "decisionBoundaryBefore": "Aunt Em commits to taking shelter in the cellar after seeing the danger.",
+      "resultingState": "The trapdoor is open; Aunt Em is descending into the cellar; Dorothy is still trying to retrieve Toto.",
+      "targets": [],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 3,
+          "chapterIndex": 3,
+          "lineStart": 58,
+          "lineEnd": 59
+        }
+      ]
+    },
+    {
+      "actor": "Dorothy",
+      "action": "Catches Toto and starts toward Aunt Em.",
+      "decisionBoundaryBefore": "Dorothy resumes the shelter goal after securing Toto.",
+      "resultingState": "Dorothy is holding Toto and is halfway across the room toward the open trapdoor; Aunt Em is in the cellar.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 5,
+        "boundaryReason": "The house's violent shaking interrupts Dorothy halfway across the room.",
+        "choiceText": "Catch Toto and follow Aunt Em toward the cellar.",
+        "completion": "Dorothy catches Toto and begins following Aunt Em but has not reached the cellar.",
+        "playerBeatIndexes": [
+          5
+        ],
+        "preconditions": [
+          "Toto is accessible under the bed.",
+          "The trapdoor is open and Aunt Em is in the cellar."
+        ],
+        "interruptWhen": [
+          "The house shakes and Dorothy loses her footing."
+        ]
+      },
+      "targets": [
+        "Toto",
+        "Aunt Em"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 3,
+          "chapterIndex": 3,
+          "lineStart": 59,
+          "lineEnd": 60
+        }
+      ],
+      "automaticPreludeSourceExcerpt": "Suddenly Uncle Henry stood up.\n\u201cThere\u2019s a cyclone coming, Em,\u201d he called to his wife.\n\u201cI\u2019ll go look after the stock.\u201d Then he ran toward the sheds\nwhere the cows and horses were kept.\nAunt Em dropped her work and came to the door. One glance told her of the\ndanger close at hand.\n\u201cQuick, Dorothy!\u201d she screamed. \u201cRun for the cellar!\u201d\nToto jumped out of Dorothy\u2019s arms and hid under the bed, and the girl\nstarted to get him. Aunt Em, badly frightened, threw open the trap door in the\nfloor and climbed down the ladder into the small, dark hole. Dorothy caught",
+      "automaticPreludeEndState": "The trapdoor is open; Aunt Em is descending into the cellar; Dorothy is still trying to retrieve Toto.",
+      "characterActionGroup": null
+    },
+    {
+      "actor": "Dorothy",
+      "action": "Loses her footing when the house shakes and sits down suddenly on the floor.",
+      "resultingState": "Dorothy is seated on the floor while holding Toto; she has not reached the cellar.",
+      "targets": [],
+      "agency": "involuntary",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 3,
+          "chapterIndex": 3,
+          "lineStart": 60,
+          "lineEnd": 62
+        }
+      ],
+      "automaticPreludeSourceExcerpt": "Suddenly Uncle Henry stood up.\n\u201cThere\u2019s a cyclone coming, Em,\u201d he called to his wife.\n\u201cI\u2019ll go look after the stock.\u201d Then he ran toward the sheds\nwhere the cows and horses were kept.\nAunt Em dropped her work and came to the door. One glance told her of the\ndanger close at hand.\n\u201cQuick, Dorothy!\u201d she screamed. \u201cRun for the cellar!\u201d\nToto jumped out of Dorothy\u2019s arms and hid under the bed, and the girl\nstarted to get him. Aunt Em, badly frightened, threw open the trap door in the\nfloor and climbed down the ladder into the small, dark hole. Dorothy caught\nToto at last and started to follow her aunt. When she was halfway across the",
+      "automaticPreludeEndState": "Dorothy is holding Toto and is halfway across the room toward the open trapdoor; Aunt Em is in the cellar."
+    }
+  ]
+}

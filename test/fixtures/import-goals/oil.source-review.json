@@ -1,0 +1,1595 @@
+{
+  "sourceSha256": "1edf12f5593a0873127a8c51f19a0927fd62f7ac8ab95ebf7e362bbe6f22d81f",
+  "timeline": {
+    "summary": "Dorothy retrieves an oil-can and helps the rusted Tin Woodman regain movement. She oils his neck, arms, and legs, while the Scarecrow assists by moving his head and bending his arms. The Tin Woodman lowers his axe, becomes fully mobile, and repeatedly thanks them.",
+    "significantEvents": [
+      {
+        "description": "Dorothy offers to help the distressed Tin Woodman.",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Asks the Tin Woodman what she can do for him after hearing the sadness in his voice.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has offered help, and the Tin Woodman can explain what assistance he needs.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 1,
+                "lineEnd": 2
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 2
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman asks Dorothy to retrieve oil and treat his rusted joints.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Asks Dorothy to get the oil-can from his cottage and oil his rusted joints so he can move again.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy knows that rust has immobilized the Tin Woodman's joints and that an oil-can is in his cottage.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 3,
+                "lineEnd": 5
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 5
+          }
+        ]
+      },
+      {
+        "description": "Dorothy retrieves the oil-can and returns to begin treating the Tin Woodman's joints.",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Runs to the cottage, finds the oil-can, returns, and asks the Tin Woodman where his joints are.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has returned with the oil-can and is ready to oil the Tin Woodman's joints.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 6,
+                "lineEnd": 7
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 7
+          }
+        ]
+      },
+      {
+        "description": "Dorothy and the Scarecrow free the Tin Woodman's neck and head from rust.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Directs Dorothy to oil his neck first.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has been instructed to begin with the Tin Woodman's neck; his neck remains rusted until she treats it.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 8,
+                "lineEnd": 8
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Oils the Tin Woodman's neck.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The Tin Woodman's neck has been oiled, but his head remains stiff from rust.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 8,
+                "lineEnd": 8
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Takes hold of the Tin Woodman's head and gently moves it from side to side until it works freely.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The Tin Woodman's head moves freely, and he can turn it himself.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 9,
+                "lineEnd": 10
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman",
+          "Dorothy",
+          "Scarecrow"
+        ],
+        "targets": [
+          "Dorothy",
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 8,
+            "lineEnd": 8
+          },
+          {
+            "lineStart": 8,
+            "lineEnd": 10
+          },
+          {
+            "lineStart": 9,
+            "lineEnd": 10
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman directs Dorothy to treat his arms, and Dorothy and the Scarecrow free the arm joints.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Instructs Dorothy to oil the joints in his arms.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has been directed to treat the Tin Woodman's arm joints, which remain rusted.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 12,
+                "lineEnd": 12
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Oils the joints in the Tin Woodman's arms.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The Tin Woodman's arm joints have been oiled, but the arms still require movement to become free.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 12,
+                "lineEnd": 13
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Carefully bends the Tin Woodman's arms until they are free from rust and work as well as new.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The Tin Woodman's arms are free from rust and function normally.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 13,
+                "lineEnd": 14
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman",
+          "Dorothy",
+          "Scarecrow"
+        ],
+        "targets": [
+          "Dorothy",
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 12,
+            "lineEnd": 12
+          },
+          {
+            "lineStart": 12,
+            "lineEnd": 13
+          },
+          {
+            "lineStart": 12,
+            "lineEnd": 14
+          },
+          {
+            "lineStart": 13,
+            "lineEnd": 14
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman lowers the axe he had been holding aloft.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Sighs with satisfaction after his arms have been freed.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The Tin Woodman experiences satisfaction after regaining use of his arms.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 15,
+                "lineEnd": 15
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Lowers his axe and leans it against the tree.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The axe is no longer in the Tin Woodman's raised hands and is leaning against the tree.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 15,
+                "lineEnd": 16
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 15,
+            "lineEnd": 15
+          },
+          {
+            "lineStart": 15,
+            "lineEnd": 16
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman expresses relief and asks Dorothy to treat his legs.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The Tin Woodman says that putting down the axe is a great comfort and that he had held it in the air ever since he rusted.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The Tin Woodman says that putting down the axe is a great comfort and that he had held it in the air ever since he rusted.",
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The Tin Woodman says that putting down the axe is a great comfort and that he had held it in the air ever since he rusted.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 17,
+                "lineEnd": 18
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Asks Dorothy to oil the joints of his legs so he can become fully mobile again.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has been asked to treat the Tin Woodman's leg joints, which remain to be freed.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 19,
+                "lineEnd": 20
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 17,
+            "lineEnd": 18
+          },
+          {
+            "lineStart": 17,
+            "lineEnd": 20
+          },
+          {
+            "lineStart": 19,
+            "lineEnd": 20
+          }
+        ]
+      },
+      {
+        "description": "Dorothy and the Scarecrow jointly oil the Tin Woodman's legs until he can move them freely.",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Jointly oils the Tin Woodman's leg joints with the Scarecrow until the legs move freely.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "oil-tin-woodmans-legs",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow"
+                ],
+                "resultingState": "The Tin Woodman's legs move freely, completing the release of his rusted joints."
+              }
+            },
+            "resultingState": "The Tin Woodman's legs move freely, completing the release of his rusted joints.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 21,
+                "lineEnd": 21
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Jointly oils the Tin Woodman's leg joints with Dorothy until the legs move freely.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "oil-tin-woodmans-legs",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow"
+                ],
+                "resultingState": "The Tin Woodman's legs move freely, completing the release of his rusted joints."
+              }
+            },
+            "resultingState": "The Tin Woodman's legs move freely, completing the release of his rusted joints.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 21,
+                "lineEnd": 21
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy",
+          "Scarecrow"
+        ],
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman thanks Dorothy and the Scarecrow for freeing him.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Thanks Dorothy and the Scarecrow repeatedly for freeing him.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The Tin Woodman is free from the rust that immobilized him and has expressed gratitude to both helpers.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 21,
+                "lineEnd": 23
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Dorothy",
+          "Scarecrow"
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "name": "Dorothy",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 1
+          },
+          {
+            "lineStart": 6,
+            "lineEnd": 8
+          },
+          {
+            "lineStart": 12,
+            "lineEnd": 13
+          },
+          {
+            "lineStart": 19,
+            "lineEnd": 21
+          }
+        ]
+      },
+      {
+        "name": "Tin Woodman",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 5
+          },
+          {
+            "lineStart": 8,
+            "lineEnd": 11
+          },
+          {
+            "lineStart": 12,
+            "lineEnd": 23
+          }
+        ]
+      },
+      {
+        "name": "Scarecrow",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 9,
+            "lineEnd": 10
+          },
+          {
+            "lineStart": 13,
+            "lineEnd": 14
+          },
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "actor": "Dorothy",
+        "description": "Asks the Tin Woodman what she can do for him.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 2
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Asks Dorothy to retrieve an oil-can and oil his rusted joints.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 5
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Retrieves the oil-can from the cottage and returns to the Tin Woodman.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 7
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Directs Dorothy to oil his neck first.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 8,
+            "lineEnd": 8
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Oils the Tin Woodman's neck.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 8,
+            "lineEnd": 8
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "description": "Moves the Tin Woodman's head from side to side until it works freely.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 9,
+            "lineEnd": 10
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Directs Dorothy to oil the joints in his arms.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 12,
+            "lineEnd": 12
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Oils the Tin Woodman's arm joints.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 12,
+            "lineEnd": 13
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "description": "Bends the Tin Woodman's arms until they are free from rust.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 13,
+            "lineEnd": 14
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Lowers his axe and leans it against the tree.",
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 15,
+            "lineEnd": 16
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Asks Dorothy to oil the joints of his legs.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 19,
+            "lineEnd": 20
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Jointly oils the Tin Woodman's legs with the Scarecrow until they move freely.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "description": "Jointly oils the Tin Woodman's legs with Dorothy until they move freely.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Thanks Dorothy and the Scarecrow for freeing him.",
+        "targets": [
+          "Dorothy",
+          "Scarecrow"
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "Dorothy",
+        "description": "The Tin Woodman is grateful to Dorothy for oiling his rusted joints and helping free him.",
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      },
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "Scarecrow",
+        "description": "The Tin Woodman is grateful to the Scarecrow for helping free his rusted joints.",
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Scarecrow",
+        "description": "Dorothy and the Scarecrow cooperate to restore the Tin Woodman's movement.",
+        "references": [
+          {
+            "lineStart": 9,
+            "lineEnd": 14
+          },
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ]
+      }
+    ]
+  },
+  "previousCandidate": {
+    "summary": "Dorothy responds to the Tin Woodman's request for help, retrieves an oil-can, and oils his rusted neck, arms, and legs with the Scarecrow's assistance. The Tin Woodman regains movement, lowers his axe, and gratefully thanks them for freeing him.",
+    "significantEvents": [
+      {
+        "description": "Dorothy compassionately asks the distressed man what she can do for him.",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Asks the Tin Woodman what she can do for him after being moved by his sad voice.",
+            "resultingState": "Dorothy has offered help, and the Tin Woodman has been invited to explain his need.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 1,
+                "lineEnd": 2
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_start",
+              "jointAction": null
+            }
+          }
+        ],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 2
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman explains that rust has immobilized his joints and asks Dorothy to oil them.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Asks Dorothy to retrieve an oil-can and oil his rusted joints so that he can move again.",
+            "resultingState": "Dorothy knows that the Tin Woodman's joints are immobilized by rust and that an oil-can is available in his cottage.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 3,
+                "lineEnd": 5
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_start",
+              "jointAction": null
+            }
+          }
+        ],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 5
+          }
+        ]
+      },
+      {
+        "description": "Dorothy retrieves the oil-can and returns to begin helping the Tin Woodman.",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Runs to the cottage, finds the oil-can, returns, and anxiously asks the Tin Woodman where his joints are.",
+            "resultingState": "Dorothy has returned with the oil-can and is ready to oil the Tin Woodman's joints.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 6,
+                "lineEnd": 7
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_step",
+              "jointAction": null
+            }
+          }
+        ],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 7
+          }
+        ]
+      },
+      {
+        "description": "Dorothy oils the Tin Woodman's neck while the Scarecrow frees his head.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Directs Dorothy to oil his neck first.",
+            "resultingState": "Dorothy has been instructed to begin with the Tin Woodman's neck, and the neck remains rusted until she oils it.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 8,
+                "lineEnd": 8
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_start",
+              "jointAction": null
+            }
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Oils the Tin Woodman's neck.",
+            "resultingState": "The Tin Woodman's neck has been oiled, but his head is still stiff from rust.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 8,
+                "lineEnd": 8
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_step",
+              "jointAction": null
+            }
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Takes hold of the Tin Woodman's head and gently moves it from side to side until it works freely.",
+            "resultingState": "The Tin Woodman's head moves freely, and he can turn it himself.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 9,
+                "lineEnd": 10
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_step",
+              "jointAction": null
+            }
+          }
+        ],
+        "references": [
+          {
+            "lineStart": 8,
+            "lineEnd": 10
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman directs Dorothy to oil his arms, and Dorothy and the Scarecrow free them from rust.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Instructs Dorothy to oil the joints in his arms.",
+            "resultingState": "Dorothy has been directed to treat the Tin Woodman's arm joints, which remain rusted.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 12,
+                "lineEnd": 12
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_start",
+              "jointAction": null
+            }
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Oils the joints in the Tin Woodman's arms.",
+            "resultingState": "The Tin Woodman's arm joints have been oiled but still require movement to become free.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 12,
+                "lineEnd": 13
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_step",
+              "jointAction": null
+            }
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Carefully bends the Tin Woodman's arms until they are free of rust and work as well as new.",
+            "resultingState": "The Tin Woodman's arms are free from rust and functioning normally.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 13,
+                "lineEnd": 14
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_step",
+              "jointAction": null
+            }
+          }
+        ],
+        "references": [
+          {
+            "lineStart": 12,
+            "lineEnd": 14
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman experiences relief and lowers the axe he had been holding.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Sighs with satisfaction after his arms have been freed.",
+            "resultingState": "The Tin Woodman feels relief, and he is able to control his arms sufficiently to lower the axe.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 15,
+                "lineEnd": 15
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            }
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Lowers his axe and leans it against the tree.",
+            "resultingState": "The axe is no longer held in the Tin Woodman's raised hands and is leaning against the tree.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 15,
+                "lineEnd": 16
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_step",
+              "jointAction": null
+            }
+          }
+        ],
+        "references": [
+          {
+            "lineStart": 15,
+            "lineEnd": 16
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman expresses relief and requests that Dorothy and the Scarecrow oil his legs.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "States that being able to put down the axe is a great comfort and recounts that he had held it aloft since he rusted.",
+            "resultingState": "The Tin Woodman has communicated his relief and the duration of his earlier immobilization; the axe remains down against the tree.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 17,
+                "lineEnd": 18
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The Tin Woodman says he had been holding the axe in the air ever since he rusted.",
+              "intentionalRole": "other",
+              "jointAction": null
+            }
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Asks Dorothy to oil the joints of his legs so that he can become fully mobile again.",
+            "resultingState": "Dorothy and the Scarecrow have been asked to treat the Tin Woodman's leg joints, which remain to be freed.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 19,
+                "lineEnd": 20
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_start",
+              "jointAction": null
+            }
+          }
+        ],
+        "references": [
+          {
+            "lineStart": 17,
+            "lineEnd": 20
+          }
+        ]
+      },
+      {
+        "description": "Dorothy and the Scarecrow jointly oil the Tin Woodman's legs until he can move them freely.",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Jointly oils the Tin Woodman's leg joints with the Scarecrow until the legs move freely.",
+            "resultingState": "The Tin Woodman's legs move freely, completing the release of his rusted joints.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 21,
+                "lineEnd": 21
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_step",
+              "jointAction": {
+                "id": "oil-tin-woodmans-legs",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow"
+                ],
+                "resultingState": "The Tin Woodman's legs move freely, completing the release of his rusted joints."
+              }
+            }
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Jointly oils the Tin Woodman's leg joints with Dorothy until the legs move freely.",
+            "resultingState": "The Tin Woodman's legs move freely, completing the release of his rusted joints.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 21,
+                "lineEnd": 21
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful_step",
+              "jointAction": {
+                "id": "oil-tin-woodmans-legs",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow"
+                ],
+                "resultingState": "The Tin Woodman's legs move freely, completing the release of his rusted joints."
+              }
+            }
+          }
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman thanks Dorothy and the Scarecrow and expresses gratitude for being released from immobilization.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Thanks Dorothy and the Scarecrow repeatedly for freeing him.",
+            "resultingState": "The Tin Woodman is free from the rust that immobilized him and has expressed his gratitude to both helpers.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 21,
+                "lineEnd": 23
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            }
+          }
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "name": "Dorothy",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 1
+          },
+          {
+            "lineStart": 6,
+            "lineEnd": 8
+          },
+          {
+            "lineStart": 12,
+            "lineEnd": 13
+          },
+          {
+            "lineStart": 19,
+            "lineEnd": 21
+          }
+        ]
+      },
+      {
+        "name": "Tin Woodman",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 5
+          },
+          {
+            "lineStart": 8,
+            "lineEnd": 11
+          },
+          {
+            "lineStart": 12,
+            "lineEnd": 23
+          }
+        ]
+      },
+      {
+        "name": "Scarecrow",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 9,
+            "lineEnd": 10
+          },
+          {
+            "lineStart": 13,
+            "lineEnd": 14
+          },
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "actor": "Dorothy",
+        "description": "Asks the Tin Woodman what she can do for him.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 2
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Asks Dorothy to retrieve an oil-can and oil his rusted joints.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 5
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Retrieves the oil-can from the cottage and returns to the Tin Woodman.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 7
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Directs Dorothy to oil his neck first.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 8,
+            "lineEnd": 8
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Oils the Tin Woodman's neck.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 8,
+            "lineEnd": 8
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "description": "Moves the Tin Woodman's head from side to side until it works freely.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 9,
+            "lineEnd": 10
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Directs Dorothy to oil the joints in his arms.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 12,
+            "lineEnd": 12
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Oils the Tin Woodman's arm joints.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 12,
+            "lineEnd": 13
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "description": "Bends the Tin Woodman's arms until they are free from rust.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 13,
+            "lineEnd": 14
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Lowers his axe and leans it against the tree.",
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 15,
+            "lineEnd": 16
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Asks Dorothy to oil the joints of his legs.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 19,
+            "lineEnd": 20
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Jointly oils the Tin Woodman's legs with the Scarecrow until they move freely.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "description": "Jointly oils the Tin Woodman's legs with Dorothy until they move freely.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Thanks Dorothy and the Scarecrow for freeing him.",
+        "targets": [
+          "Dorothy",
+          "Scarecrow"
+        ],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "Dorothy",
+        "description": "The Tin Woodman is grateful to Dorothy for oiling his rusted joints and helping release him from immobilization.",
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      },
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "Scarecrow",
+        "description": "The Tin Woodman is grateful to the Scarecrow for helping free his rusted joints.",
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 23
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Scarecrow",
+        "description": "Dorothy and the Scarecrow cooperate in restoring the Tin Woodman's movement.",
+        "references": [
+          {
+            "lineStart": 9,
+            "lineEnd": 14
+          },
+          {
+            "lineStart": 21,
+            "lineEnd": 21
+          }
+        ]
+      }
+    ]
+  },
+  "provenance": "Unmodified compiled repair output from 2026-09-16T07-49-19.850Z/1-oil-source-repair/checkpoint.json; not an accepted timeline. Previous candidate preserved for the same source-evidence comparison; previous review verdict withheld."
+}

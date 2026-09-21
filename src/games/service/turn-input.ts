@@ -29,13 +29,15 @@ export function explicitPlayerChoiceRequiredNotice(choice: GameChoice): GameNoti
   };
 }
 
-export function storyContinuationUnavailableNotice(scene: Scene): GameNotice {
+export function storyContinuationUnavailableNotice(scene: Scene, rejection?: SceneGenerationError): GameNotice {
   const suggestedChoice = scene.choices[0]?.id === SOURCE_CONTINUATION_CHOICE_ID
     ? undefined
     : scene.choices[0];
   return {
     code: "STORY_CONTINUATION_UNAVAILABLE",
-    message: suggestedChoice
+    message: rejection
+      ? `The generated continuation was rejected. Your scene is unchanged. Reason: ${rejection.validationFailures.join(" ") || rejection.message}`
+      : suggestedChoice
       ? "I've lost the story thread and cannot find a reliable direct anchor. Your scene is unchanged. Try the suggested current choice; option 1 is the strongest available route back toward the source."
       : "I've lost the story thread and cannot find a reliable direct anchor. Your scene is unchanged. Use 101 to take a concrete action toward an unresolved conflict, relationship, location, or objective already established in the scene.",
     ...(suggestedChoice ? { suggestedChoice: { ...suggestedChoice } } : {}),
@@ -106,3 +108,4 @@ export function appendGameParameter(
     parameter,
   ].slice(-MAX_GAME_PARAMETERS);
 }
+

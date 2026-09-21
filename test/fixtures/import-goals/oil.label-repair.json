@@ -1,0 +1,83 @@
+{
+  "sourceSha256": "1edf12f5593a0873127a8c51f19a0927fd62f7ac8ab95ebf7e362bbe6f22d81f",
+  "plans": [
+    {
+      "startBeatIndex": 0,
+      "endBeatIndex": 1,
+      "goal": "Dorothy offers to help the Tin Woodman and determine what assistance he needs.",
+      "boundaryReason": "The Tin Woodman's answer at beat 1 supplies the concrete task, ending Dorothy's open-ended offer before she begins carrying it out."
+    },
+    {
+      "startBeatIndex": 1,
+      "endBeatIndex": 14,
+      "goal": "The Tin Woodman seeks complete release from rust through oiling and loosening his neck, arms, and legs.",
+      "boundaryReason": "His requests for successive joints, the lowering of his axe after his arms are freed, and the helpers' treatment all remain part of the unchanged restoration objective; it ends when the leg treatment frees his movement at beat 14."
+    },
+    {
+      "startBeatIndex": 2,
+      "endBeatIndex": 13,
+      "goal": "Dorothy retrieves the oil-can and assists in oiling the Tin Woodman's joints until his legs are freed.",
+      "boundaryReason": "Returning with the can, asking where to oil, and treating the neck, arms, and legs are steps of the same rescue; the goal ends with the leg treatment's freeing result at beat 13."
+    },
+    {
+      "startBeatIndex": 7,
+      "endBeatIndex": 14,
+      "goal": "The Scarecrow assists Dorothy by loosening the Tin Woodman's oiled joints so his head, arms, and legs work freely.",
+      "boundaryReason": "The Scarecrow's head, arm, and leg assistance is continuous treatment of the same rust-removal objective and ends when the legs can move freely at beat 14."
+    },
+    {
+      "startBeatIndex": 15,
+      "endBeatIndex": 15,
+      "goal": "The Tin Woodman expresses repeated gratitude to Dorothy and the Scarecrow for releasing him from the rust.",
+      "boundaryReason": "Gratitude is a new intentional objective after the rescue is complete, and the source ends immediately after he gives thanks."
+    }
+  ],
+  "rejectedLabels": {
+    "beat_0": {
+      "choiceText": "Offer to help the Tin Woodman and ask what assistance he needs.",
+      "completion": "Dorothy offers her help, and the Tin Woodman answers by identifying the oiling assistance he needs.",
+      "preconditions": [],
+      "interruptWhen": []
+    },
+    "beat_1": {
+      "choiceText": "Ask Dorothy to fetch the oil-can and oil the rusted joints so you can move freely again.",
+      "completion": "The Tin Woodman specifies the oil-can and joint-oiling treatment, explains that rust has immobilized him, and tells Dorothy where to find the can; his joints remain rusted.",
+      "preconditions": [
+        "Dorothy has offered to help him.",
+        "His joints are badly rusted and preventing movement."
+      ],
+      "interruptWhen": []
+    },
+    "beat_2": {
+      "choiceText": "Retrieve the oil-can and assist with oiling and loosening the Tin Woodman's neck, arms, and legs.",
+      "completion": "Dorothy finds and returns with the oil-can, oils the Tin Woodman's neck and arms, and participates in oiling his legs until they are freed and he can move them freely.",
+      "preconditions": [
+        "The Tin Woodman has requested the oil-can and joint treatment.",
+        "The oil-can is located in his cottage.",
+        "The Tin Woodman's joints remain rusted and require treatment."
+      ],
+      "interruptWhen": [
+        "The oil-can cannot be found or retrieved from the cottage before the joint treatment can continue."
+      ]
+    },
+    "beat_7": {
+      "choiceText": "Assist Dorothy by loosening the Tin Woodman's oiled joints, continuing through his arms and legs until they work freely.",
+      "completion": "The Scarecrow loosens the Tin Woodman's head after his neck is oiled, bends his arms until they are free from rust, and participates in oiling his legs; the Tin Woodman can move his legs freely.",
+      "preconditions": [
+        "The Tin Woodman's neck has been oiled but still needs loosening.",
+        "The Tin Woodman's joints remain rusted and require the Scarecrow's assistance."
+      ],
+      "interruptWhen": []
+    },
+    "beat_15": {
+      "choiceText": "Thank Dorothy and the Scarecrow repeatedly for releasing you from the rust.",
+      "completion": "The Tin Woodman thanks Dorothy and the Scarecrow repeatedly for his release.",
+      "preconditions": [
+        "The Tin Woodman's legs have been freed and he can move them freely.",
+        "Dorothy and the Scarecrow have completed the joint treatment that released him."
+      ],
+      "interruptWhen": []
+    }
+  },
+  "defect": "Repair the rejected oil labels against the frozen full groups. The Tin Woodman goal ends at beat 14 with restored mobility, not at his initial request with rusted joints. Its choice must cover the whole restoration objective. Scarecrow assistance is not an independently established necessary precondition; require only the source-backed treatment needs. The previous reviewer also rejected inability to obtain the oil-can because it did not happen: that rationale is not valid. It may remain as a conditional guard on a source-established dependency, without claiming an actual missing can."
+}

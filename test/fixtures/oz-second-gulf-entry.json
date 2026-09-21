@@ -1,0 +1,125 @@
+{
+  "current_scene": {
+    "title": "The Tin Woodman’s Crossing",
+    "text": "The Tin Woodman stood waiting on the other side of the gulf, and I bent down so that he might climb upon my back. His metal body was heavy, but I set my paws firmly on the ground and carried him toward the opening.\n\nThe gulf still frightened me. I could see the far bank beyond it, where Dorothy, Toto, and the Scarecrow waited, but my legs trembled as I reached the edge. I went on, holding the Tin Woodman securely, and crossed over to the others.\n\nWhen my paws touched the far bank, I lowered myself and let the Tin Woodman climb down. Dorothy and Toto were safe beside the Scarecrow, and now all four travelers and Toto stood together on the far side of the first gulf.\n\nI was too tired to go farther. After carrying the Tin Woodman across, I sat down upon the ground and rested, while my companions remained near me on the road.",
+    "sceneScope": {
+      "currentLocation": "far side of the first gulf",
+      "peoplePresent": [
+        "Cowardly Lion",
+        "Tin Woodman",
+        "Dorothy",
+        "Toto",
+        "Scarecrow"
+      ],
+      "peopleWithinSpeakingDistance": [
+        "Cowardly Lion",
+        "Tin Woodman",
+        "Dorothy",
+        "Toto",
+        "Scarecrow"
+      ]
+    },
+    "outcome": "active",
+    "outcomeReason": "The Tin Woodman has been carried across the gulf, but the journey toward Oz continues and no fixed ending has been reached.",
+    "storyMemory": {
+      "summary": "I carried the Tin Woodman across the first gulf and then sat down to rest. Dorothy, Toto, the Scarecrow, the Tin Woodman, and I are together on the far side, while our journey toward Oz continues.",
+      "openThreads": [
+        "The travelers must continue toward Oz.",
+        "The Lion's request for courage remains unresolved.",
+        "The Scarecrow's request for brains remains unresolved.",
+        "The Tin Woodman's request for a heart remains unresolved.",
+        "Dorothy's wish to return to Kansas with Toto remains unresolved."
+      ],
+      "canonFacts": [
+        "The Cowardly Lion fears danger and seeks courage from Oz.",
+        "The Scarecrow is safely across the first gulf.",
+        "Dorothy and Toto are safely across the first gulf.",
+        "The Cowardly Lion carried the Tin Woodman across the first gulf.",
+        "All four travelers and Toto are on the far side of the first gulf.",
+        "The Cowardly Lion is exhausted and resting.",
+        "The group seeks Oz for courage, brains, a heart, and Dorothy's return to Kansas."
+      ]
+    },
+    "choices": []
+  },
+  "entry_source": "They found the forest very thick on this side, and it looked dark and gloomy.\nAfter the Lion had rested they started along the road of yellow brick, silently\nwondering, each in his own mind, if ever they would come to the end of the\nwoods and reach the bright sunshine again. To add to their discomfort, they\nsoon heard strange noises in the depths of the forest, and the Lion whispered\nto them that it was in this part of the country that the Kalidahs lived.\n“What are the Kalidahs?” asked the girl.\n“They are monstrous beasts with bodies like bears and heads like\ntigers,” replied the Lion, “and with claws so long and sharp that\nthey could tear me in two as easily as I could kill Toto. I’m terribly\nafraid of the Kalidahs.”\n“I’m not surprised that you are,” returned Dorothy.\n“They must be dreadful beasts.”\nThe Lion was about to reply when suddenly they came to another gulf across the\nroad. But this one was so broad and deep that the Lion knew at once he could\nnot leap across it.\nSo they sat down to consider what they should do, and after serious thought the\nScarecrow said:",
+  "entry_action_source": "“Here is a great tree, standing close to the ditch. If the Tin Woodman\ncan chop it down, so that it will fall to the other side, we can walk across it\neasily.”\n“That is a first-rate idea,” said the Lion. “One would almost\nsuspect you had brains in your head, instead of straw.”\nThe Woodman set to work at once, and so sharp was his axe that the tree was\nsoon chopped nearly through. Then the Lion put his strong front legs against",
+  "next_event": {
+    "eventId": "event_66f4807e4ea612d15b5e",
+    "actions": [
+      {
+        "actor": "The Tin Woodman",
+        "action": "Chops nearly through a tree so it can become a bridge."
+      }
+    ],
+    "entry_action": {
+      "beatIndex": 0,
+      "actor": "The Tin Woodman",
+      "action": "Chops nearly through a tree so it can become a bridge.",
+      "targets": [],
+      "requiresPlayerDecision": false,
+      "readiness": "begin_first_step",
+      "goal": {
+        "choiceText": "Chop down the tree to make a bridge across the gulf.",
+        "completion": "The tree is nearly severed.",
+        "playerBeatIndexes": [
+          0
+        ],
+        "endBeatIndex": 0
+      },
+      "indexedPreconditions": [
+        "A suitable tree stands beside the gulf.",
+        "The axe is available."
+      ]
+    },
+    "entry_preconditions": [
+      "A suitable tree stands beside the gulf.",
+      "The axe is available."
+    ]
+  },
+  "rejected_transition": {
+    "text": "After I had rested, we started along the yellow brick road through the thick, dark forest. Strange noises came from the trees, and I whispered that this was where the Kalidahs lived. When Dorothy asked what they were, I told her they were monstrous beasts with bodies like bears and heads like tigers, and admitted that I was terribly afraid of them.\n\nBefore I could say more, we came to another gulf across the road, too broad and deep for me to leap. We sat down to consider what we should do. Then the Scarecrow pointed out a great tree standing beside the gulf and suggested that, if the Tin Woodman chopped it down, it could fall across the gap and make a bridge. The Woodman’s axe was available, and the tree stood ready beside the gulf.",
+    "sceneScope": {
+      "currentLocation": "beside the second gulf in the dark forest",
+      "peoplePresent": [
+        "Cowardly Lion",
+        "Tin Woodman",
+        "Dorothy",
+        "Toto",
+        "Scarecrow"
+      ],
+      "peopleWithinSpeakingDistance": [
+        "Cowardly Lion",
+        "Tin Woodman",
+        "Dorothy",
+        "Toto",
+        "Scarecrow"
+      ]
+    },
+    "storyMemory": {
+      "summary": "After resting, I traveled with Dorothy, Toto, the Scarecrow, and the Tin Woodman along the yellow brick road through a thick, gloomy forest. I warned them about the Kalidahs and admitted my fear. We reached a second, broader gulf that I cannot leap across. The Scarecrow proposed using a great tree beside it as a bridge, and the Tin Woodman’s axe is available for the task.",
+      "openThreads": [
+        "The travelers must cross the second gulf.",
+        "The Lion's request for courage remains unresolved.",
+        "The Scarecrow's request for brains remains unresolved.",
+        "The Tin Woodman's request for a heart remains unresolved.",
+        "Dorothy's wish to return to Kansas with Toto remains unresolved.",
+        "The Kalidahs may inhabit this part of the forest."
+      ],
+      "canonFacts": [
+        "The Cowardly Lion fears danger and seeks courage from Oz.",
+        "The Scarecrow is safely across the first gulf.",
+        "Dorothy and Toto are safely across the first gulf.",
+        "The Cowardly Lion carried the Tin Woodman across the first gulf.",
+        "All four travelers and Toto are on the far side of the first gulf.",
+        "The Cowardly Lion rested after crossing the first gulf.",
+        "The group seeks Oz for courage, brains, a heart, and Dorothy's return to Kansas.",
+        "The travelers passed through a thick, dark forest on the yellow brick road.",
+        "The Lion knows and fears the Kalidahs, monstrous beasts said to have bear-like bodies and tiger-like heads.",
+        "A second gulf, too broad and deep for the Lion to leap, blocks the road.",
+        "A great tree stands beside the second gulf and could be used as a bridge.",
+        "The Tin Woodman's axe is available."
+      ]
+    }
+  }
+}

@@ -25,6 +25,7 @@ param aiModel string = ''
 param indexModel string = ''
 param enableSocialAuth bool = false
 param entraClientId string = ''
+param entraIssuerUrl string = ''
 
 @secure()
 param entraClientSecret string = ''
@@ -44,12 +45,15 @@ var workspaceName = 'log-bookrpg-${environmentName}'
 var insightsName = 'appi-bookrpg-${environmentName}'
 var environmentNameResource = 'cae-bookrpg-${environmentName}'
 var appName = 'ca-bookrpg-${environmentName}'
+var applicationOrigin = 'https://${appName}.${managedEnvironment.outputs.defaultDomain}'
 var databaseName = 'bookrpg'
 var gamesContainerName = 'games'
+var membersContainerName = 'members'
 var booksContainerName = 'books'
 var entraConfigured = enableSocialAuth && !empty(entraClientId) && !empty(entraClientSecret)
 var githubConfigured = enableSocialAuth && !empty(githubClientId) && !empty(githubClientSecret)
 var oauthConfigured = entraConfigured || githubConfigured
+var entraOpenIdIssuer = empty(entraIssuerUrl) ? '${environment().authentication.loginEndpoint}${tenantId}/v2.0' : entraIssuerUrl
 var aiEnvironmentVariable = aiProvider == 'xai' ? 'XAI_API_KEY' : 'OPENAI_API_KEY'
 var keyVaultSecrets = concat(
   [
@@ -174,6 +178,13 @@ module cosmos 'br/public:avm/res/document-db/database-account:0.21.1' = {
             ]
             defaultTtl: -1
           }
+          {
+            name: membersContainerName
+            paths: [
+              '/userId'
+            ]
+            defaultTtl: -1
+          }
         ]
       }
     ]
@@ -182,6 +193,11 @@ module cosmos 'br/public:avm/res/document-db/database-account:0.21.1' = {
         principalId: identity.outputs.principalId
         roleDefinitionId: '${resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosName)}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002'
         scope: '${resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosName)}/dbs/${databaseName}/colls/${gamesContainerName}'
+      }
+      {
+        principalId: identity.outputs.principalId
+        roleDefinitionId: '${resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosName)}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002'
+        scope: '${resourceId('Microsoft.DocumentDB/databaseAccounts', cosmosName)}/dbs/${databaseName}/colls/${membersContainerName}'
       }
     ]
     tags: tags
@@ -308,8 +324,28 @@ var containerEnvironment = concat(
       value: 'azure'
     }
     {
+      name: 'BOOKRPG_REQUIRE_MEMBER_EMAIL'
+      value: '1'
+    }
+    {
       name: 'BOOKRPG_STORAGE_MODE'
       value: 'azure'
+    }
+    {
+      name: 'BOOKRPG_DATA_DIR'
+      value: '/tmp/bookrpg'
+    }
+    {
+      name: 'BOOKRPG_AI_LOG_FILE'
+      value: 'off'
+    }
+    {
+      name: 'BOOKRPG_WEB_LOGS'
+      value: '1'
+    }
+    {
+      name: 'BOOKRPG_FLOW_LOG'
+      value: 'off'
     }
     {
       name: 'BOOKRPG_AI_PROVIDER'
@@ -348,6 +384,14 @@ var containerEnvironment = concat(
       value: gamesContainerName
     }
     {
+      name: 'COSMOS_MEMBERS_CONTAINER'
+      value: membersContainerName
+    }
+    {
+      name: 'BOOKRPG_FREE_TURN_LIMIT'
+      value: '5'
+    }
+    {
       name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
       value: insights.outputs.connectionString
     }
@@ -384,6 +428,25 @@ module containerApp 'br/public:avm/res/app/container-app:0.23.0' = {
     ingressAllowInsecure: false
     ingressTargetPort: 8787
     ingressTransport: 'auto'
+    stickySessionsAffinity: 'sticky'
+    corsPolicy: {
+      allowCredentials: true
+      allowedOrigins: [
+        applicationOrigin
+      ]
+      allowedMethods: [
+        'GET'
+        'POST'
+        'PUT'
+        'PATCH'
+        'DELETE'
+        'OPTIONS'
+      ]
+      allowedHeaders: [
+        'content-type'
+        'accept'
+      ]
+    }
     activeRevisionsMode: 'Single'
     maxInactiveRevisions: 2
     workloadProfileName: 'Consumption'
@@ -473,6 +536,9 @@ module authConfig 'br/public:avm/res/app/container-app/auth-config:0.1.0' = if (
       }
     }
     login: {
+      allowedExternalRedirectUrls: [
+        applicationOrigin
+      ]
       tokenStore: {
         enabled: true
       }
@@ -485,7 +551,7 @@ module authConfig 'br/public:avm/res/app/container-app/auth-config:0.1.0' = if (
             registration: {
               clientId: entraClientId
               clientSecretSettingName: 'entra-client-secret'
-              openIdIssuer: '${environment().authentication.loginEndpoint}${tenantId}/v2.0'
+              openIdIssuer: entraOpenIdIssuer
             }
           }
         }

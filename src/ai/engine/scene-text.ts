@@ -58,13 +58,31 @@ export const LEAKED_EXTERNAL_DEVELOPMENT_REFERENCE = new RegExp(
   "i",
 );
 
+export const LEAKED_OPENING_CONTROL_LINE =
+  /^\s*(?:OPENING PRELUDE|PRELUDE BEAT\s+\d+|STOP BEFORE PLAYER BEAT\s+\d+|PENDING PLAYER BEAT\s*[—-]\s*DO NOT PERFORM)\b.*(?:\r?\n|$)/gim;
+
+export const LEAKED_OPENING_CONTROL_REFERENCE =
+  /\b(?:OPENING PRELUDE|PRELUDE BEAT\s+\d+|STOP BEFORE PLAYER BEAT\s+\d+|PENDING PLAYER BEAT\s*[—-]\s*DO NOT PERFORM)\b/i;
+
+/** A model can occasionally serialize the remainder of its structured scene object
+ * into the prose value itself. Match only object-like quoted field syntax so
+ * ordinary narration containing words such as "development" is unaffected. */
+export const LEAKED_SCENE_OBJECT_TAIL =
+  /(?:^|[,{}]\s*)['"](?:development|outcome|outcomeReason|sceneScope|peopleKilledInScene|storyMemory|choices)['"]\s*:/i;
+
+export const LEAKED_SCENE_OBJECT_TAIL_START =
+  /(?:\s*['"]?\s*,\s*)?['"](?:development|outcome|outcomeReason|sceneScope|peopleKilledInScene|storyMemory|choices)['"]\s*:/i;
+
 export function extractLeakedExternalDevelopment(text: string): string | undefined {
   return LEAKED_EXTERNAL_DEVELOPMENT.exec(text)?.[1]?.trim() || undefined;
 }
 
 export function stripLeakedSceneMetadata(text: string): string {
-  return text
+  const objectTail = LEAKED_SCENE_OBJECT_TAIL_START.exec(text);
+  const narrative = objectTail ? text.slice(0, objectTail.index) : text;
+  return narrative
     .replace(LEAKED_EXTERNAL_DEVELOPMENT_LINE, "")
+    .replace(LEAKED_OPENING_CONTROL_LINE, "")
     .replace(/^\s*external developments?\s+(?:condense|summary|context)\s*:.*(?:\r?\n|$)/gim, "")
     .replace(/^\s*establishedEvent\s*:.*(?:\r?\n|$)/gim, "")
     .replace(LEAKED_EXTERNAL_DEVELOPMENT_SENTENCE, " ")
@@ -77,8 +95,10 @@ export function stripLeakedSceneMetadata(text: string): string {
 export function sceneLeaksInternalMetadata(...texts: string[]): boolean {
   return texts.some((text) =>
     LEAKED_EXTERNAL_DEVELOPMENT_REFERENCE.test(text)
+    || LEAKED_OPENING_CONTROL_REFERENCE.test(text)
     || /\bexternal developments?\s+(?:condense|summary|context)\s*:/i.test(text)
     || /\bestablishedEvent\s*:/i.test(text)
+    || LEAKED_SCENE_OBJECT_TAIL.test(text)
   );
 }
 
@@ -103,64 +123,3 @@ export function textMentionsCharacter(
   });
 }
 
-export function textNarratesCharacterArrival(
-  text: string,
-  character: string,
-  characterProfiles: readonly CharacterProfile[] = [],
-): boolean {
-  const normalizedText = normalizeComparableChoiceText(text);
-  const normalizedCharacter = normalizeComparableChoiceText(character);
-  const profile = characterProfiles.find((candidate) =>
-    [candidate.name, ...candidate.aliases].some(
-      (identity) => normalizeComparableChoiceText(identity) === normalizedCharacter,
-    )
-  );
-  const fallbackFirstName = !profile && character.trim().includes(" ")
-    ? character.trim().split(/\s+/u)[0]
-    : undefined;
-  const identities = [
-    character,
-    profile?.name,
-    ...(profile?.aliases ?? []),
-    fallbackFirstName,
-  ]
-    .filter((identity): identity is string => Boolean(identity?.trim()))
-    .map(normalizeComparableChoiceText);
-
-  return identities.some((identity) => {
-    const escaped = identity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(
-      `\\b${escaped}\\b(?: \\p{L}+){0,6} \\b(?:arrives|returns|enters|appears|comes (?:in|inside|home)|steps (?:in|inside|through)|is (?:here|back|home|present))\\b`,
-      "iu",
-    ).test(normalizedText);
-  });
-}
-
-export function sceneDirectlyInteractsWithCharacter(
-  text: string,
-  character: string,
-  characterProfiles: readonly CharacterProfile[],
-): boolean {
-  if (!textMentionsCharacter(text, character, characterProfiles)) return false;
-  if (textNarratesCharacterArrival(text, character, characterProfiles)) return true;
-
-  const normalizedText = normalizeComparableChoiceText(text);
-  const profile = characterProfiles.find((candidate) =>
-    [candidate.name, ...candidate.aliases].some((identity) =>
-      normalizeComparableChoiceText(identity) === normalizeComparableChoiceText(character)
-    )
-  );
-  const interactionVerb =
-    "(?:answers|asks|calls|enters|greets|hands|joins|kisses|nods|questions|replies|responds|returns|says|speaks|talks|tells|touches|waves)";
-  return [character, profile?.name, ...(profile?.aliases ?? [])]
-    .filter((identity): identity is string => Boolean(identity?.trim()))
-    .some((identity) => {
-      const escapedIdentity = normalizeComparableChoiceText(identity)
-        .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      return new RegExp(
-        `(?:\\b${escapedIdentity}\\b(?: \\p{L}+){0,8} \\b${interactionVerb}\\b|`
-        + `\\b${interactionVerb}\\b(?: \\p{L}+){0,8} \\b${escapedIdentity}\\b)`,
-        "iu",
-      ).test(normalizedText);
-    });
-}

@@ -1,0 +1,225 @@
+{
+  "state": {
+    "gameId": "game_b779b2a88f0a4ba0a6cde7eeeb0887e0",
+    "bookId": "bbeefbb5f2247376453e0b869c8e7472",
+    "playerName": "Dorothy",
+    "turnNumber": 4,
+    "status": "active",
+    "position": {
+      "chapterIndex": 3,
+      "chapterTitle": "The Wonderful Wizard of Oz",
+      "progress": 0
+    },
+    "sourceCursor": {
+      "chapterPosition": 3,
+      "textOffset": 4969,
+      "eventId": "event_6518879e27a7d45555e2"
+    },
+    "scene": {
+      "title": "Lifted Home, Waiting Wind (Turn 4)",
+      "text": "The air presses around us with the hiss of wind and rope-dark shadows. I glare at the churning ceiling, Toto tucked tight in my lap, and I press my heel into the floor as the house rides the cyclone\u2019s breath. I whisper to Toto: stay calm, stay close. My heartbeat keeps time with the creak of timbers and the howl that rattles the lantern\u2019s glass. The ladder groans, the trapdoor yawns below, and the world tilts again. I keep my body braced, my eyes fixed on the lantern\u2019s stubborn glow, ready to move only if the floor tells me to. We don\u2019t know what comes next, but we\u2019ll endure together, Toto against the wind and fear.\n\nAunt Em\u2019s call echoes somewhere distant in memory, but for now the house is our small harbor in a blue-black sky, and I wait for the cyclone to end, waiting with Toto pressed to my chest until a stubborn lull gives us a moment to breathe.",
+      "sceneScope": {
+        "currentLocation": "airborne house (unseen Kansas countryside)",
+        "peoplePresent": [
+          "Dorothy",
+          "Toto"
+        ],
+        "peopleWithinSpeakingDistance": [
+          "Dorothy",
+          "Toto"
+        ]
+      },
+      "outcome": "active",
+      "outcomeReason": "The cyclone continues its ascent; Dorothy and Toto endure the ride, awaiting a moment of quiet or a turn in the weather that could reveal their next move.",
+      "choices": [
+        {
+          "id": "__bookrpg_source_anchor__",
+          "type": "action",
+          "text": "Pull Toto safely back into the room and close the trapdoor.",
+          "requiredPresentCharacters": [
+            "Toto"
+          ],
+          "requiredAbsentCharacters": [],
+          "sourceEventId": "event_7461f5ec9814a38eedd4",
+          "sourceAnchorRoute": "event",
+          "stakes": "critical"
+        },
+        {
+          "id": "__bookrpg_source_continuation__",
+          "type": "action",
+          "text": "And events move forward\u2026",
+          "stakes": "significant"
+        }
+      ],
+      "development": "The cyclone\u2019s ferocity tampers with the house, lifting and tilting it as it carries us toward an uncertain horizon."
+    },
+    "parameters": []
+  },
+  "event": {
+    "eventId": "event_7461f5ec9814a38eedd4",
+    "sequence": 3,
+    "description": "Dorothy rescues Toto after he falls through the trapdoor.",
+    "category": "other",
+    "chapterPosition": 3,
+    "actors": [
+      "Toto",
+      "Dorothy"
+    ],
+    "targets": [
+      "Toto"
+    ],
+    "beats": [
+      {
+        "actor": "Toto",
+        "action": "Falls through the open trapdoor and is held above the cellar opening by the air pressure.",
+        "resultingState": "Toto is caught in the opening with one ear visible; Dorothy is inside the room and the trapdoor is open.",
+        "targets": [],
+        "agency": "involuntary",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 79,
+            "lineEnd": 81
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Creeps to the opening, catches Toto by the ear, drags him into the room, and closes the trapdoor.",
+        "decisionBoundaryBefore": "Dorothy chooses to rescue Toto and prevent another fall.",
+        "resultingState": "Toto is back inside the room with Dorothy; the trapdoor is closed.",
+        "playerAction": {
+          "kind": "player_action",
+          "endBeatIndex": 1,
+          "boundaryReason": "The rescue and securing of the trapdoor complete one immediate safety goal.",
+          "choiceText": "Pull Toto safely back into the room and close the trapdoor.",
+          "completion": "Toto is back in the room and the trapdoor is closed.",
+          "playerBeatIndexes": [
+            1
+          ],
+          "preconditions": [
+            "Toto is held at the opening.",
+            "Dorothy can reach the trapdoor."
+          ],
+          "interruptWhen": [
+            "Toto slips beyond reach or the house presents a new immediate danger."
+          ]
+        },
+        "targets": [
+          "Toto"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 82,
+            "lineEnd": 84
+          }
+        ],
+        "automaticPreludeSourceExcerpt": "Once Toto got too near the open trap door, and fell in; and at first the little\ngirl thought she had lost him. But soon she saw one of his ears sticking up\nthrough the hole, for the strong pressure of the air was keeping him up so that",
+        "automaticPreludeEndState": "Toto is caught in the opening with one ear visible; Dorothy is inside the room and the trapdoor is open."
+      }
+    ],
+    "sourceReferences": []
+  },
+  "contract": {
+    "version": 1,
+    "nextPlayerAction": {
+      "kind": "player_action",
+      "endBeatIndex": 1,
+      "boundaryReason": "The rescue and securing of the trapdoor complete one immediate safety goal.",
+      "choiceText": "Pull Toto safely back into the room and close the trapdoor.",
+      "completion": "Toto is back in the room and the trapdoor is closed.",
+      "playerBeatIndexes": [
+        1
+      ],
+      "preconditions": [
+        "Toto is held at the opening.",
+        "Dorothy can reach the trapdoor."
+      ],
+      "interruptWhen": [
+        "Toto slips beyond reach or the house presents a new immediate danger."
+      ]
+    },
+    "sourceProgression": "required",
+    "contextJson": "{\"character_runtime\":{\"current_event_sequence\":2,\"player\":{\"name\":\"Dorothy\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_d9be05ce34de89db8723\",\"event_a620e1fa4310a43cccf9\",\"event_65874a43749b7b982026\",\"event_3ed72d65bc4e4fcbaeee\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"Homesick Kansas child living with Aunt Em, Uncle Henry, and Toto; dependent on familiar guardians and not yet aware of Oz.\",\"traits\":[\"loyal\",\"practical\",\"compassionate\"],\"goals\":[\"remain safe with Toto\"],\"fears\":[\"the cyclone\",\"separation from Aunt Em and Uncle Henry\"],\"beliefs\":[\"Kansas is home\"],\"known_facts\":[\"she lives on a Kansas prairie\",\"Toto is her dog\"],\"relationships\":[{\"character\":\"Toto\",\"description\":\"beloved constant companion\"},{\"character\":\"Aunt Em\",\"description\":\"caretaker\"},{\"character\":\"Uncle Henry\",\"description\":\"caretaker\"}]}},\"characters\":[{\"name\":\"Dorothy\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_d9be05ce34de89db8723\",\"event_a620e1fa4310a43cccf9\",\"event_65874a43749b7b982026\",\"event_3ed72d65bc4e4fcbaeee\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"Homesick Kansas child living with Aunt Em, Uncle Henry, and Toto; dependent on familiar guardians and not yet aware of Oz.\",\"traits\":[\"loyal\",\"practical\",\"compassionate\"],\"goals\":[\"remain safe with Toto\"],\"fears\":[\"the cyclone\",\"separation from Aunt Em and Uncle Henry\"],\"beliefs\":[\"Kansas is home\"],\"known_facts\":[\"she lives on a Kansas prairie\",\"Toto is her dog\"],\"relationships\":[{\"character\":\"Toto\",\"description\":\"beloved constant companion\"},{\"character\":\"Aunt Em\",\"description\":\"caretaker\"},{\"character\":\"Uncle Henry\",\"description\":\"caretaker\"}]}},{\"name\":\"Tin Woodman\",\"aliases\":[\"Woodman\",\"The Tin Woodman\",\"The Woodman\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_13c38b29b37ba87191c5\",\"event_8e1654a7b6078c34ee06\",\"event_a29c60ffc1b393f12b24\",\"event_e389d12f27257ce541fc\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":7,\"state_summary\":\"A rusted tin woodman immobilized in the forest, believing he has lost his human body and heart.\",\"traits\":[\"compassionate\",\"sensitive\",\"industrious\"],\"goals\":[\"be freed from rust\",\"recover a heart\"],\"fears\":[\"remaining immobilized\",\"having no heart\"],\"beliefs\":[\"without a heart he cannot love\"],\"known_facts\":[\"he is rusted beside a tree\",\"Dorothy and the Scarecrow are nearby\"],\"relationships\":[]}},{\"name\":\"Toto\",\"aliases\":[],\"speech\":{\"mode\":\"nonverbal\",\"communicationModes\":[\"barking\",\"growling\",\"whining\",\"biting\"],\"evidenceEventIds\":[\"event_7461f5ec9814a38eedd4\",\"event_65874a43749b7b982026\",\"event_13c38b29b37ba87191c5\",\"event_cb63061b051301cf9602\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"Dorothy's small Kansas dog and constant companion, alert and dependent on her protection.\",\"traits\":[\"loyal\",\"alert\",\"playful\"],\"goals\":[\"stay with Dorothy\"],\"fears\":[\"the cyclone\",\"separation from Dorothy\"],\"beliefs\":[],\"known_facts\":[\"Dorothy is his companion\",\"the farmhouse is threatened by a cyclone\"],\"relationships\":[{\"character\":\"Dorothy\",\"description\":\"constant companion and protector\"}]}},{\"name\":\"Scarecrow\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_65874a43749b7b982026\",\"event_0dffb4eae86e20f19da8\",\"event_e1c9e6c416a64a6f5ee5\",\"event_1592358f3bc5ff687141\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":5,\"state_summary\":\"A living scarecrow fixed to a pole, convinced that his straw stuffing means he lacks brains.\",\"traits\":[\"humble\",\"lonely\",\"hopeful\"],\"goals\":[\"be freed from the pole\",\"obtain brains\"],\"fears\":[\"fire\",\"being permanently unintelligent\"],\"beliefs\":[\"he has no brains\"],\"known_facts\":[\"he was made by a farmer and left in a cornfield\"],\"relationships\":[]}},{\"name\":\"Cowardly Lion\",\"aliases\":[\"The Lion\",\"Lion\",\"The Cowardly Lion\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\",\"roaring\",\"growling\"],\"evidenceEventIds\":[\"event_f104ad2b60745673c2e7\",\"event_54016523b1b9070e36da\",\"event_fe92fd5fada9af567bfd\",\"event_9b03cc0b2a618858c0c2\",\"event_3eb2174f8c4640851c75\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":8,\"state_summary\":\"A physically powerful lion who fears danger and believes himself cowardly; he is not yet connected to Dorothy\u2019s company.\",\"traits\":[\"Fearful\",\"Powerful\"],\"goals\":[\"Avoid danger\"],\"fears\":[\"Danger\",\"Being exposed as cowardly\"],\"beliefs\":[\"He is cowardly despite being the King of Beasts\"],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Oz\",\"aliases\":[\"Great Oz\",\"The Great Oz\",\"Wonderful Wizard\",\"Wizard Oz\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\",\"ventriloquism\"],\"evidenceEventIds\":[\"event_aebe82da1de28c7156ed\",\"event_f6310ecd2457b26e5fc2\",\"event_10ea01e054a8dff3f928\",\"event_3fef4d342c3fd67b8744\",\"event_bfffec305e23fe0b2bb6\",\"event_e0843ffaed0e1cb11bc2\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":5,\"state_summary\":\"A powerful but unseen ruler known to travelers as the Great Oz; his public persona and private motives have not yet been encountered by the company.\",\"traits\":[\"Mysterious\",\"Authoritative\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Wicked Witch of the West\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\",\"commands\"],\"evidenceEventIds\":[\"event_1592358f3bc5ff687141\",\"event_74a5e26115283d27ab2e\",\"event_9b03cc0b2a618858c0c2\",\"event_518b97c7c30c0e57b566\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":10,\"state_summary\":\"A powerful western ruler whose country and threat are known to the travelers, but who has not yet directly confronted them.\",\"traits\":[\"Powerful\",\"Tyrannical\"],\"goals\":[\"Maintain control of the western country\"],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Guardian of the Gates\",\"aliases\":[\"Guardian of the Gate\",\"The Guardian of the Gates\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\",\"formal questioning\",\"instructions\"],\"evidenceEventIds\":[\"event_5df98e176a89acb768a8\",\"event_391359251f8ef58d718a\",\"event_73a096d8733371be2eb7\",\"event_f14a51d2c5c3a4a25fab\",\"event_e02847a4c2e3dfd8d1f4\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":12,\"state_summary\":\"A cautious Emerald City gatekeeper responsible for controlling entry and enforcing the city\u2019s procedures.\",\"traits\":[\"Cautious\",\"Orderly\",\"Obedient\"],\"goals\":[\"Control access to Emerald City\"],\"fears\":[],\"beliefs\":[\"Visitors must follow the city\u2019s rules\"],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Aunt Em\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_5b3afb6e1e10b0544fd3\",\"event_3ed72d65bc4e4fcbaeee\"]},\"development\":{\"valid_after_event_id\":\"event_5b3afb6e1e10b0544fd3\",\"valid_after_event_sequence\":1,\"chapter_position\":3,\"state_summary\":\"Reacts urgently to the cyclone and tries to get Dorothy into the cellar, then is separated from her when the house is carried away.\",\"traits\":[\"practical\",\"caring\",\"anxious\",\"protective\"],\"goals\":[\"protect Dorothy from the cyclone\"],\"fears\":[\"the approaching cyclone\",\"for Dorothy\u2019s safety\"],\"beliefs\":[\"the cyclone is dangerous\"],\"known_facts\":[\"a cyclone is approaching\",\"Dorothy is in the farmhouse during the danger\"],\"relationships\":[{\"character\":\"Dorothy\",\"description\":\"Protective aunt and guardian separated from her during the cyclone\"},{\"character\":\"Uncle Henry\",\"description\":\"Household partner facing the cyclone with her\"}]}},{\"name\":\"Wicked Witch of the East\",\"aliases\":[\"Witch of the East\",\"The Witch of the East\"],\"speech\":{\"mode\":\"unknown\",\"communicationModes\":[],\"evidenceEventIds\":[]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":0,\"state_summary\":\"A deceased eastern witch whose former rule over the Munchkins is known through the story\u2019s account of her death and oppression.\",\"traits\":[\"oppressive\",\"magical\",\"cruel\",\"absent after death\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"The Scarecrow\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_54016523b1b9070e36da\",\"event_e6e2da71693d83a7dc8e\",\"event_e389d12f27257ce541fc\",\"event_2ba4b4247bb0adcd74e3\",\"event_66f4807e4ea612d15b5e\",\"event_33e3e72b3ddec0ac53f6\",\"event_a0529625e0c10a77d7e5\",\"event_ce0809cceda84c380a9c\",\"event_966dd296c826a2a3c61c\",\"event_02de3b7e53252b11210a\",\"event_5df98e176a89acb768a8\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":8,\"state_summary\":\"A resourceful traveling scarecrow whose practical abilities are present but whose wish for brains has not yet been established in the supplied earliest event.\",\"traits\":[\"resourceful\",\"strategic\",\"helpful\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Uncle Henry\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_5b3afb6e1e10b0544fd3\",\"event_f933263803e602b34dff\"]},\"development\":{\"valid_after_event_id\":\"event_5b3afb6e1e10b0544fd3\",\"valid_after_event_sequence\":1,\"chapter_position\":3,\"state_summary\":\"Responds to the cyclone by warning Aunt Em and running to protect the stock, while Dorothy is carried away with the house.\",\"traits\":[\"hardworking\",\"responsible\",\"practical\",\"urgent\"],\"goals\":[\"protect the stock from the cyclone\"],\"fears\":[\"the approaching cyclone\",\"for the farm\"],\"beliefs\":[\"the cyclone threatens the farm\"],\"known_facts\":[\"a cyclone is approaching\",\"Dorothy is in the farmhouse during the danger\"],\"relationships\":[{\"character\":\"Aunt Em\",\"description\":\"Household partner warned about the cyclone\"},{\"character\":\"Dorothy\",\"description\":\"Guardian whose safety is endangered by the cyclone\"}]}},{\"name\":\"Winged Monkeys\",\"aliases\":[\"the Monkeys\"],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_fef7bd299629f9edb8cf\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":14,\"state_summary\":\"A powerful magical flying group whose service can be obtained through the Golden Cap.\",\"traits\":[\"Able to fly\",\"Strong enough to carry travelers\",\"Powerful\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}},{\"name\":\"Soldier with the Green Whiskers\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_391359251f8ef58d718a\",\"event_f6310ecd2457b26e5fc2\",\"event_0b59d5807301e7ee4497\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":13,\"state_summary\":\"A dutiful soldier serving at Oz\u2019s Palace in the Emerald City, with official duties connected to admitting visitors and assisting the palace.\",\"traits\":[\"Dutiful\",\"Helpful to visitors\",\"Connected with Oz\u2019s Palace\"],\"goals\":[],\"fears\":[],\"beliefs\":[],\"known_facts\":[],\"relationships\":[]}}]},\"current_scene\":{\"title\":\"Lifted Home, Waiting Wind (Turn 4)\",\"text\":\"The air presses around us with the hiss of wind and rope-dark shadows. I glare at the churning ceiling, Toto tucked tight in my lap, and I press my heel into the floor as the house rides the cyclone\u2019s breath. I whisper to Toto: stay calm, stay close. My heartbeat keeps time with the creak of timbers and the howl that rattles the lantern\u2019s glass. The ladder groans, the trapdoor yawns below, and the world tilts again. I keep my body braced, my eyes fixed on the lantern\u2019s stubborn glow, ready to move only if the floor tells me to. We don\u2019t know what comes next, but we\u2019ll endure together, Toto against the wind and fear.\\n\\nAunt Em\u2019s call echoes somewhere distant in memory, but for now the house is our small harbor in a blue-black sky, and I wait for the cyclone to end, waiting with Toto pressed to my chest until a stubborn lull gives us a moment to breathe.\",\"sceneScope\":{\"currentLocation\":\"airborne house (unseen Kansas countryside)\",\"peoplePresent\":[\"Dorothy\",\"Toto\"],\"peopleWithinSpeakingDistance\":[\"Dorothy\",\"Toto\"]}},\"recent_history\":[{\"kind\":\"scene\",\"text\":\"The cyclone roars, and the farmhouse sighs like a living thing lifting into the black swirl. Wood, wind, and dirt twist around us as the house tilts. From my perch near Toto, I glimpse Aunt Em\u2019s lantern cut a knife of light through the darkness, and I hear Uncle Henry\u2019s shouted orders swallowed by gale. The trapdoor yawns; the cellar invites shelter, but the world has stopped obeying the ground. The ladder groans, and the floor shifts beneath my feet as if the earth itself is tipping us to the heavens.\\n\\nToto trembles, ducking his head under my sleeve, and I press him tighter, whispering, \u201cIt\u2019ll be all right, Toto. We\u2019ll stay together.\u201d The wind answers with a howl that shakes the room, and in a breath the house rises higher, lighter than a feather\u2014and we rise with it, a tiny figure clinging to certainty while the cyclone carries us toward nowhere and everywhere at once.\\n\\nI hold Toto close, my legs braced against the rocking floor, listening for Aunt Em\u2019s voice above the scream, hoping for the cellar\u2019s welcome when we find it again. I won\u2019t let Toto fall or drift away. I won\u2019t let Aunt Em call and call and be lost to the wind. Not today.\",\"development\":\"The cyclone lifts the house and carries it away, with Dorothy and Toto aboard; the family\u2019s sheltering plan is disrupted and unknown fate awaits beyond the trapdoor.\",\"sceneScope\":{\"currentLocation\":\"airborne house (unseen Kansas countryside)\",\"peoplePresent\":[\"Dorothy\",\"Toto\"],\"peopleWithinSpeakingDistance\":[\"Dorothy\",\"Toto\"]}},{\"kind\":\"choice\",\"text\":\"Stay still inside the airborne house and wait for the cyclone to end.\"},{\"kind\":\"scene\",\"text\":\"The air presses around us with the hiss of wind and rope-dark shadows. I glare at the churning ceiling, Toto tucked tight in my lap, and I press my heel into the floor as the house rides the cyclone\u2019s breath. I whisper to Toto: stay calm, stay close. My heartbeat keeps time with the creak of timbers and the howl that rattles the lantern\u2019s glass. The ladder groans, the trapdoor yawns below, and the world tilts again. I keep my body braced, my eyes fixed on the lantern\u2019s stubborn glow, ready to move only if the floor tells me to. We don\u2019t know what comes next, but we\u2019ll endure together, Toto against the wind and fear.\\n\\nAunt Em\u2019s call echoes somewhere distant in memory, but for now the house is our small harbor in a blue-black sky, and I wait for the cyclone to end, waiting with Toto pressed to my chest until a stubborn lull gives us a moment to breathe.\",\"development\":\"The cyclone\u2019s ferocity tampers with the house, lifting and tilting it as it carries us toward an uncertain horizon.\",\"sceneScope\":{\"currentLocation\":\"airborne house (unseen Kansas countryside)\",\"peoplePresent\":[\"Dorothy\",\"Toto\"],\"peopleWithinSpeakingDistance\":[\"Dorothy\",\"Toto\"]}}],\"story_memory\":{\"summary\":\"The cyclone lifts the house; Dorothy and Toto ride it aloft, clinging to each other as the world spins and the trapdoor to safety looms below.\",\"openThreads\":[\"Toto\u2019s safety during the ascent\",\"Escape route to the cellar remains blocked while the house is airborne\",\"Uncle Henry and Aunt Em are separated from Dorothy\"],\"canonFacts\":[\"Dorothy and Toto are in Kansas; a cyclone approaches; Aunt Em orders Dorothy to run for the cellar; Uncle Henry heads to the stock sheds to protect animals; Toto hides under the bed.\",\"Cyclone carries Dorothy's house away from Kansas\",\"Dorothy and Toto are aboard the airborne house at this moment\",\"Aunt Em and Uncle Henry are not currently inside the airborne house\",\"Dorothy and Toto are aboard the airborne house bound for an unknown destination\",\"Aunt Em and Uncle Henry are not inside the airborne house\",\"The trapdoor is an existing route to shelter that is currently not accessible\"]},\"player_profile\":{\"name\":\"Dorothy\",\"aliases\":[],\"speech\":{\"mode\":\"verbal\",\"communicationModes\":[\"speech\"],\"evidenceEventIds\":[\"event_d9be05ce34de89db8723\",\"event_a620e1fa4310a43cccf9\",\"event_65874a43749b7b982026\",\"event_3ed72d65bc4e4fcbaeee\"]},\"development\":{\"valid_after_event_id\":null,\"valid_after_event_sequence\":null,\"chapter_position\":3,\"state_summary\":\"Homesick Kansas child living with Aunt Em, Uncle Henry, and Toto; dependent on familiar guardians and not yet aware of Oz.\",\"traits\":[\"loyal\",\"practical\",\"compassionate\"],\"goals\":[\"remain safe with Toto\"],\"fears\":[\"the cyclone\",\"separation from Aunt Em and Uncle Henry\"],\"beliefs\":[\"Kansas is home\"],\"known_facts\":[\"she lives on a Kansas prairie\",\"Toto is her dog\"],\"relationships\":[{\"character\":\"Toto\",\"description\":\"beloved constant companion\"},{\"character\":\"Aunt Em\",\"description\":\"caretaker\"},{\"character\":\"Uncle Henry\",\"description\":\"caretaker\"}]},\"description\":\"Homesick Kansas child living with Aunt Em, Uncle Henry, and Toto; dependent on familiar guardians and not yet aware of Oz.\",\"traits\":[\"loyal\",\"practical\",\"compassionate\"],\"relationships\":[{\"character\":\"Toto\",\"description\":\"beloved constant companion\"},{\"character\":\"Aunt Em\",\"description\":\"caretaker\"},{\"character\":\"Uncle Henry\",\"description\":\"caretaker\"}]}}",
+    "sourceEvidence": {
+      "0": "Once Toto got too near the open trap door, and fell in; and at first the little\ngirl thought she had lost him."
+    },
+    "turnNumber": 4,
+    "mode": "action",
+    "player": "Dorothy",
+    "playerAliases": [
+      "Dorothy"
+    ],
+    "selectedIntent": null,
+    "worldRules": [],
+    "eventId": "event_7461f5ec9814a38eedd4",
+    "completedBeatIndexes": [],
+    "allowedPlayerBeatIndexes": [],
+    "requiredAutomaticBeatIndexes": [
+      0
+    ],
+    "nextPlayerDecision": 1,
+    "beats": [
+      {
+        "actor": "Toto",
+        "action": "Falls through the open trapdoor and is held above the cellar opening by the air pressure.",
+        "resultingState": "Toto is caught in the opening with one ear visible; Dorothy is inside the room and the trapdoor is open.",
+        "targets": [],
+        "agency": "involuntary",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 79,
+            "lineEnd": 81
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Creeps to the opening, catches Toto by the ear, drags him into the room, and closes the trapdoor.",
+        "decisionBoundaryBefore": "Dorothy chooses to rescue Toto and prevent another fall.",
+        "resultingState": "Toto is back inside the room with Dorothy; the trapdoor is closed.",
+        "playerAction": {
+          "kind": "player_action",
+          "endBeatIndex": 1,
+          "boundaryReason": "The rescue and securing of the trapdoor complete one immediate safety goal.",
+          "choiceText": "Pull Toto safely back into the room and close the trapdoor.",
+          "completion": "Toto is back in the room and the trapdoor is closed.",
+          "playerBeatIndexes": [
+            1
+          ],
+          "preconditions": [
+            "Toto is held at the opening.",
+            "Dorothy can reach the trapdoor."
+          ],
+          "interruptWhen": [
+            "Toto slips beyond reach or the house presents a new immediate danger."
+          ]
+        },
+        "targets": [
+          "Toto"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 82,
+            "lineEnd": 84
+          }
+        ],
+        "automaticPreludeSourceExcerpt": "Once Toto got too near the open trap door, and fell in; and at first the little\ngirl thought she had lost him. But soon she saw one of his ears sticking up\nthrough the hole, for the strong pressure of the air was keeping him up so that",
+        "automaticPreludeEndState": "Toto is caught in the opening with one ear visible; Dorothy is inside the room and the trapdoor is open."
+      }
+    ]
+  }
+}

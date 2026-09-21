@@ -1,0 +1,407 @@
+{
+  "version": 3,
+  "provenance": "Assistant-curated against the numbered source excerpt; pending independent human semantic review. No goal annotations are supplied to the model.",
+  "sourceSha256": "f5d15a8a670050c1783a01c568c191e8bae12f4dc1e27f2e5e00f6d63e81cde3",
+  "timeline": {
+    "summary": "story source excerpt",
+    "characters": [
+      {
+        "name": "Scarecrow",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 1
+          }
+        ]
+      },
+      {
+        "name": "Tin Woodman",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 4
+          }
+        ]
+      },
+      {
+        "name": "Dorothy",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 51,
+            "lineEnd": 52
+          }
+        ]
+      }
+    ],
+    "significantEvents": [
+      {
+        "description": "Asks why that is.",
+        "actors": [
+          "Scarecrow"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 1
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Scarecrow",
+            "action": "Asks why that is.",
+            "resultingState": "The Scarecrow has asked for an explanation.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 1,
+                "lineEnd": 1
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Offers to tell his story as the explanation.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 2,
+            "lineEnd": 2
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Offers to tell his story as the explanation.",
+            "resultingState": "The Tin Woodman has committed to telling his story.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 2,
+                "lineEnd": 2
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "While walking, begins telling of his woodman father, becoming a wood-chopper, caring for his mother after his father died, and deciding to marry rather than live alone.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 9
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: While walking, begins telling of his woodman father, becoming a wood-chopper, caring for his mother after his father died, and deciding to marry rather than live alone.",
+            "resultingState": "Tin Woodman has recounted: While walking, begins telling of his woodman father, becoming a wood-chopper, caring for his mother after his father died, and deciding to marry rather than live alone.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 3,
+                "lineEnd": 9
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "While walking, begins telling of his woodman father, becoming a wood-chopper, caring for his mother after his father died, and deciding to marry rather than live alone.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Recounts love for a Munchkin girl, her marriage promise conditional on a house, the old woman’s opposition and bargain with the Witch, the enchanted axe and the loss of his left leg.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 10,
+            "lineEnd": 19
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: Recounts love for a Munchkin girl, her marriage promise conditional on a house, the old woman’s opposition and bargain with the Witch, the enchanted axe and the loss of his left leg.",
+            "resultingState": "Tin Woodman has recounted: Recounts love for a Munchkin girl, her marriage promise conditional on a house, the old woman’s opposition and bargain with the Witch, the enchanted axe and the loss of his left leg.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 10,
+                "lineEnd": 19
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "Recounts love for a Munchkin girl, her marriage promise conditional on a house, the old woman’s opposition and bargain with the Witch, the enchanted axe and the loss of his left leg.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Continues the account of a tinsmith replacing his left leg, renewed attacks costing his right leg and arms, then his head, and their replacement with tin.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 20,
+            "lineEnd": 30
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: Continues the account of a tinsmith replacing his left leg, renewed attacks costing his right leg and arms, then his head, and their replacement with tin.",
+            "resultingState": "Tin Woodman has recounted: Continues the account of a tinsmith replacing his left leg, renewed attacks costing his right leg and arms, then his head, and their replacement with tin.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 20,
+                "lineEnd": 30
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "Continues the account of a tinsmith replacing his left leg, renewed attacks costing his right leg and arms, then his head, and their replacement with tin.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Recounts renewed work, the Witch splitting his body, the tinsmith replacing it, his consequent lack of a heart and love, and his supposition that the girl still waits.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 31,
+            "lineEnd": 39
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: Recounts renewed work, the Witch splitting his body, the tinsmith replacing it, his consequent lack of a heart and love, and his supposition that the girl still waits.",
+            "resultingState": "Tin Woodman has recounted: Recounts renewed work, the Witch splitting his body, the tinsmith replacing it, his consequent lack of a heart and love, and his supposition that the girl still waits.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 31,
+                "lineEnd": 39
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "Recounts renewed work, the Witch splitting his body, the tinsmith replacing it, his consequent lack of a heart and love, and his supposition that the girl still waits.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Tells of pride in the tin body, oiling to prevent rust, forgetting, a rainstorm, and remaining rusted until his listeners helped him.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 40,
+            "lineEnd": 46
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: Tells of pride in the tin body, oiling to prevent rust, forgetting, a rainstorm, and remaining rusted until his listeners helped him.",
+            "resultingState": "Tin Woodman has recounted: Tells of pride in the tin body, oiling to prevent rust, forgetting, a rainstorm, and remaining rusted until his listeners helped him.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 40,
+                "lineEnd": 46
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "Tells of pride in the tin body, oiling to prevent rust, forgetting, a rainstorm, and remaining rusted until his listeners helped him.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Finishes by describing reflection during the year of immobility, resolving to ask Oz for a heart, and intending to return and marry if given one.",
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 46,
+            "lineEnd": 50
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: Finishes by describing reflection during the year of immobility, resolving to ask Oz for a heart, and intending to return and marry if given one.",
+            "resultingState": "Tin Woodman has recounted: Finishes by describing reflection during the year of immobility, resolving to ask Oz for a heart, and intending to return and marry if given one.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 46,
+                "lineEnd": 50
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "Finishes by describing reflection during the year of immobility, resolving to ask Oz for a heart, and intending to return and marry if given one.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Has been interested in the story and now understands his desire for a heart.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 51,
+            "lineEnd": 52
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Has been interested in the story and now understands his desire for a heart.",
+            "resultingState": "Dorothy understands why he wants a heart.",
+            "agency": "involuntary",
+            "stakes": "routine",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 51,
+                "lineEnd": 52
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Has been interested in the story and now understands his desire for a heart.",
+        "actors": [
+          "Scarecrow"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 51,
+            "lineEnd": 52
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Scarecrow",
+            "action": "Has been interested in the story and now understands his desire for a heart.",
+            "resultingState": "The Scarecrow understands why he wants a heart.",
+            "agency": "involuntary",
+            "stakes": "routine",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 51,
+                "lineEnd": 52
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            }
+          }
+        ]
+      }
+    ],
+    "actions": [],
+    "relationships": []
+  },
+  "expectedPrimaryGoal": {
+    "actor": "Tin Woodman",
+    "playerBeatIndexes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "endBeatIndex": 7
+  }
+}

@@ -41,6 +41,54 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+export function validateStoryEventBeatReferenceOrder(
+  index: ChapterPartSourceIndex,
+): void {
+  for (const event of index.significantEvents) {
+    const beats = event.beats ?? [];
+    for (let earlierIndex = 0; earlierIndex < beats.length; earlierIndex += 1) {
+      const earlierBeat = beats[earlierIndex]!;
+      for (let laterIndex = earlierIndex + 1; laterIndex < beats.length; laterIndex += 1) {
+        const laterBeat = beats[laterIndex]!;
+        for (const earlierReference of earlierBeat.references) {
+          for (const laterReference of laterBeat.references) {
+            const identicalRange =
+              earlierReference.lineStart === laterReference.lineStart
+              && earlierReference.lineEnd === laterReference.lineEnd;
+            if (identicalRange) continue;
+
+            // Line ranges cannot order separate clauses within their shared final
+            // line. Equal endpoints alone do not establish an interleaved action.
+            const earlierContainsLater =
+              earlierReference.lineStart < laterReference.lineStart
+              && earlierReference.lineEnd > laterReference.lineEnd;
+            if (!earlierContainsLater) continue;
+
+            const laterEvidenceContinuesPastEarlierBeat = beats
+              .slice(laterIndex + 1)
+              .some((followingBeat) =>
+                followingBeat.references.some((followingReference) =>
+                  followingReference.lineStart <= earlierReference.lineEnd
+                  && followingReference.lineEnd > earlierReference.lineEnd
+                )
+              );
+            if (!laterEvidenceContinuesPastEarlierBeat) continue;
+
+            throw new Error(
+              `Significant event beat ${earlierIndex} source range `
+              + `${earlierReference.lineStart}-${earlierReference.lineEnd} spans intervening beat `
+              + `${laterIndex} range ${laterReference.lineStart}-${laterReference.lineEnd} while later `
+              + "beat evidence continues beyond the earlier range. Keep each beat atomic and contiguous: "
+              + "split actions before and after the intervening beat into separate beats and use the "
+              + "narrowest source range for each.",
+            );
+          }
+        }
+      }
+    }
+  }
+}
+
 export function mergeSupplementalCharacterProfileOutput(
   worldBibleOutput: string,
   supplementalOutput: string,
@@ -137,16 +185,15 @@ export function parseChapterSourceIndexes(
   const validationErrors = new Map<string, string>();
   for (const part of parts) {
     try {
-      indexes.set(
-        part.sourceId,
-        parseChapterPartSourceIndex(parsed[part.sourceId], {
-          sourceId: part.sourceId,
-          chapterIndex: part.chapterIndex,
-          lineStart: part.lineStart,
-          lineEnd: part.lineEnd,
-          sourceText: part.text,
-        }),
-      );
+      const index = parseChapterPartSourceIndex(parsed[part.sourceId], {
+        sourceId: part.sourceId,
+        chapterIndex: part.chapterIndex,
+        lineStart: part.lineStart,
+        lineEnd: part.lineEnd,
+        sourceText: part.text,
+      });
+      validateStoryEventBeatReferenceOrder(index);
+      indexes.set(part.sourceId, index);
     } catch (error) {
       invalidParts.push(part);
       validationErrors.set(
@@ -183,3 +230,4 @@ export function chapterSourceOutputTokenLimit(
     initialLimit * (2 ** (attempt - 1)),
   );
 }
+

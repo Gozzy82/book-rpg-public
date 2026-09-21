@@ -1,3 +1,4 @@
+import type { TurnDecision } from "./turn-validator.js";
 import type {
   CharacterRelationship,
   CharacterProfile,
@@ -137,6 +138,12 @@ export interface SceneRepetitionReview {
   reason: string;
 }
 
+export interface ChoiceRejectionFeedback {
+  text: string;
+  role: "anchor" | "alternative" | "unknown";
+  reason: string;
+}
+
 export interface SceneChoiceReview {
   anchorChoiceIndex: number | null;
   unusableChoiceIndexes: number[];
@@ -157,6 +164,8 @@ export interface DialogueSceneReviewContext {
 }
 
 export interface ScenePresenceReview {
+  peopleKilledInScene?: string[];
+  turnValidation?: TurnDecision;
   peoplePresent: string[];
   peopleWithinSpeakingDistance: string[];
   latestVisibleSourceEventId: string | null;
@@ -203,7 +212,7 @@ export function reviewedUnusableChoiceIndexes(
 }
 
 export const SCENE_REPETITION_REVIEW_OUTPUT_TOKENS = [3_200, 6_400] as const;
-export const SCENE_CHOICE_REVIEW_OUTPUT_TOKENS = [3_200, 6_400] as const;
+export const SCENE_CHOICE_REVIEW_OUTPUT_TOKENS = [800, 1_600, 3_200] as const;
 export const SCENE_PRESENCE_REVIEW_OUTPUT_TOKENS = [3_200, 6_400] as const;
 
 export function recentScenesForRepetitionReview(
@@ -250,6 +259,7 @@ export function buildSceneRepetitionReviewContext(
     | "characterProfiles"
     | "objective"
     | "selectedText"
+    | "parameters"
   >,
   candidate: Pick<Scene, "title" | "text" | "development" | "sceneScope"> & {
     actionResult?: string;
@@ -264,6 +274,7 @@ export function buildSceneRepetitionReviewContext(
 
   return JSON.stringify({
     player_identity: state.playerName,
+    runtime_parameters: state.parameters ?? [],
     player_identity_aliases: playerProfile
       ? [playerProfile.name, ...playerProfile.aliases]
       : [state.playerName],
@@ -301,6 +312,7 @@ export function buildSceneChoiceReviewContext(
     | "characterProfiles"
     | "objective"
     | "selectedText"
+    | "parameters"
   >,
   candidate: Pick<
     Scene,
@@ -315,6 +327,7 @@ export function buildSceneChoiceReviewContext(
 
   return JSON.stringify({
     player_identity: state.playerName,
+    runtime_parameters: state.parameters ?? [],
     player_identity_aliases: playerProfile
       ? [playerProfile.name, ...playerProfile.aliases]
       : [state.playerName],
@@ -459,8 +472,9 @@ function compactSceneCharacterProfile(
 export function buildDialogueTargetCharacterProfile(
   targetCharacter: string,
   playerName: string,
-  profiles: readonly CharacterProfile[],
+  profiles: readonly CharacterProfile[] | undefined,
 ) {
+  const availableProfiles = profiles ?? [];
   const normalizeIdentity = (identity: string): string =>
     identity.trim().toLocaleLowerCase();
   const matchesIdentity = (
@@ -472,12 +486,12 @@ export function buildDialogueTargetCharacterProfile(
       (candidate) => normalizeIdentity(candidate) === normalizedIdentity,
     );
   };
-  const targetProfile = profiles.find((profile) =>
+  const targetProfile = availableProfiles.find((profile) =>
     matchesIdentity(profile, targetCharacter)
   );
   if (!targetProfile) return null;
 
-  const playerProfile = profiles.find((profile) =>
+  const playerProfile = availableProfiles.find((profile) =>
     matchesIdentity(profile, playerName)
   );
   const playerIdentities = new Set(
@@ -926,3 +940,4 @@ export function sourceActionsCompletedAtSelectedMoment(
     )
   );
 }
+

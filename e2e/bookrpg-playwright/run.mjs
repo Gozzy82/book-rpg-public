@@ -3,14 +3,20 @@ import { readFileSync, mkdirSync, appendFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { installGameResponseCapture } from './response-capture.mjs';
+import { assertPlayableResponse, assertTurnProgress, resolveAutomaticContinuations } from './progress-check.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const cfg = JSON.parse(readFileSync(path.join(root, 'config.json'), 'utf8'));
 if (!Number.isInteger(cfg.clicksPerCharacter) || cfg.clicksPerCharacter < 1) throw Error('clicksPerCharacter moet een positief geheel getal zijn.');
 if (!(cfg.turnTimeoutMs > 0)) throw Error('turnTimeoutMs moet positief zijn.');
+const resumeIndex = process.argv.indexOf('--resume');
+const resumeGameId = resumeIndex < 0 ? null : process.argv[resumeIndex + 1];
+if (resumeIndex >= 0 && (!resumeGameId || !/^[a-zA-Z0-9_-]+$/.test(resumeGameId))) {
+  throw Error('Gebruik --resume <gameId>.');
+}
 const output = path.join(root, 'results', new Date().toISOString().replace(/[:.]/g, '-'));
 mkdirSync(output, { recursive: true });
-writeFileSync(path.join(output, 'config.json'), JSON.stringify(cfg, null, 2));
+writeFileSync(path.join(output, 'config.json'), JSON.stringify({...cfg, resumeGameId}, null, 2));
 const summary = [];
 const saveSummary = () => writeFileSync(path.join(output, 'summary.json'), JSON.stringify(summary, null, 2));
 const browser = await chromium.launch({ headless: cfg.headless || process.argv.includes('--headless') });
@@ -32,14 +38,22 @@ try {
   discover.setDefaultTimeout(cfg.turnTimeoutMs);
   let characters;
   try {
-    await setup(discover);
-    characters = await discover.locator(cfg.selectors.characterName).allTextContents();
-    characters = [...new Set(characters.map(s => s.trim()).filter(Boolean))];
-    if (!characters.length) throw Error('Geen personages gevonden.');
-    if (cfg.characters.length) {
-      const missing = cfg.characters.filter(c => !characters.includes(c));
-      if (missing.length) throw Error(`Niet gevonden: ${missing.join(', ')}`);
-      characters = characters.filter(c => cfg.characters.includes(c));
+    if (resumeGameId) {
+      const response = await context.request.get(new URL('/api/games', origin).href);
+      if (!response.ok()) throw Error(`Opslaanlijst ophalen mislukt: HTTP ${response.status()}`);
+      const saved = (await response.json()).find(game => game.gameId === resumeGameId);
+      if (!saved) throw Error(`Opgeslagen game niet gevonden: ${resumeGameId}`);
+      characters = [saved.playerName];
+    } else {
+      await setup(discover);
+      characters = await discover.locator(cfg.selectors.characterName).allTextContents();
+      characters = [...new Set(characters.map(s => s.trim()).filter(Boolean))];
+      if (!characters.length) throw Error('Geen personages gevonden.');
+      if (cfg.characters.length) {
+        const missing = cfg.characters.filter(c => !characters.includes(c));
+        if (missing.length) throw Error(`Niet gevonden: ${missing.join(', ')}`);
+        characters = characters.filter(c => cfg.characters.includes(c));
+      }
     }
   } catch (error) {
     await discover.screenshot({ path: path.join(output, 'setup-error.png'), fullPage: true }).catch(() => {});
@@ -126,6 +140,17 @@ try {
       }
       return result;
     }
+    async function resolveAutomatic(step, result) {
+      return resolveAutomaticContinuations(result, async (_previous, hop) => {
+        console.log(`${character}: automatisch vervolg ${hop} na ${step} keuzes`);
+        log('flow.jsonl', { step, automaticHop: hop, action: 'continue-automatic-source' });
+        const choice = page.locator(cfg.selectors.choice).first();
+        const next = await submit(choice,
+          `/api/games/${encodeURIComponent(report.gameId)}/choices`);
+        await snapshot(`${step}-auto-${hop}`, next);
+        return next;
+      });
+    }
     async function snapshot(step, result) {
       const text = await page.locator('body').innerText();
       writeFileSync(path.join(dir, `screen-${String(step).padStart(2, '0')}.txt`), text);
@@ -133,17 +158,33 @@ try {
       appendFileSync(path.join(dir, 'flow.md'), `\n## Na ${step} keuzes\n\n${result.scene?.title || ''}\n\n${result.scene?.text || text}\n\nKeuzes:\n${(result.scene?.choices || []).map((c, i) => `${i + 1}. ${c.text}`).join('\n')}\n`);
     }
     try {
-      console.log(`\nStart ${character}`);
-      await setup(page);
-      // Filter via the exact name element, avoiding initials and similarly named characters.
-      const option = page.locator(cfg.selectors.character).filter({ has: page.getByText(character, { exact: true }) });
-      await option.click();
-      let result = await submit(page.getByRole('button', { name: 'Start my story', exact: true }), '/api/games');
+      let result;
+      if (resumeGameId) {
+        console.log(`\nHervat ${character}: ${resumeGameId}`);
+        await page.goto(cfg.url, { waitUntil: 'domcontentloaded' });
+        await idle(page);
+        const card = page.locator(`.journey-card[data-game-id="${resumeGameId}"]`);
+        if (await card.count() !== 1) throw Error('De opgeslagen game is niet beschikbaar als hervatbare game in de UI.');
+        result = await submit(card, `/api/games/${encodeURIComponent(resumeGameId)}/resume`);
+        if (result.gameId !== resumeGameId) throw Error('Hervatten gaf een andere game terug.');
+        report.resumed = true;
+        report.startingTurnNumber = result.turnNumber ?? result.turnHistory?.at(-1)?.turnNumber ?? null;
+      } else {
+        console.log(`\nStart ${character}`);
+        await setup(page);
+        // Filter via the exact name element, avoiding initials and similarly named characters.
+        const option = page.locator(cfg.selectors.character).filter({ has: page.getByText(character, { exact: true }) });
+        await option.click();
+        result = await submit(page.getByRole('button', { name: 'Start my story', exact: true }), '/api/games');
+      }
       report.gameId = result.gameId;
-      if (!report.gameId) throw Error('Startantwoord bevat geen gameId.');
+      if (!report.gameId) throw Error('Antwoord bevat geen gameId.');
+      saveSummary();
       result = await resolveConversation(0, result);
       await snapshot(0, result);
-      let previous = result.scene?.text?.trim();
+      result = await resolveAutomatic(0, result);
+      assertPlayableResponse(result);
+      let previous = result;
       for (let step = 1; step <= cfg.clicksPerCharacter; step++) {
         if (await page.locator('.outcome-panel').isVisible()) { report.status = 'ended'; break; }
         const choices = page.locator(cfg.selectors.choice);
@@ -170,17 +211,15 @@ try {
           chosen
         });
         appendFileSync(path.join(dir, 'flow.md'), `\n### Klik ${step}: optie ${optionNumber}${skipConversation ? ' (optie 1 was CONVERSATION)' : ''}\n\n${chosen}\n`);
-        await choice.click();
-        await page.locator('.scene-panel .choice-button-selected').first().waitFor();
-        result = await submit(page.getByRole('button', { name: 'Continue', exact: true }), `/api/games/${encodeURIComponent(report.gameId)}/choices`);
+        result = await submit(choice, `/api/games/${encodeURIComponent(report.gameId)}/choices`);
         result = await resolveConversation(step, result);
+        await snapshot(step, result);
+        assertTurnProgress(previous, result, { allowAutomatic: true });
+        result = await resolveAutomatic(step, result);
         report.completedClicks = step;
-        await snapshot(step, result); saveSummary();
+        saveSummary();
         console.log(`${character}: ${step}/${cfg.clicksPerCharacter}`);
-        const current = result.scene?.text?.trim();
-        if (!current) throw Error('Lege of ontbrekende scènetekst.');
-        if (current === previous) throw Error('Exact dezelfde scènetekst na de keuze.');
-        previous = current;
+        previous = result;
         if (await page.locator('.outcome-panel').isVisible()) { report.status = 'ended'; break; }
       }
       if (report.status === 'running') report.status = 'passed';

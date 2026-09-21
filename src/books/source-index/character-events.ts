@@ -4,11 +4,13 @@ import type {
   StoryEventBeat,
 } from "../../shared/contracts.js";
 import {
+  sourcePreludeEndStateForBeat,
   sourcePreludeForBeat,
 } from "./story-events.js";
 
 type PreludeStoryEventBeat = StoryEventBeat & {
   automaticPreludeSourceExcerpt?: string;
+  automaticPreludeEndState?: string;
 };
 
 function normalizeCharacterIdentity(value: string): string {
@@ -29,6 +31,7 @@ function eventForCharacter(
   const beats = event.beats.map((beat, beatIndex) => {
     const cleanBeat = { ...beat } as PreludeStoryEventBeat;
     delete cleanBeat.automaticPreludeSourceExcerpt;
+    delete cleanBeat.automaticPreludeEndState;
 
     if (
       !beat.actor
@@ -42,8 +45,16 @@ function eventForCharacter(
       event.beats!,
       beatIndex,
     );
-    return automaticPreludeSourceExcerpt
-      ? { ...cleanBeat, automaticPreludeSourceExcerpt }
+    const automaticPreludeEndState = sourcePreludeEndStateForBeat(
+      event.beats!,
+      beatIndex,
+    );
+    return automaticPreludeSourceExcerpt || automaticPreludeEndState
+      ? {
+          ...cleanBeat,
+          ...(automaticPreludeSourceExcerpt ? { automaticPreludeSourceExcerpt } : {}),
+          ...(automaticPreludeEndState ? { automaticPreludeEndState } : {}),
+        }
       : cleanBeat;
   });
 

@@ -1,0 +1,250 @@
+{
+  "event": {
+    "eventId": "event_823cb5eb3e0bd3b284dd",
+    "sequence": 126,
+    "description": "Dorothy and her companions decide to return to the Emerald City to claim Oz\u2019s promises.",
+    "category": "decision",
+    "chapterPosition": 15,
+    "actors": [
+      "Dorothy",
+      "Tin Woodman",
+      "Scarecrow",
+      "Cowardly Lion"
+    ],
+    "targets": [
+      "Aunt Em",
+      "Oz"
+    ],
+    "beats": [
+      {
+        "actor": "Dorothy",
+        "action": "Remembers Aunt Em and says they must return to Oz to claim his promise.",
+        "sourceSemantics": {
+          "mode": "present",
+          "narratedContent": null,
+          "intentionalRole": "meaningful",
+          "jointAction": null
+        },
+        "resultingState": "Dorothy has decided that the group must return to Oz, motivated by her wish to get back to Aunt Em and Kansas.",
+        "targets": [
+          "Aunt Em",
+          "Oz"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 15,
+            "chapterIndex": 15,
+            "lineStart": 76,
+            "lineEnd": 77
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "action": "States that returning to Oz will let him receive a heart.",
+        "sourceSemantics": {
+          "mode": "present",
+          "narratedContent": null,
+          "intentionalRole": "meaningful",
+          "jointAction": null
+        },
+        "resultingState": "The Tin Woodman is committed to returning to Oz to obtain the promised heart.",
+        "targets": [
+          "Oz"
+        ],
+        "agency": "intentional",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 15,
+            "chapterIndex": 15,
+            "lineStart": 78,
+            "lineEnd": 79
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "action": "States that returning to Oz will let him receive brains.",
+        "sourceSemantics": {
+          "mode": "present",
+          "narratedContent": null,
+          "intentionalRole": "meaningful",
+          "jointAction": null
+        },
+        "resultingState": "The Scarecrow is committed to returning to Oz to obtain the promised brains.",
+        "targets": [
+          "Oz"
+        ],
+        "agency": "intentional",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 15,
+            "chapterIndex": 15,
+            "lineStart": 80,
+            "lineEnd": 80
+          }
+        ]
+      },
+      {
+        "actor": "Cowardly Lion",
+        "action": "States that returning to Oz will let him receive courage.",
+        "sourceSemantics": {
+          "mode": "present",
+          "narratedContent": null,
+          "intentionalRole": "meaningful",
+          "jointAction": null
+        },
+        "resultingState": "The Cowardly Lion is committed to returning to Oz to obtain the promised courage.",
+        "targets": [
+          "Oz"
+        ],
+        "agency": "intentional",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 15,
+            "chapterIndex": 15,
+            "lineStart": 81,
+            "lineEnd": 81
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Says that returning to Oz will let her get back to Kansas and proposes starting for the Emerald City the next day.",
+        "sourceSemantics": {
+          "mode": "present",
+          "narratedContent": null,
+          "intentionalRole": "meaningful",
+          "jointAction": null
+        },
+        "resultingState": "Dorothy and her companions have decided to begin their journey to the Emerald City the next day.",
+        "targets": [
+          "Oz",
+          "Aunt Em"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 15,
+            "chapterIndex": 15,
+            "lineStart": 82,
+            "lineEnd": 83
+          }
+        ]
+      }
+    ],
+    "sourceReferences": [
+      {
+        "chapterPosition": 15,
+        "chapterIndex": 15,
+        "lineStart": 76,
+        "lineEnd": 77
+      },
+      {
+        "chapterPosition": 15,
+        "chapterIndex": 15,
+        "lineStart": 76,
+        "lineEnd": 83
+      },
+      {
+        "chapterPosition": 15,
+        "chapterIndex": 15,
+        "lineStart": 78,
+        "lineEnd": 79
+      },
+      {
+        "chapterPosition": 15,
+        "chapterIndex": 15,
+        "lineStart": 80,
+        "lineEnd": 80
+      },
+      {
+        "chapterPosition": 15,
+        "chapterIndex": 15,
+        "lineStart": 81,
+        "lineEnd": 81
+      },
+      {
+        "chapterPosition": 15,
+        "chapterIndex": 15,
+        "lineStart": 82,
+        "lineEnd": 83
+      }
+    ]
+  },
+  "checkpoint": {
+    "fingerprint": "9ba0e6eca78b548b6af5a01ade2691c1f773d3bcfdef243d79b2cd8e79f4201c",
+    "attempts": 2,
+    "rejectedCandidate": [
+      {
+        "startBeatIndex": 0,
+        "endBeatIndex": 3,
+        "label": "Decide to return to Oz for Aunt Em",
+        "boundaryReason": "Ends after Dorothy\u2019s companions affirm the shared return decision, completing the commitment initiated by Dorothy; it stops before her separate proposal to depart the next day."
+      },
+      {
+        "startBeatIndex": 4,
+        "endBeatIndex": 4,
+        "label": "Propose leaving for the Emerald City tomorrow",
+        "boundaryReason": "Ends with Dorothy\u2019s concrete departure proposal, a distinct planning decision after the group has already committed to returning to Oz."
+      }
+    ],
+    "usage": [
+      {
+        "input_tokens": 1747,
+        "input_tokens_details": {
+          "cache_write_tokens": 1744,
+          "cached_tokens": 0
+        },
+        "output_tokens": 418,
+        "output_tokens_details": {
+          "reasoning_tokens": 305
+        },
+        "total_tokens": 2165
+      },
+      {
+        "input_tokens": 2552,
+        "input_tokens_details": {
+          "cache_write_tokens": 2549,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1162,
+        "output_tokens_details": {
+          "reasoning_tokens": 1034
+        },
+        "total_tokens": 3714
+      },
+      {
+        "input_tokens": 2003,
+        "input_tokens_details": {
+          "cache_write_tokens": 2000,
+          "cached_tokens": 0
+        },
+        "output_tokens": 294,
+        "output_tokens_details": {
+          "reasoning_tokens": 167
+        },
+        "total_tokens": 2297
+      },
+      {
+        "input_tokens": 2576,
+        "input_tokens_details": {
+          "cache_write_tokens": 2573,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1034,
+        "output_tokens_details": {
+          "reasoning_tokens": 950
+        },
+        "total_tokens": 3610
+      }
+    ],
+    "error": "The first Dorothy anchor has a material ownership defect: its completion states that the Cowardly Lion is committed to returning, even though Dorothy initiates and completes her own decision to return to Oz. The completion should identify Dorothy\u2019s decision or the shared group commitment."
+  }
+}

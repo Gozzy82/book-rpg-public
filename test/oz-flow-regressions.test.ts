@@ -36,7 +36,8 @@ test("opening accepts indexed participants omitted by the short event descriptio
     requiredEventTargets: ["Aunt Em", "Dorothy", "Toto"],
   };
   for (const name of ["Toto", "Aunt Em", "Uncle Henry"]) {
-    assert.deepEqual(openingCharacterContinuityFailures(`${name} enters the room.`, state, [candidate]), []);
+    assert.deepEqual(openingCharacterContinuityFailures(`${name} enters the room.`, state, [candidate], { currentLocation: "Kansas", peoplePresent: [name], peopleWithinSpeakingDistance: [name] }), []);
   }
-  assert.equal(openingCharacterContinuityFailures("Scarecrow enters the room.", state, [candidate]).length, 1);
+  assert.equal(openingCharacterContinuityFailures("Scarecrow enters the room.", state, [candidate], { currentLocation: "Kansas", peoplePresent: ["Scarecrow"], peopleWithinSpeakingDistance: ["Scarecrow"] }).length, 1);
 });
+

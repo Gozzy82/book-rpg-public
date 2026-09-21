@@ -1,0 +1,108 @@
+[
+  {
+    "player": "Tin Woodman",
+    "passages": [
+      "Dorothy discovered something shining in a ray of sunshine that fell between the\ntrees. She ran to the place and then stopped short, with a little cry of\nsurprise.\nOne of the big trees had been partly chopped through, and standing beside it,\nwith an uplifted axe in his hands, was a man made entirely of tin. His head and\narms and legs were jointed upon his body, but he stood perfectly motionless, as\nif he could not stir at all.\nDorothy looked at him in amazement, and so did the Scarecrow, while Toto barked",
+      "Dorothy looked at him in amazement, and so did the Scarecrow, while Toto barked\nsharply and made a snap at the tin legs, which hurt his teeth."
+    ],
+    "response": {
+      "facts": [
+        {
+          "fact": "The Tin Woodman is standing beside a partly chopped tree, motionless, with an axe raised in his hands.",
+          "quote": "One of the big trees had been partly chopped through, and standing beside it, with an uplifted axe in his hands, was a man made entirely of tin. His head and arms and legs were jointed upon his body, but he stood perfectly motionless, as if he could not stir at all."
+        }
+      ],
+      "unresolved": []
+    }
+  },
+  {
+    "player": "Scarecrow",
+    "passages": [
+      "great cornfield beyond the fence, and not far away she saw a Scarecrow, placed\nhigh on a pole to keep the birds from the ripe corn.\nDorothy leaned her chin upon her hand and gazed thoughtfully at the Scarecrow.\nIts head was a small sack stuffed with straw, with eyes, nose, and mouth\npainted on it to represent a face. An old, pointed blue hat, that had belonged\nto some Munchkin, was perched on his head, and the rest of the figure was a\nblue suit of clothes, worn and faded, which had also been stuffed with straw.\nOn the feet were some old boots with blue tops, such as every man wore in this\ncountry, and the figure was raised above the stalks of corn by means of the\npole stuck up its back.",
+      "While Dorothy was looking earnestly into the queer, painted face of the\nScarecrow, she was surprised to see one of the eyes slowly wink at her. She\nthought she must have been mistaken at first, for none of the scarecrows in\nKansas ever wink; but presently the figure nodded its head to her in a friendly"
+    ],
+    "response": {
+      "facts": [
+        {
+          "fact": "Dorothy is at a great cornfield beyond a fence.",
+          "quote": "great cornfield beyond the fence"
+        },
+        {
+          "fact": "Dorothy is looking toward the Scarecrow.",
+          "quote": "Dorothy leaned her chin upon her hand and gazed thoughtfully at the Scarecrow."
+        },
+        {
+          "fact": "The Scarecrow is raised above the corn on a pole stuck up his back.",
+          "quote": "the figure was raised above the stalks of corn by means of the pole stuck up its back."
+        },
+        {
+          "fact": "The Scarecrow is a straw-filled figure wearing a faded blue suit.",
+          "quote": "the rest of the figure was a blue suit of clothes, worn and faded, which had also been stuffed with straw."
+        },
+        {
+          "fact": "The Scarecrow has a painted face and an old pointed blue hat.",
+          "quote": "Its head was a small sack stuffed with straw, with eyes, nose, and mouth painted on it to represent a face. An old, pointed blue hat"
+        },
+        {
+          "fact": "The Scarecrow wears old boots with blue tops.",
+          "quote": "On the feet were some old boots with blue tops"
+        }
+      ],
+      "unresolved": []
+    }
+  },
+  {
+    "player": "Dorothy",
+    "passages": [
+      "Today, however, they were not playing. Uncle Henry sat upon the doorstep and\nlooked anxiously at the sky, which was even grayer than usual. Dorothy stood in",
+      "looked anxiously at the sky, which was even grayer than usual. Dorothy stood in\nthe door with Toto in her arms, and looked at the sky too. Aunt Em was washing"
+    ],
+    "response": {
+      "facts": [
+        {
+          "fact": "Uncle Henry is seated upon the doorstep.",
+          "quote": "Uncle Henry sat upon the doorstep and"
+        },
+        {
+          "fact": "The sky is unusually gray.",
+          "quote": "looked anxiously at the sky, which was even grayer than usual."
+        },
+        {
+          "fact": "Dorothy is standing in the doorway.",
+          "quote": "Dorothy stood in the door with Toto in her arms, and looked at the sky too."
+        },
+        {
+          "fact": "Dorothy is holding Toto in her arms.",
+          "quote": "Dorothy stood in the door with Toto in her arms, and looked at the sky too."
+        },
+        {
+          "fact": "Aunt Em is washing.",
+          "quote": "Aunt Em was washing"
+        }
+      ],
+      "unresolved": []
+    }
+  },
+  {
+    "player": "Cowardly Lion",
+    "passages": [
+      "Just as he spoke there came from the forest a terrible roar, and the next\nmoment a great Lion bounded into the road. With one blow of his paw he sent the"
+    ],
+    "response": {
+      "facts": [
+        {
+          "fact": "The Cowardly Lion is in the forest immediately before entering the road.",
+          "quote": "there came from the forest a terrible roar, and the next\nmoment a great Lion bounded into the road."
+        },
+        {
+          "fact": "A road is present beyond the forest.",
+          "quote": "there came from the forest a terrible roar, and the next\nmoment a great Lion bounded into the road."
+        }
+      ],
+      "unresolved": [
+        "The presence and positions of Dorothy, Toto, the Scarecrow, and the Tin Woodman are not established by the supplied passage.",
+        "No additional objects are established by the supplied passage."
+      ]
+    }
+  }
+]

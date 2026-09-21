@@ -1,0 +1,8 @@
+{
+  "title": "The Wonderful Wizard of Oz",
+  "author": "L. Frank Baum",
+  "language": "English",
+  "guidance": "Clear, warm, plainspoken fairy-tale narration with concrete actions and gentle wonder. Adapt to first-person Dorothy. Avoid overwrought metaphors and modern idioms.",
+  "referenceExcerpt": "Dorothy at once ran back to the cottage and found the oil-can, and then she\nreturned and asked anxiously, \u201cWhere are your joints?\u201d\n\u201cOil my neck, first,\u201d replied the Tin Woodman. So she oiled it, and\nas it was quite badly rusted the Scarecrow took hold of the tin head and moved\nit gently from side to side until it worked freely, and then the man could turn\nit himself.\n\u201cNow oil the joints in my arms,\u201d he said. And Dorothy oiled them\nand the Scarecrow bent them carefully until they were quite free from rust and\nas good as new.\n",
+  "provenance": "Public-domain book excerpt from existing test/fixtures/import-goals/oil.json; voice reference only."
+}

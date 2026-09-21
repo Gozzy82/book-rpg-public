@@ -1,14 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  analyzeBook,
+  analyzeBook as analyzeBookProduction,
   buildAnalysisChunks,
   buildChapterAnalysisBatches,
   CHARACTER_PROFILE_DESCRIPTION_RULES,
   mergeSupplementalCharacterProfiles,
 } from "../src/books/analyze.js";
 import {
-  classifyStoryEventCategory,
   buildBookStoryEvents,
   parseChapterPartSourceIndex,
   parseWorldBibleOutput,
@@ -25,6 +24,16 @@ import type {
   SourceReference,
 } from "../src/shared/contracts.js";
 
+// These legacy cases target chapter/world-index behavior; stage-specific audits
+// are exercised through the unwrapped production flow in staged-index.test.ts.
+const analyzeBook: typeof analyzeBookProduction = (book, options = {}) => analyzeBookProduction(book, {
+  ...options,
+  saveStageProgress: options.saveStageProgress ?? (async () => {}),
+  ...(options.createResponse ? {createResponse: async request => request.text?.format.name === "bookrpg_source_timeline_review"
+    ? {status: "completed" as const, output_text: JSON.stringify({valid: true, issues: []})}
+    : options.createResponse!(request)} : {}),
+});
+
 test("character descriptions prioritize concrete identity over symbolism", () => {
   const rules = CHARACTER_PROFILE_DESCRIPTION_RULES.join("\n");
 
@@ -35,20 +44,6 @@ test("character descriptions prioritize concrete identity over symbolism", () =>
   assert.match(rules, /symbolic meaning.*only after/i);
 });
 
-test("significant story event categories prioritize the event action over mentioned state", () => {
-  assert.equal(
-    classifyStoryEventCategory("Mary murders Patrick with a frozen leg of lamb."),
-    "death",
-  );
-  assert.equal(
-    classifyStoryEventCategory("Mary discovers Patrick dead on the floor."),
-    "discovery",
-  );
-  assert.equal(
-    classifyStoryEventCategory("Police arrive and investigate Patrick's death."),
-    "arrival",
-  );
-});
 
 test("book story events prefer their own participants over overlapping actions", () => {
   const events = buildBookStoryEvents({
@@ -560,7 +555,7 @@ test("book analysis builds a source-backed character, action, and relationship i
     log: () => undefined,
     createResponse: async (request) => {
       callCount += 1;
-      if (callCount === 1) {
+      if (callCount <= 2) {
         assert.match(
           request.instructions ?? "",
           /Treat the narrative present .* as the event chronology/i,
@@ -582,6 +577,8 @@ test("book analysis builds a source-backed character, action, and relationship i
                 beats: [{
                   actor: "Person Alpha",
                   action: "Greets Person Beta.",
+                  sourceSemantics: {mode: "present", narratedContent: null, intentionalRole: "other", jointAction: null},
+                  resultingState: "Person Beta has heard the greeting.",
                   targets: ["Person Beta"],
                   agency: "intentional",
                   stakes: "routine",
@@ -613,6 +610,8 @@ test("book analysis builds a source-backed character, action, and relationship i
                 beats: [{
                   actor: "Person Beta",
                   action: "Helps Person Alpha.",
+                  sourceSemantics: {mode: "present", narratedContent: null, intentionalRole: "other", jointAction: null},
+                  resultingState: "Person Alpha has received help.",
                   targets: ["Person Alpha"],
                   agency: "intentional",
                   stakes: "routine",
@@ -642,7 +641,7 @@ test("book analysis builds a source-backed character, action, and relationship i
           incomplete_details: null,
         };
       }
-      if (callCount === 2) {
+      if (callCount === 3) {
         if (typeof request.input !== "string") {
           throw new Error("Expected whole-book input to be a string");
         }
@@ -675,12 +674,15 @@ test("book analysis builds a source-backed character, action, and relationship i
   ]);
   assert.equal(book.chapters[0]?.sourceIndex?.schemaVersion, CHAPTER_SOURCE_INDEX_VERSION);
   assert.deepEqual(book.chapters[0]?.sourceIndex?.significantEvents, [{
+    category: "other",
     description: "Person Alpha greets Person Beta.",
     actors: ["Person Alpha"],
     targets: ["Person Beta"],
     beats: [{
       actor: "Person Alpha",
       action: "Greets Person Beta.",
+      sourceSemantics: {mode: "present", narratedContent: null, intentionalRole: "other", jointAction: null},
+      resultingState: "Person Beta has heard the greeting.",
       targets: ["Person Beta"],
       agency: "intentional",
       stakes: "routine",
@@ -725,7 +727,7 @@ test("book analysis builds a source-backed character, action, and relationship i
   assert.equal(alpha?.actions?.[0]?.targets[0]?.characterId, beta?.characterId);
   assert.deepEqual(alpha?.actions?.[0]?.sourceReferences, [reference(0, 4)]);
   assert.deepEqual(alpha?.sourceReferences, [reference(0, 4), reference(1, 9)]);
-  assert.equal(callCount, 2);
+  assert.equal(callCount, 3);
 });
 
 test("canonical profile names populate the derived character list", async () => {
@@ -1108,21 +1110,21 @@ test("book analysis retries only invalid source indexes and checkpoints complete
     importedAt: "2026-01-01T00:00:00.000Z",
   };
   const inputs: string[] = [];
-  let checkpoints = 0;
+  const checkpointSummaries: Array<Array<string | undefined>> = [];
 
   const analysis = await analyzeBook(book, {
     log: () => undefined,
     saveProgress: async () => {
-      checkpoints += 1;
-      assert.equal(book.chapters[0]?.sourceIndex?.summary, "Summary one.");
-      assert.equal(book.chapters[1]?.sourceIndex?.summary, "Summary two.");
+      checkpointSummaries.push(
+        book.chapters.map((chapter) => chapter.sourceIndex?.summary),
+      );
     },
     createResponse: async (request) => {
       if (typeof request.input !== "string") {
         throw new Error("Expected request input to be a string");
       }
       inputs.push(request.input);
-      if (inputs.length === 1) {
+      if (inputs.length <= 2) {
         return {
           output_text: JSON.stringify({
             chapter_1_part_1: emptyPartIndex("Summary one."),
@@ -1140,7 +1142,7 @@ test("book analysis retries only invalid source indexes and checkpoints complete
           status: "completed",
         };
       }
-      if (inputs.length === 2) {
+      if (inputs.length === 3) {
         return {
           output_text: JSON.stringify({
             chapter_2_part_1: emptyPartIndex("Summary two."),
@@ -1156,11 +1158,14 @@ test("book analysis retries only invalid source indexes and checkpoints complete
   });
 
   assert.match(inputs[0]!, /SOURCE_ID: chapter_1_part_1/);
-  assert.match(inputs[0]!, /SOURCE_ID: chapter_2_part_1/);
+  assert.doesNotMatch(inputs[0]!, /SOURCE_ID: chapter_2_part_1/);
   assert.doesNotMatch(inputs[1]!, /SOURCE_ID: chapter_1_part_1/);
   assert.match(inputs[1]!, /SOURCE_ID: chapter_2_part_1/);
   assert.deepEqual(analysis.chapterSummaries, ["Summary one.", "Summary two."]);
-  assert.equal(checkpoints, 1);
+  assert.deepEqual(checkpointSummaries, [
+    ["Summary one.", undefined],
+    ["Summary one.", "Summary two."],
+  ]);
 });
 
 test("book analysis retries incomplete chapter source index batches", async () => {
@@ -1563,3 +1568,5 @@ test("whole-book indexing retries partial supplemental omissions without regener
     ),
   );
 });
+
+

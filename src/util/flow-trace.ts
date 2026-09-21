@@ -18,6 +18,12 @@ const sensitiveField = /^(?:api[-_]?key|authorization|cookie|password|token|(?:a
 // Serialize appends per file so concurrent operations cannot interleave blocks.
 const writes = new Map<string, Promise<void>>();
 
+function flowLoggingDisabled(): boolean {
+  return /^(0|false|off|none)$/i.test(
+    process.env.BOOKRPG_FLOW_LOG?.trim() ?? "",
+  );
+}
+
 function gameIdFrom(value: unknown): string | undefined {
   if (!value || typeof value !== "object" || !("gameId" in value)) return undefined;
   return typeof value.gameId === "string" && /^[a-zA-Z0-9_-]{1,200}$/.test(value.gameId)
@@ -68,6 +74,7 @@ export function traceEvent(event: string, data: unknown): void {
 
 export function flowDiagnostic(...args: unknown[]): void {
   traceEvent("decision", args);
+  if (flowLoggingDisabled()) return;
   console.error(...args);
 }
 
@@ -79,6 +86,7 @@ export function traceGameState(event: string, game: GameState): void {
     turnNumber: game.turnNumber, status: game.status, position: game.position,
     sourceCursor: game.sourceCursor, sourceEventProgress: game.sourceEventProgress,
     establishedEvent: game.establishedEvent, scene: game.scene,
+    confirmedDeadCharacters: game.confirmedDeadCharacters,
     activeConversation: game.activeConversation,
     activeConversationAnchorDirected: game.activeConversationAnchorDirected,
     parameters: game.parameters,
@@ -92,7 +100,7 @@ export async function withFlowTrace<T>(
     traceEvent("operation.nested", { operation, input });
     return await run();
   }
-  if (/^(0|false|off|none)$/i.test(process.env.BOOKRPG_FLOW_LOG?.trim() ?? "")) {
+  if (flowLoggingDisabled()) {
     return await run();
   }
   const trace: FlowTrace = {
@@ -118,4 +126,5 @@ export async function withFlowTrace<T>(
     }
   });
 }
+
 

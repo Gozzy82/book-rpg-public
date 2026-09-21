@@ -1,0 +1,433 @@
+{
+  "version": 3,
+  "provenance": "Assistant-curated against the numbered source excerpt; pending independent human semantic review. No goal annotations are supplied to the model.",
+  "sourceSha256": "444dcecc0e5dc07fcb682adaf2c1197e0f757501cdd042a1008e2e96e6b88ee8",
+  "timeline": {
+    "summary": "toto source excerpt",
+    "characters": [
+      {
+        "name": "Toto",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 4
+          }
+        ]
+      },
+      {
+        "name": "Dorothy",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 4
+          }
+        ]
+      },
+      {
+        "name": "Aunt Em",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 2,
+            "lineEnd": 3
+          }
+        ]
+      }
+    ],
+    "significantEvents": [
+      {
+        "description": "Jumps out of Dorothy’s arms.",
+        "actors": [
+          "Toto"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 1
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Toto",
+            "action": "Jumps out of Dorothy’s arms.",
+            "resultingState": "Toto is out of Dorothy’s arms.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 1,
+                "lineEnd": 1
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Hides under the bed.",
+        "actors": [
+          "Toto"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 1
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Toto",
+            "action": "Hides under the bed.",
+            "resultingState": "Toto is under the bed.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 1,
+                "lineEnd": 1
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Starts to get Toto from under the bed.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 2
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Starts to get Toto from under the bed.",
+            "resultingState": "Dorothy has begun retrieving Toto; he is not yet caught.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 1,
+                "lineEnd": 2
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Throws open the trap door, badly frightened.",
+        "actors": [
+          "Aunt Em"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 2,
+            "lineEnd": 3
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Aunt Em",
+            "action": "Throws open the trap door, badly frightened.",
+            "resultingState": "The trap door is open; Aunt Em is badly frightened.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 2,
+                "lineEnd": 3
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Climbs down the ladder into the hole.",
+        "actors": [
+          "Aunt Em"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 3
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Aunt Em",
+            "action": "Climbs down the ladder into the hole.",
+            "resultingState": "Aunt Em is down in the shelter.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 3,
+                "lineEnd": 3
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Catches Toto at last.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 4
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Catches Toto at last.",
+            "resultingState": "Dorothy has caught Toto.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 3,
+                "lineEnd": 4
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Starts to follow Aunt Em and reaches halfway across the room.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 4,
+            "lineEnd": 5
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Starts to follow Aunt Em and reaches halfway across the room.",
+            "resultingState": "Dorothy is halfway across the room with Toto; she has not reached the shelter.",
+            "agency": "intentional",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 4,
+                "lineEnd": 5
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "The wind shrieks.",
+        "actors": [],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 5
+          }
+        ],
+        "beats": [
+          {
+            "actor": null,
+            "action": "The wind shrieks.",
+            "resultingState": "A great shriek comes from the wind.",
+            "agency": "external",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 5,
+                "lineEnd": 5
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "The house shakes hard.",
+        "actors": [],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 5
+          }
+        ],
+        "beats": [
+          {
+            "actor": null,
+            "action": "The house shakes hard.",
+            "resultingState": "The room is violently shaking.",
+            "agency": "external",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 5,
+                "lineEnd": 5
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Loses her footing.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 6
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Loses her footing.",
+            "resultingState": "Dorothy has lost her balance halfway across the room.",
+            "agency": "involuntary",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 6,
+                "lineEnd": 6
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            }
+          }
+        ]
+      },
+      {
+        "description": "Sits down suddenly upon the floor.",
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 6
+          }
+        ],
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Sits down suddenly upon the floor.",
+            "resultingState": "Dorothy is on the floor, still holding Toto.",
+            "agency": "involuntary",
+            "stakes": "significant",
+            "targets": [],
+            "references": [
+              {
+                "lineStart": 6,
+                "lineEnd": 6
+              }
+            ],
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            }
+          }
+        ]
+      }
+    ],
+    "actions": [],
+    "relationships": []
+  },
+  "expectedPrimaryGoal": {
+    "actor": "Dorothy",
+    "playerBeatIndexes": [
+      2,
+      5
+    ],
+    "endBeatIndex": 5
+  }
+}

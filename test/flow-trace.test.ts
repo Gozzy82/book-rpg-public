@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { GameState } from "../src/shared/contracts.js";
-import { traceEvent, traceGameState, withFlowTrace } from "../src/util/flow-trace.js";
+import { flowDiagnostic, traceEvent, traceGameState, withFlowTrace } from "../src/util/flow-trace.js";
 
 test("flow traces isolate concurrent operations, snapshot data, redact credentials and include nested failures", async () => {
   const previous = process.env.BOOKRPG_FLOW_LOG;
@@ -42,6 +42,7 @@ test("flow traces isolate concurrent operations, snapshot data, redact credentia
     assert.deepEqual(first.events.map((event: any) => event.sequence), [1, 2, 3, 4]);
     process.env.BOOKRPG_FLOW_LOG = "off";
     assert.equal(await withFlowTrace("disabled", {}, async () => 42), 42);
+    flowDiagnostic("private story detail must not reach stderr");
     assert.equal(messages.length, 2);
   } finally {
     console.error = original;

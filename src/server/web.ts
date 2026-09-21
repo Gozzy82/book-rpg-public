@@ -12,6 +12,11 @@ const WEB_ASSETS = new Map<string, WebAsset>([
   ["/index.html", { filename: "index.html", contentType: "text/html; charset=utf-8" }],
   ["/app.js", { filename: "app.js", contentType: "text/javascript; charset=utf-8" }],
   ["/styles.css", { filename: "styles.css", contentType: "text/css; charset=utf-8" }],
+  ["/world-rules.js", { filename: "world-rules.js", contentType: "text/javascript; charset=utf-8" }],
+  ["/world-rules.css", { filename: "world-rules.css", contentType: "text/css; charset=utf-8" }],
+  ["/narrative-layout.js", { filename: "narrative-layout.js", contentType: "text/javascript; charset=utf-8" }],
+  ["/narrative-layout.css", { filename: "narrative-layout.css", contentType: "text/css; charset=utf-8" }],
+  ["/turn-controls.css", { filename: "turn-controls.css", contentType: "text/css; charset=utf-8" }],
   [
     "/manifest.webmanifest",
     { filename: "manifest.webmanifest", contentType: "application/manifest+json; charset=utf-8" },

@@ -123,9 +123,8 @@ test("calling and listening for an absent character does not require their parti
         text:
           "Carefully move toward the edge of the room where Patrick's steps might be "
           + "heard and call again for Patrick, keeping low and listening for a distant reply.",
-        character: "Patrick Maloney",
-        requiredPresentCharacters: ["Patrick Maloney"],
-        requiredAbsentCharacters: [],
+        requiredPresentCharacters: [],
+        requiredAbsentCharacters: ["Patrick Maloney"],
       },
       {
         id: "ask",
@@ -156,9 +155,8 @@ test("searching for arrival signs is unavailable once the character is present",
       id: "listen_and_call",
       type: "action" as const,
       text: "Listen for Patrick's footsteps and call out for Patrick",
-      character: "Patrick Maloney",
-      requiredPresentCharacters: ["Patrick Maloney"],
-      requiredAbsentCharacters: [],
+      requiredPresentCharacters: [],
+      requiredAbsentCharacters: ["Patrick Maloney"],
     }],
   };
 
@@ -260,7 +258,7 @@ test("uncertain presence cannot enable talk or direct interaction choices", () =
   assert.deepEqual(filtered.choices.map((choice) => choice.id), ["wait"]);
 });
 
-test("a visibly completed arrival lifts temporary unavailability", () => {
+test("prose cannot override an explicit unavailability verdict", () => {
   const scene = {
     ...sceneWithPresentCharacters(["Patrick Maloney"]),
     text: "Patrick Maloney arrives home and steps inside the living room.",
@@ -272,5 +270,6 @@ test("a visibly completed arrival lifts temporary unavailability", () => {
     ["Patrick Maloney"],
   );
 
-  assert.deepEqual(filtered.choices.map((choice) => choice.id), ["welcome", "sew"]);
+  assert.deepEqual(filtered.choices.map((choice) => choice.id), ["sew"]);
 });
+

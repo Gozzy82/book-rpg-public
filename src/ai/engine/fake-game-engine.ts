@@ -54,6 +54,12 @@ export function fakeScene(
 }
 
 export class FakeGameEngine implements GameEngine {
+  async reviewResumeAnchor(state: GameState): Promise<import('../../shared/contracts.js').SceneScope> {
+    if(!state.scene.sceneScope) throw new Error('Saved scene has no scope.');
+    return state.scene.sceneScope;
+  }
+
+  async assessEstablishedDeaths(state: GameState): Promise<string[]> { return state.confirmedDeadCharacters ?? []; }
   async classifyBook(): Promise<BookGameProfile> {
     return {
       category: "adventure",
@@ -229,3 +235,4 @@ export class FakeGameEngine implements GameEngine {
     return fakeScene(`You say to ${character}: “${playerText}”`, candidates[0]);
   }
 }
+

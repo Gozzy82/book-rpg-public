@@ -1,0 +1,552 @@
+[
+  {
+    "eventId": "event_5b3afb6e1e10b0544fd3",
+    "sequence": 1,
+    "description": "A cyclone approaches the farmhouse and the family reacts.",
+    "category": "other",
+    "chapterPosition": 3,
+    "actors": [
+      "Uncle Henry",
+      "Aunt Em",
+      "Toto",
+      "Dorothy"
+    ],
+    "targets": [
+      "Aunt Em",
+      "Dorothy",
+      "Toto"
+    ],
+    "beats": [
+      {
+        "actor": "Uncle Henry",
+        "action": "Warns Aunt Em that a cyclone is coming and runs toward the sheds to look after the stock.",
+        "decisionBoundaryBefore": "Uncle Henry chooses to protect the livestock after recognizing the approaching cyclone.",
+        "resultingState": "Uncle Henry is running toward the sheds; Aunt Em remains in the house; Dorothy holds Toto at the doorway.",
+        "targets": [
+          "Aunt Em"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 50,
+            "lineEnd": 53
+          }
+        ]
+      },
+      {
+        "actor": "Aunt Em",
+        "action": "Drops her work, sees the danger, and orders Dorothy to run for the cellar.",
+        "decisionBoundaryBefore": "Aunt Em responds to the immediate danger by directing Dorothy to shelter.",
+        "resultingState": "Aunt Em has stopped washing dishes and has ordered Dorothy toward the cellar; Dorothy still holds Toto.",
+        "targets": [
+          "Dorothy"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 54,
+            "lineEnd": 56
+          }
+        ]
+      },
+      {
+        "actor": "Toto",
+        "action": "Jumps from Dorothy's arms and hides under the bed.",
+        "decisionBoundaryBefore": "Toto reacts to the emergency by fleeing from Dorothy.",
+        "resultingState": "Toto is under the bed and Dorothy is no longer holding him.",
+        "targets": [
+          "Dorothy"
+        ],
+        "agency": "involuntary",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 57,
+            "lineEnd": 57
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Starts trying to retrieve Toto from under the bed.",
+        "decisionBoundaryBefore": "Dorothy chooses to retrieve Toto rather than immediately descend to the cellar.",
+        "resultingState": "Dorothy has begun trying to get Toto; Toto remains under the bed; Aunt Em has not yet descended.",
+        "playerAction": {
+          "kind": "player_action",
+          "endBeatIndex": 3,
+          "boundaryReason": "The retrieval attempt is interrupted by Aunt Em opening the trapdoor and descending.",
+          "choiceText": "Retrieve Toto from under the bed before taking shelter.",
+          "completion": "Dorothy begins reaching for Toto, but the source interrupts before she catches him.",
+          "playerBeatIndexes": [
+            3
+          ],
+          "preconditions": [
+            "Toto is under the bed.",
+            "Dorothy is inside the house."
+          ],
+          "interruptWhen": [
+            "Aunt Em opens the trapdoor and descends."
+          ]
+        },
+        "targets": [
+          "Toto"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 57,
+            "lineEnd": 58
+          }
+        ]
+      },
+      {
+        "actor": "Aunt Em",
+        "action": "Throws open the trapdoor and climbs down the ladder into the cyclone cellar.",
+        "decisionBoundaryBefore": "Aunt Em commits to taking shelter in the cellar after seeing the danger.",
+        "resultingState": "The trapdoor is open; Aunt Em is descending into the cellar; Dorothy is still trying to retrieve Toto.",
+        "targets": [],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 58,
+            "lineEnd": 59
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Catches Toto and starts toward Aunt Em.",
+        "decisionBoundaryBefore": "Dorothy resumes the shelter goal after securing Toto.",
+        "resultingState": "Dorothy is holding Toto and is halfway across the room toward the open trapdoor; Aunt Em is in the cellar.",
+        "playerAction": {
+          "kind": "player_action",
+          "endBeatIndex": 5,
+          "boundaryReason": "The house's violent shaking interrupts Dorothy halfway across the room.",
+          "choiceText": "Catch Toto and follow Aunt Em toward the cellar.",
+          "completion": "Dorothy catches Toto and begins following Aunt Em but has not reached the cellar.",
+          "playerBeatIndexes": [
+            5
+          ],
+          "preconditions": [
+            "Toto is accessible under the bed.",
+            "The trapdoor is open and Aunt Em is in the cellar."
+          ],
+          "interruptWhen": [
+            "The house shakes and Dorothy loses her footing."
+          ]
+        },
+        "targets": [
+          "Toto",
+          "Aunt Em"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 59,
+            "lineEnd": 60
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Loses her footing when the house shakes and sits down suddenly on the floor.",
+        "resultingState": "Dorothy is seated on the floor while holding Toto; she has not reached the cellar.",
+        "targets": [],
+        "agency": "involuntary",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 60,
+            "lineEnd": 62
+          }
+        ]
+      }
+    ],
+    "sourceReferences": [
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 50,
+        "lineEnd": 53
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 50,
+        "lineEnd": 62
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 54,
+        "lineEnd": 56
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 57,
+        "lineEnd": 57
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 57,
+        "lineEnd": 58
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 58,
+        "lineEnd": 59
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 59,
+        "lineEnd": 60
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 60,
+        "lineEnd": 62
+      }
+    ]
+  },
+  {
+    "eventId": "event_13c38b29b37ba87191c5",
+    "sequence": 13,
+    "description": "Dorothy and the Scarecrow discover and rescue the Tin Woodman.",
+    "category": "discovery",
+    "chapterPosition": 7,
+    "actors": [
+      "Dorothy",
+      "Scarecrow",
+      "Toto",
+      "Tin Woodman"
+    ],
+    "targets": [
+      "Scarecrow",
+      "Dorothy",
+      "Tin Woodman"
+    ],
+    "beats": [
+      {
+        "actor": "Dorothy",
+        "action": "Wakes, leaves the cottage with the Scarecrow, and searches for water.",
+        "decisionBoundaryBefore": "Dorothy chooses to search for water for washing and drinking.",
+        "resultingState": "Dorothy, Toto, and the Scarecrow have left the cottage and are searching the forest for water.",
+        "targets": [
+          "Scarecrow"
+        ],
+        "agency": "intentional",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 5,
+            "lineEnd": 16
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Finds a spring, drinks, bathes, and eats breakfast.",
+        "resultingState": "Dorothy has washed, drunk water, and eaten breakfast; little bread remains.",
+        "targets": [],
+        "agency": "intentional",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 16,
+            "lineEnd": 20
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Hears a groan and asks what caused it.",
+        "decisionBoundaryBefore": "Dorothy chooses to investigate the nearby groan.",
+        "resultingState": "Dorothy and the Scarecrow know that a groan is coming from nearby, but its source is not yet identified.",
+        "targets": [
+          "Scarecrow"
+        ],
+        "agency": "intentional",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 21,
+            "lineEnd": 25
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "action": "Agrees that they should investigate the groan.",
+        "resultingState": "Dorothy and the Scarecrow have decided to search for the source of the groan.",
+        "targets": [
+          "Dorothy"
+        ],
+        "agency": "intentional",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 23,
+            "lineEnd": 28
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Discovers the Tin Woodman standing motionless beside a partly chopped tree with an axe raised.",
+        "resultingState": "Dorothy and the Scarecrow have found the Tin Woodman immobilized beside the tree.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 26,
+            "lineEnd": 35
+          }
+        ]
+      },
+      {
+        "actor": "Toto",
+        "action": "Barks at and snaps at the Tin Woodman's tin legs, hurting his teeth.",
+        "resultingState": "Toto has barked at the Tin Woodman and hurt his teeth; the Tin Woodman remains motionless.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "agency": "intentional",
+        "stakes": "routine",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 35,
+            "lineEnd": 36
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "action": "Explains that he has been groaning for more than a year because rust has immobilized him.",
+        "resultingState": "Dorothy knows the Tin Woodman has been trapped and unable to move for more than a year.",
+        "targets": [
+          "Dorothy"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 37,
+            "lineEnd": 45
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Runs to the cottage, retrieves the oil-can, and returns to the Tin Woodman.",
+        "decisionBoundaryBefore": "Dorothy chooses to rescue the Tin Woodman by obtaining the oil-can.",
+        "resultingState": "Dorothy has the oil-can and is back beside the immobilized Tin Woodman.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 41,
+            "lineEnd": 48
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Oils the Tin Woodman's neck while the Scarecrow moves his head until the joint works freely.",
+        "decisionBoundaryBefore": "Dorothy begins freeing the Tin Woodman's rusted joints, starting with his neck.",
+        "resultingState": "The Tin Woodman's neck joint is free, and he can turn his head himself; his arms and legs remain rusted.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 47,
+            "lineEnd": 51
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Oils the Tin Woodman's arm joints while the Scarecrow bends them until they are free.",
+        "resultingState": "The Tin Woodman's neck and arm joints are free; his leg joints remain rusted.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 52,
+            "lineEnd": 54
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "action": "Lowers his axe and leans it against the tree after his arms are freed.",
+        "resultingState": "The Tin Woodman is no longer holding the raised axe; it rests against the tree while his legs remain rusted.",
+        "targets": [],
+        "agency": "intentional",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 55,
+            "lineEnd": 60
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Oils the Tin Woodman's leg joints until he can move freely.",
+        "decisionBoundaryBefore": "Dorothy completes the rescue by freeing the Tin Woodman's legs.",
+        "resultingState": "The Tin Woodman can move all of his joints and has been freed from his year-long immobilization.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 7,
+            "chapterIndex": 7,
+            "lineStart": 59,
+            "lineEnd": 65
+          }
+        ]
+      }
+    ],
+    "sourceReferences": [
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 5,
+        "lineEnd": 16
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 5,
+        "lineEnd": 65
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 16,
+        "lineEnd": 20
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 21,
+        "lineEnd": 25
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 23,
+        "lineEnd": 28
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 26,
+        "lineEnd": 35
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 35,
+        "lineEnd": 36
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 37,
+        "lineEnd": 45
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 41,
+        "lineEnd": 48
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 47,
+        "lineEnd": 51
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 52,
+        "lineEnd": 54
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 55,
+        "lineEnd": 60
+      },
+      {
+        "chapterPosition": 7,
+        "chapterIndex": 7,
+        "lineStart": 59,
+        "lineEnd": 65
+      }
+    ]
+  }
+]
