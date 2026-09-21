@@ -1,10 +1,16 @@
 # BookRPG
 
-BookRPG is a source-grounded AI engine that turns books into interactive role-playing experiences while trying to preserve narrative continuity, character identity and player agency.
+An experimental TypeScript application that turns EPUB books into interactive stories. Players choose a character and take actions while the engine tracks story progression and game state.
+
+The project explores how generated scenes can stay consistent with the book without making decisions for the player.
+
+[Case study](https://gerko.amsterdam/book-rpg/) · [Portfolio](https://gerko.amsterdam/) · [LinkedIn](https://nl.linkedin.com/in/gerko-schrieken-b1853246)
 
 This repository is a **sanitized public source snapshot** of the implementation. It is exported from the private development repository with fresh Git history and excludes local data, logs, credentials and other operational artifacts.
 
-## What this demonstrates
+**Status:** experimental source snapshot, not a validated release. See [Validation of this snapshot](#validation-of-this-snapshot) for the recorded build and test limitations.
+
+## Main components
 
 - EPUB ingestion and indexing into reusable story context;
 - source-grounded significant events and beat progression;
@@ -43,6 +49,10 @@ Book analysis / source index
 ```
 
 The implementation deliberately separates **what the source says should happen** from **what the player is allowed to do now**. The game state advances through source-grounded beats while still allowing generated prose and player choices to vary.
+
+## Where to start
+
+For a code review, start with [`src/books/`](src/books/) for book import and indexing, [`src/ai/`](src/ai/) for generation and review, and [`src/games/`](src/games/) for game state and persistence.
 
 ## Project structure
 
