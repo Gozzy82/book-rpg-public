@@ -108,3 +108,22 @@ test("terminal scenes do not gain a required player choice", () => {
 
   assert.deepEqual(ensureRequiredPlayerChoiceFirst(scene, fallback), scene);
 });
+
+
+test("required next decision retains radical alternatives without canonical route metadata", () => {
+  const fallback: Scene["choices"][number] = {id: "required", type: "action", text: "Ask Dorothy to take me to Oz",
+    sourceEventId: "next-event", sourceAnchorRoute: "event", stakes: "significant"};
+  const scene: Scene = {title: "A fork", text: "Dorothy stands beside me at the fork in the road.", choices: [
+    {id: "leave", type: "action", text: "Leave Dorothy and take the other road", stakes: "significant",
+      sourceEventId: "wrong-event", sourceAnchorRoute: "event"},
+    {id: "attack", type: "action", text: "Attempt to strike Dorothy", character: "Dorothy", stakes: "significant"},
+  ]};
+  const repaired = ensureRequiredPlayerChoiceFirst(scene, fallback);
+  assert.equal(repaired.choices[0]?.text, fallback.text);
+  assert.equal(repaired.choices[0]?.sourceAnchorRoute, "event");
+  assert.deepEqual(repaired.choices.slice(1).map(choice => choice.text), scene.choices.map(choice => choice.text));
+  for (const choice of repaired.choices.slice(1)) {
+    assert.equal(choice.sourceAnchorRoute, undefined);
+    assert.equal(choice.sourceEventId, undefined);
+  }
+});

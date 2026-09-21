@@ -1,3 +1,4 @@
+import {peopleKilledInSceneSchema} from '../shared/scene-deaths.js';
 const choicesJsonSchema = {
   type: "array",
   minItems: 0,
@@ -111,7 +112,7 @@ const sceneScopeJsonSchema = {
       minItems: 0,
       maxItems: 16,
       items: { type: "string" },
-      description: "Every confirmed living non-player character physically present and interactable at currentLocation at the decision point. Use only an exact name or alias from the known character profiles, without decorating or qualifying the identity. Always include player_identity exactly once, including a nonhuman player. Exclude corpses, dead characters, anyone absent or departed, anticipated arrivals, and uncertain identities.",
+      description: "Every confirmed living non-player character physically present and interactable at currentLocation at the decision point, including animals and nonhuman characters. Include known characters hiding within the current room even when not visible, unable to speak or beyond immediate physical reach; presence does not require touching them or grant speech. Use only an exact name or alias from the known character profiles, without decorating or qualifying the identity. Always include player_identity exactly once, including a nonhuman player. Exclude corpses, dead characters, anyone absent or departed, anticipated arrivals, and uncertain identities.",
     },
     peopleWithinSpeakingDistance: {
       type: "array",
@@ -132,6 +133,7 @@ export const scenePresenceReviewJsonSchema = {
   type: "object",
   additionalProperties: false,
   properties: {
+    peopleKilledInScene: peopleKilledInSceneSchema,
     peoplePresent: {
       type: "array",
       maxItems: 16,
@@ -166,6 +168,7 @@ export const scenePresenceReviewJsonSchema = {
     reason: { type: "string" },
   },
   required: [
+    "peopleKilledInScene",
     "peoplePresent",
     "peopleWithinSpeakingDistance",
     "latestVisibleSourceEventId",
@@ -181,6 +184,7 @@ export const sceneJsonSchema = {
   type: "object",
   additionalProperties: false,
   properties: {
+    peopleKilledInScene: peopleKilledInSceneSchema,
     title: { type: "string" },
     text: { type: "string" },
     playerAction: { type: "string" },
@@ -198,6 +202,7 @@ export const sceneJsonSchema = {
     outcomeReason: { type: "string" },
   },
   required: [
+    "peopleKilledInScene",
     "title",
     "text",
     "playerAction",
@@ -585,3 +590,4 @@ export function sourceEventJsonSchemaForBlocks(blockCount: number) {
     required: ["compatible", "blockIndex", "eventId", "event", "reason"],
   } as const;
 }
+

@@ -1,3 +1,4 @@
+import {storyEventCategorySchema} from '../../shared/story-event-category.js';
 import type {
   AiResponse,
   AiResponseRequest,
@@ -98,11 +99,13 @@ export type CreateAnalysisResponse = (
 ) => Promise<AiResponse>;
 
 export interface AnalyzeBookOptions {
+  sharedEventsOnly?: boolean;
   createResponse?: CreateAnalysisResponse;
   log?: (message: string) => void;
   maxSourceCharsPerRequest?: number;
   model?: string;
   saveProgress?: () => Promise<void>;
+  saveStageProgress?: () => Promise<void>;
 }
 
 export interface ChapterAnalysisPart {
@@ -160,7 +163,9 @@ export function formatPartHeader(
 ): string {
   return [
     `SOURCE_ID: ${sourceId(chapterPosition, partNumber)}`,
-    `CHAPTER_POSITION: ${chapterPosition + 1}`,
+    `CHAPTER_POSITION: ${chapterPosition}`,
+    `CHAPTER_NUMBER: ${chapterPosition + 1}`,
+    "BASES: position/column=0; number/line=1.",
     `EPUB_SPINE_INDEX: ${chapterIndex}`,
     `TITLE: ${chapterTitle}`,
     `PART: ${partNumber}/${partCount}`,
@@ -398,6 +403,7 @@ export function chapterSourceIndexSchema(parts: ChapterAnalysisPart[]): Record<s
             additionalProperties: false,
             properties: {
               description: { type: "string" },
+              category: storyEventCategorySchema,
               beats: {
                 type: "array",
                 minItems: 1,
@@ -410,6 +416,24 @@ export function chapterSourceIndexSchema(parts: ChapterAnalysisPart[]): Record<s
                       description: "Exact character name for a character action or experience; null only for an environmental or otherwise actorless external beat.",
                     },
                     action: { type: "string" },
+                    decisionBoundaryBefore: {type: ["string", "null"], description: "New goal, commitment, changed method/risk, or response to relevant new information requiring a fresh choice by this beat actor; null for continuation of an already selected goal."},
+                    playerAction: {
+                      anyOf: [{type: "null"}, {type: "object", additionalProperties: false,
+                        properties: {
+                          kind: {type: "string", enum: ["player_action"]},
+                          choiceText: {type: "string"},
+                          endBeatIndex: {type: "integer", minimum: 0},
+                          boundaryReason: {type: "string"},
+                          playerBeatIndexes: {type: "array", items: {type: "integer", minimum: 0}, minItems: 1},
+                          completion: {type: "string"},
+                          preconditions: {type: "array", items: {type: "string", minLength: 1}},
+                          interruptWhen: {type: "array", items: {type: "string", minLength: 1}},
+                        }, required: ["kind", "endBeatIndex", "boundaryReason", "choiceText", "playerBeatIndexes", "completion", "preconditions", "interruptWhen"]}],
+                    },
+                    resultingState: {
+                      type: "string",
+                      description: "Concrete source-backed state after only this beat and the already-completed prefix, before the next beat begins. No new independent action by another actor and no later action or outcome. Use later beats only to determine the stopping boundary.",
+                    },
                     targets: {
                       type: "array",
                       items: { type: "string" },
@@ -427,6 +451,9 @@ export function chapterSourceIndexSchema(parts: ChapterAnalysisPart[]): Record<s
                   required: [
                     "actor",
                     "action",
+                    "resultingState",
+                    "playerAction",
+                    "decisionBoundaryBefore",
                     "targets",
                     "agency",
                     "stakes",
@@ -436,7 +463,7 @@ export function chapterSourceIndexSchema(parts: ChapterAnalysisPart[]): Record<s
               },
               references,
             },
-            required: ["description", "beats", "references"],
+            required: ["description", "category", "beats", "references"],
           },
         },
         characters: {
@@ -509,3 +536,4 @@ export function chapterSourceIndexSchema(parts: ChapterAnalysisPart[]): Record<s
     required: parts.map((part) => part.sourceId),
   };
 }
+

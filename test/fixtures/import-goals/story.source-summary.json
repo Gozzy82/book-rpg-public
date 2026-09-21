@@ -1,0 +1,1345 @@
+{
+  "sourceSha256": "f5d15a8a670050c1783a01c568c191e8bae12f4dc1e27f2e5e00f6d63e81cde3",
+  "timeline": {
+    "summary": "While walking through the forest, the Tin Woodman tells the Scarecrow and Dorothy how the Wicked Witch of the East caused him to lose his limbs, head, body, and heart while trying to prevent his marriage to a Munchkin girl. He explains that rust later immobilized him until Dorothy and the Scarecrow helped him, and that he now intends to ask Oz for a heart so he can marry the Munchkin girl.",
+    "significantEvents": [
+      {
+        "description": "The Scarecrow asks why the Tin Woodman wants a new heart, and the Tin Woodman agrees to explain by telling his story as they walk through the forest.",
+        "beats": [
+          {
+            "actor": "Scarecrow",
+            "action": "Asks the Tin Woodman why he wants a new heart.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The Tin Woodman has been asked to explain his desire for a new heart.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 1,
+                "lineEnd": 1
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Says that he will tell the Scarecrow his story so the Scarecrow will understand.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The Tin Woodman has committed to explaining his past to the Scarecrow.",
+            "targets": [
+              "Scarecrow"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 2,
+                "lineEnd": 2
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The Tin Woodman tells his story while he, Dorothy, and the Scarecrow walk through the forest.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The Tin Woodman tells his story while he, Dorothy, and the Scarecrow walk through the forest.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The Tin Woodman tells his story while he, Dorothy, and the Scarecrow walk through the forest.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 3,
+                "lineEnd": 4
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Scarecrow",
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Tin Woodman",
+          "Scarecrow",
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 1
+          },
+          {
+            "lineStart": 1,
+            "lineEnd": 4
+          },
+          {
+            "lineStart": 2,
+            "lineEnd": 2
+          },
+          {
+            "lineStart": 3,
+            "lineEnd": 4
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman recounts his family background, his work as a wood-chopper, and his decision to marry rather than remain alone.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He was born the son of a woodman who chopped and sold wood for a living.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He was born the son of a woodman who chopped and sold wood for a living.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He was born the son of a woodman who chopped and sold wood for a living.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 5,
+                "lineEnd": 5
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He became a wood-chopper, cared for his old mother after his father died, and continued caring for her until she died.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He became a wood-chopper, cared for his old mother after his father died, and continued caring for her until she died.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He became a wood-chopper, cared for his old mother after his father died, and continued caring for her until she died.",
+            "targets": [
+              "old mother"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 6,
+                "lineEnd": 8
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: Afterward, he decided to marry so he would not live alone and become lonely.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "Afterward, he decided to marry so he would not live alone and become lonely.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: Afterward, he decided to marry so he would not live alone and become lonely.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 8,
+                "lineEnd": 9
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "old mother"
+        ],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 5
+          },
+          {
+            "lineStart": 5,
+            "lineEnd": 9
+          },
+          {
+            "lineStart": 6,
+            "lineEnd": 8
+          },
+          {
+            "lineStart": 8,
+            "lineEnd": 9
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman recounts falling in love with a Munchkin girl, receiving her conditional promise of marriage, and working to earn money for a better house.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He fell deeply in love with a beautiful Munchkin girl.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He fell deeply in love with a beautiful Munchkin girl.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He fell deeply in love with a beautiful Munchkin girl.",
+            "targets": [
+              "Munchkin girl"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 10,
+                "lineEnd": 11
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The Munchkin girl promised to marry him once he earned enough money to build a better house for her.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The Munchkin girl promised to marry him once he earned enough money to build a better house for her.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The Munchkin girl promised to marry him once he earned enough money to build a better house for her.",
+            "targets": [
+              "Munchkin girl"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 11,
+                "lineEnd": 12
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He began working harder than ever to earn the money for the house.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He began working harder than ever to earn the money for the house.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He began working harder than ever to earn the money for the house.",
+            "targets": [
+              "Munchkin girl"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 12,
+                "lineEnd": 12
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Munchkin girl"
+        ],
+        "references": [
+          {
+            "lineStart": 10,
+            "lineEnd": 11
+          },
+          {
+            "lineStart": 10,
+            "lineEnd": 12
+          },
+          {
+            "lineStart": 11,
+            "lineEnd": 12
+          },
+          {
+            "lineStart": 12,
+            "lineEnd": 12
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman recounts how the old woman opposed the marriage and hired the Wicked Witch of the East to prevent it.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The Munchkin girl lived with an old woman who opposed her marrying anyone because she wanted the girl to remain and perform the cooking and housework.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The Munchkin girl lived with an old woman who opposed her marrying anyone because she wanted the girl to remain and perform the cooking and housework.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The Munchkin girl lived with an old woman who opposed her marrying anyone because she wanted the girl to remain and perform the cooking and housework.",
+            "targets": [
+              "Munchkin girl"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 13,
+                "lineEnd": 15
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The old woman went to the Wicked Witch of the East and promised her two sheep and a cow to prevent the marriage.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The old woman went to the Wicked Witch of the East and promised her two sheep and a cow to prevent the marriage.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The old woman went to the Wicked Witch of the East and promised her two sheep and a cow to prevent the marriage.",
+            "targets": [
+              "Wicked Witch of the East"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 15,
+                "lineEnd": 17
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Munchkin girl",
+          "Wicked Witch of the East"
+        ],
+        "references": [
+          {
+            "lineStart": 13,
+            "lineEnd": 15
+          },
+          {
+            "lineStart": 13,
+            "lineEnd": 17
+          },
+          {
+            "lineStart": 15,
+            "lineEnd": 17
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman recounts the Witch's first attacks and the replacement of his legs with tin.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The Wicked Witch of the East enchanted his axe while he was working to earn money for the house and marriage.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The Wicked Witch of the East enchanted his axe while he was working to earn money for the house and marriage.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The Wicked Witch of the East enchanted his axe while he was working to earn money for the house and marriage.",
+            "targets": [
+              "Wicked Witch of the East"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 17,
+                "lineEnd": 18
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The enchanted axe slipped and cut off his left leg.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The enchanted axe slipped and cut off his left leg.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The enchanted axe slipped and cut off his left leg.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 18,
+                "lineEnd": 19
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He went to a tinsmith, had a new tin leg made, and adapted to using it.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He went to a tinsmith, had a new tin leg made, and adapted to using it.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He went to a tinsmith, had a new tin leg made, and adapted to using it.",
+            "targets": [
+              "tinsmith"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 20,
+                "lineEnd": 22
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: When he began chopping again, the axe slipped and cut off his right leg.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "When he began chopping again, the axe slipped and cut off his right leg.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: When he began chopping again, the axe slipped and cut off his right leg.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 23,
+                "lineEnd": 25
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He again went to the tinsmith and received a tin replacement leg.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He again went to the tinsmith and received a tin replacement leg.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He again went to the tinsmith and received a tin replacement leg.",
+            "targets": [
+              "tinsmith"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 25,
+                "lineEnd": 26
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Wicked Witch of the East",
+          "tinsmith"
+        ],
+        "references": [
+          {
+            "lineStart": 17,
+            "lineEnd": 18
+          },
+          {
+            "lineStart": 17,
+            "lineEnd": 26
+          },
+          {
+            "lineStart": 18,
+            "lineEnd": 19
+          },
+          {
+            "lineStart": 20,
+            "lineEnd": 22
+          },
+          {
+            "lineStart": 23,
+            "lineEnd": 25
+          },
+          {
+            "lineStart": 25,
+            "lineEnd": 26
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman recounts losing his arms and head to the enchanted axe and receiving tin replacements from the tinsmith.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The enchanted axe cut off his arms one after the other, and he had them replaced with tin arms.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The enchanted axe cut off his arms one after the other, and he had them replaced with tin arms.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The enchanted axe cut off his arms one after the other, and he had them replaced with tin arms.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 26,
+                "lineEnd": 28
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The Wicked Witch made the axe slip again, and it cut off his head; he initially thought this was the end of him.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The Wicked Witch made the axe slip again, and it cut off his head; he initially thought this was the end of him.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The Wicked Witch made the axe slip again, and it cut off his head; he initially thought this was the end of him.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 28,
+                "lineEnd": 29
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The tinsmith happened to come along and made him a new head out of tin.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The tinsmith happened to come along and made him a new head out of tin.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The tinsmith happened to come along and made him a new head out of tin.",
+            "targets": [
+              "tinsmith"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 29,
+                "lineEnd": 30
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "tinsmith"
+        ],
+        "references": [
+          {
+            "lineStart": 26,
+            "lineEnd": 28
+          },
+          {
+            "lineStart": 26,
+            "lineEnd": 30
+          },
+          {
+            "lineStart": 28,
+            "lineEnd": 29
+          },
+          {
+            "lineStart": 29,
+            "lineEnd": 30
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman recounts the attack that split his body, the tinsmith's reconstruction, and the resulting loss of his heart and love.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: Believing he had overcome the Wicked Witch, he worked harder than ever, unaware of the further danger she planned.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "Believing he had overcome the Wicked Witch, he worked harder than ever, unaware of the further danger she planned.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: Believing he had overcome the Wicked Witch, he worked harder than ever, unaware of the further danger she planned.",
+            "targets": [
+              "Wicked Witch of the East"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 31,
+                "lineEnd": 32
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The Wicked Witch made the axe slip again, and it cut through his body, splitting him into two halves.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The Wicked Witch made the axe slip again, and it cut through his body, splitting him into two halves.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The Wicked Witch made the axe slip again, and it cut through his body, splitting him into two halves.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 32,
+                "lineEnd": 34
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The tinsmith made him a tin body and fastened his tin arms, legs, and head to it with joints, restoring his ability to move around.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The tinsmith made him a tin body and fastened his tin arms, legs, and head to it with joints, restoring his ability to move around.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The tinsmith made him a tin body and fastened his tin arms, legs, and head to it with joints, restoring his ability to move around.",
+            "targets": [
+              "tinsmith"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 34,
+                "lineEnd": 36
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He had no heart, lost his love for the Munchkin girl, and no longer cared whether he married her; he supposed she remained with the old woman waiting for him.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He had no heart, lost his love for the Munchkin girl, and no longer cared whether he married her; he supposed she remained with the old woman waiting for him.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He had no heart, lost his love for the Munchkin girl, and no longer cared whether he married her; he supposed she remained with the old woman waiting for him.",
+            "targets": [
+              "Munchkin girl"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 37,
+                "lineEnd": 39
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Wicked Witch of the East",
+          "tinsmith",
+          "Munchkin girl"
+        ],
+        "references": [
+          {
+            "lineStart": 31,
+            "lineEnd": 32
+          },
+          {
+            "lineStart": 31,
+            "lineEnd": 39
+          },
+          {
+            "lineStart": 32,
+            "lineEnd": 34
+          },
+          {
+            "lineStart": 34,
+            "lineEnd": 36
+          },
+          {
+            "lineStart": 37,
+            "lineEnd": 39
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman recounts becoming resistant to the axe but vulnerable to rust, eventually becoming immobilized in the woods.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: His brightly shining tin body made him proud and protected him from being cut by the axe.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "His brightly shining tin body made him proud and protected him from being cut by the axe.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: His brightly shining tin body made him proud and protected him from being cut by the axe.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 40,
+                "lineEnd": 41
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He recognized that rust threatened his joints, kept an oil-can in his cottage, and oiled himself whenever necessary.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He recognized that rust threatened his joints, kept an oil-can in his cottage, and oiled himself whenever necessary.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He recognized that rust threatened his joints, kept an oil-can in his cottage, and oiled himself whenever necessary.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 41,
+                "lineEnd": 43
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He forgot to oil himself and was caught in a rainstorm before considering the danger.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He forgot to oil himself and was caught in a rainstorm before considering the danger.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He forgot to oil himself and was caught in a rainstorm before considering the danger.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 43,
+                "lineEnd": 45
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: The rain rusted his joints, leaving him standing in the woods until help came.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "The rain rusted his joints, leaving him standing in the woods until help came.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: The rain rusted his joints, leaving him standing in the woods until help came.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 44,
+                "lineEnd": 46
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 40,
+            "lineEnd": 41
+          },
+          {
+            "lineStart": 40,
+            "lineEnd": 46
+          },
+          {
+            "lineStart": 41,
+            "lineEnd": 43
+          },
+          {
+            "lineStart": 43,
+            "lineEnd": 45
+          },
+          {
+            "lineStart": 44,
+            "lineEnd": 46
+          }
+        ]
+      },
+      {
+        "description": "The Tin Woodman recounts concluding that his missing heart was his greatest loss and declares his plan to ask Oz for a heart and then marry the Munchkin girl.",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: During the year he stood immobilized, he reflected that losing his heart was the greatest loss he had suffered.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "During the year he stood immobilized, he reflected that losing his heart was the greatest loss he had suffered.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: During the year he stood immobilized, he reflected that losing his heart was the greatest loss he had suffered.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 46,
+                "lineEnd": 48
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He remembered being happiest while in love and stated his belief that no one without a heart can love.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He remembered being happiest while in love and stated his belief that no one without a heart can love.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He remembered being happiest while in love and stated his belief that no one without a heart can love.",
+            "targets": [
+              "Munchkin girl"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 47,
+                "lineEnd": 49
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He resolved to ask Oz to give him a heart.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He resolved to ask Oz to give him a heart.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He resolved to ask Oz to give him a heart.",
+            "targets": [
+              "Oz"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 49,
+                "lineEnd": 49
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Recounts: He planned to return to the Munchkin girl and marry her if Oz gave him a heart.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "He planned to return to the Munchkin girl and marry her if Oz gave him a heart.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has recounted: He planned to return to the Munchkin girl and marry her if Oz gave him a heart.",
+            "targets": [
+              "Oz",
+              "Munchkin girl"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 49,
+                "lineEnd": 50
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Munchkin girl",
+          "Oz"
+        ],
+        "references": [
+          {
+            "lineStart": 46,
+            "lineEnd": 48
+          },
+          {
+            "lineStart": 46,
+            "lineEnd": 50
+          },
+          {
+            "lineStart": 47,
+            "lineEnd": 49
+          },
+          {
+            "lineStart": 49,
+            "lineEnd": 49
+          },
+          {
+            "lineStart": 49,
+            "lineEnd": 50
+          }
+        ]
+      },
+      {
+        "description": "Dorothy and the Scarecrow react with strong interest, and the Scarecrow understands the reason for the Tin Woodman's request.",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Becomes greatly interested in the Tin Woodman's story and understands why he wants a new heart.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is greatly interested in the Tin Woodman's account and understands why he wants a new heart.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 51,
+                "lineEnd": 52
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Becomes greatly interested in the Tin Woodman's story and understands why he wants a new heart.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The Scarecrow understands that the Tin Woodman wants a new heart because he believes he cannot love without one.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 51,
+                "lineEnd": 52
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy",
+          "Scarecrow"
+        ],
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 51,
+            "lineEnd": 52
+          }
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "name": "Tin Woodman",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 52
+          }
+        ]
+      },
+      {
+        "name": "Scarecrow",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 4
+          },
+          {
+            "lineStart": 51,
+            "lineEnd": 52
+          }
+        ]
+      },
+      {
+        "name": "Dorothy",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 4
+          },
+          {
+            "lineStart": 45,
+            "lineEnd": 52
+          }
+        ]
+      },
+      {
+        "name": "woodman",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 5
+          }
+        ]
+      },
+      {
+        "name": "old mother",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 7,
+            "lineEnd": 8
+          }
+        ]
+      },
+      {
+        "name": "Munchkin girl",
+        "aliases": [
+          "Munchkin maiden"
+        ],
+        "references": [
+          {
+            "lineStart": 10,
+            "lineEnd": 13
+          },
+          {
+            "lineStart": 37,
+            "lineEnd": 39
+          },
+          {
+            "lineStart": 49,
+            "lineEnd": 50
+          }
+        ]
+      },
+      {
+        "name": "old woman",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 13,
+            "lineEnd": 16
+          },
+          {
+            "lineStart": 38,
+            "lineEnd": 39
+          }
+        ]
+      },
+      {
+        "name": "Wicked Witch of the East",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 15,
+            "lineEnd": 18
+          },
+          {
+            "lineStart": 23,
+            "lineEnd": 34
+          },
+          {
+            "lineStart": 40,
+            "lineEnd": 41
+          }
+        ]
+      },
+      {
+        "name": "tinsmith",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 22
+          },
+          {
+            "lineStart": 25,
+            "lineEnd": 30
+          },
+          {
+            "lineStart": 34,
+            "lineEnd": 36
+          }
+        ]
+      },
+      {
+        "name": "Oz",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 49,
+            "lineEnd": 50
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "actor": "Scarecrow",
+        "description": "Asks the Tin Woodman why he wants a new heart.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 1
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Promises to tell the Scarecrow his story.",
+        "targets": [
+          "Scarecrow"
+        ],
+        "references": [
+          {
+            "lineStart": 2,
+            "lineEnd": 2
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Tells his story while walking through the forest with Dorothy and the Scarecrow.",
+        "targets": [
+          "Dorothy",
+          "Scarecrow"
+        ],
+        "references": [
+          {
+            "lineStart": 3,
+            "lineEnd": 4
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Becomes greatly interested in the Tin Woodman's story.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 51,
+            "lineEnd": 52
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "description": "Becomes greatly interested in the Tin Woodman's story and understands why he wants a new heart.",
+        "targets": [
+          "Tin Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 51,
+            "lineEnd": 52
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "woodman",
+        "description": "The Tin Woodman identifies the woodman as his father.",
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 5
+          }
+        ]
+      },
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "old mother",
+        "description": "The Tin Woodman identifies the old mother as his mother and says he cared for her after his father's death.",
+        "references": [
+          {
+            "lineStart": 7,
+            "lineEnd": 8
+          }
+        ]
+      },
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "Munchkin girl",
+        "description": "The Tin Woodman loved the Munchkin girl, and she promised to marry him after he earned enough money to build a better house.",
+        "references": [
+          {
+            "lineStart": 10,
+            "lineEnd": 12
+          }
+        ]
+      },
+      {
+        "character": "Munchkin girl",
+        "relatedCharacter": "old woman",
+        "description": "The Munchkin girl lived with the old woman, who wanted her to remain and do the cooking and housework.",
+        "references": [
+          {
+            "lineStart": 13,
+            "lineEnd": 15
+          }
+        ]
+      },
+      {
+        "character": "old woman",
+        "relatedCharacter": "Wicked Witch of the East",
+        "description": "The old woman sought the Wicked Witch of the East's help and offered livestock to prevent the Tin Woodman's marriage.",
+        "references": [
+          {
+            "lineStart": 15,
+            "lineEnd": 17
+          }
+        ]
+      },
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "Wicked Witch of the East",
+        "description": "The Wicked Witch of the East opposed the Tin Woodman's marriage and repeatedly caused his axe to injure and dismember him.",
+        "references": [
+          {
+            "lineStart": 17,
+            "lineEnd": 19
+          },
+          {
+            "lineStart": 23,
+            "lineEnd": 34
+          }
+        ]
+      },
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "tinsmith",
+        "description": "The tinsmith repeatedly replaced and reconstructed the Tin Woodman's body with tin parts.",
+        "references": [
+          {
+            "lineStart": 21,
+            "lineEnd": 22
+          },
+          {
+            "lineStart": 25,
+            "lineEnd": 30
+          },
+          {
+            "lineStart": 34,
+            "lineEnd": 36
+          }
+        ]
+      },
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "Scarecrow",
+        "description": "The Scarecrow asks why the Tin Woodman wants a new heart and listens to his explanation.",
+        "references": [
+          {
+            "lineStart": 1,
+            "lineEnd": 4
+          },
+          {
+            "lineStart": 45,
+            "lineEnd": 52
+          }
+        ]
+      },
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "Oz",
+        "description": "The Tin Woodman intends to ask Oz to give him a heart.",
+        "references": [
+          {
+            "lineStart": 49,
+            "lineEnd": 50
+          }
+        ]
+      }
+    ]
+  },
+  "repair": {
+    "fields": [
+      "/summary"
+    ],
+    "reason": "The current summary identifies Dorothy and Scarecrow as the helpers, but this isolated source excerpt says only until you came to help me. Preserve uncertainty about who helped in the summary, keeping all other source-backed summary facts. The narration, listener reaction and relationships have already been corrected; none may be edited."
+  },
+  "provenance": "Unmodified repaired-timeline.json from 2026-09-16T08-10-39.289Z/2-story-source-fields. Only summary remains in this curated repair scope; prior review verdict withheld."
+}

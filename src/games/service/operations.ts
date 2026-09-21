@@ -1,11 +1,19 @@
+import {startFreeWorldTalk} from '../../ai/free-world.js';
+import {applyFreeWorldTurn, retirePreviousBridgeMenu} from './free-world.js';
+import {restoreSideTurnSourceAnchor} from './resume-source-anchor.js';
+import {newSceneCode, bridgeStillPossible, bridgeBeatSelection, applyBridgeEntry, type ReturnBridge} from '../return-bridges.js';
+import {ensureDeathLedger} from './engine-access.js';
+import { sourceIndexFingerprint } from "../../books/source-index/game-version.js";
 import { withFlowTrace, traceGameState, traceEvent } from "../../util/flow-trace.js";
 import crypto from "node:crypto";
 import {
+  addSourceContinuationAnchorChoice,
   findPassageContext,
   SceneGenerationError,
 } from "../../ai/engine.js";
 import {
   FREE_ACTION_CHOICE_ID,
+  SOURCE_ANCHOR_CHOICE_ID,
   SOURCE_CONTINUATION_CHOICE_ID,
   SOURCE_CONTINUATION_CHOICE_TEXT,
 } from "../../shared/contracts.js";
@@ -27,6 +35,7 @@ import {
   saveBook,
 } from "../../books/repository.js";
 import {
+  changeReturnPlanning,
   getGame,
   saveGame,
 } from "../repository.js";
@@ -56,6 +65,7 @@ import {
   recordCompletedTurn,
 } from "./game-state.js";
 import {
+  sourceCandidateForKnownEvent,
   sourceIntroducedCharactersAtCursor,
   normalizeSourceProgress,
   missingPresentSourceEventCharacters,
@@ -86,8 +96,13 @@ async function startGameImpl(request: StartGameRequest): Promise<StartGameRespon
     await saveBook(book);
   }
   const game: GameState = {
+    narrativeMode: "canonical",
+    confirmedDeadCharacters: [],
     gameId: `game_${crypto.randomUUID().replaceAll("-", "")}`,
     book: request.book,
+    sourceIndexFingerprint: sourceIndexFingerprint(book),
+    ...(book.chapters.some(c => (c.sourceIndex?.schemaVersion ?? 0) >= 10)
+      || book.storyEvents?.some(e => e.beats?.some(b => b.characterActionGroup)) ? {playerActionVersion: 2 as const} : {}),
     wholeBookSummary: book.worldBible?.summary,
     characterProfiles: book.worldBible?.characterProfiles,
     position: canonicalStart.position,
@@ -98,6 +113,7 @@ async function startGameImpl(request: StartGameRequest): Promise<StartGameRespon
     status: "active",
     selectedText: canonicalStart.selectedText,
     sourceCursor: canonicalStart.sourceCursor,
+    ...(canonicalStart.sourceEventProgress ? {sourceEventProgress: canonicalStart.sourceEventProgress} : {}),
     turnNumber: 1,
     scene: { title: "Starting…", text: "", choices: [] },
     history: [{ kind: "start", text: book.title }],
@@ -160,6 +176,7 @@ async function continueFromSourceImpl(gameId: string): Promise<StartGameResponse
     throw new Error(`Game has already ended with status ${game.status}`);
   }
   const undoSnapshot = createUndoSnapshot(game);
+  game.narrativeMode = "canonical";
   const book = await getBook(game.book.bookId);
   if (!book) throw new Error(`Unknown bookId ${game.book.bookId}. Import the EPUB first.`);
   const passage = findPassageContext(book, game.selectedText);
@@ -173,6 +190,7 @@ async function continueFromSourceImpl(gameId: string): Promise<StartGameResponse
     book,
     game.playerName,
   );
+  await ensureDeathLedger(game);
   const sourceWorldState = sourceWorldStateForGame(game, book, cursor);
   const canonicalCandidate = buildCanonicalNextEventCandidate(
     book,
@@ -180,11 +198,7 @@ async function continueFromSourceImpl(gameId: string): Promise<StartGameResponse
     game.playerName,
     sourceWorldState,
   );
-  const candidates = canonicalCandidate
-    ? [canonicalCandidate]
-    : playerHasCanonicalTimeline
-      ? []
-      : buildSourceContinuationCandidates(book, cursor);
+  const candidates = canonicalCandidate ? [canonicalCandidate] : playerHasCanonicalTimeline ? [] : buildSourceContinuationCandidates(book, cursor);
   const missingPrerequisiteCharacters = canonicalCandidate
     ? missingPresentSourceEventCharacters(game, book, canonicalCandidate)
     : [];
@@ -222,19 +236,19 @@ async function continueFromSourceImpl(gameId: string): Promise<StartGameResponse
     return gameResponse(game);
   }
 
+  let continuationRejection: SceneGenerationError | undefined;
+  const rememberRejection = (error: SceneGenerationError) => { continuationRejection = error; };
   let result = await attemptSourceContinuation(
     async () => await gameEngine().continueFromSource(game, candidates),
+    rememberRejection,
   );
+  // Explicit legacy /story requests may still recover unindexed books. Free turns never enter this path.
   if (!result && !playerHasCanonicalTimeline) {
     result = await attemptSourceContinuation(
-      async () => await gameEngine().continueFromSource(
-        game,
-        buildSourceRecoveryCandidates(book),
-      ),
-    );
+      () => gameEngine().continueFromSource(game, buildSourceRecoveryCandidates(book)), rememberRejection);
   }
   if (!result) {
-    return gameResponse(game, storyContinuationUnavailableNotice(game.scene));
+    return gameResponse(game, storyContinuationUnavailableNotice(game.scene, continuationRejection));
   }
   if (result.requiresExplicitPlayerChoice) {
     const choices = result.scene.choices.filter(
@@ -303,6 +317,8 @@ async function continueFromSourceImpl(gameId: string): Promise<StartGameResponse
 
 export function createUndoSnapshot(game: GameState): GameUndoSnapshot {
   return structuredClone({
+    ...(game.narrativeMode ? {narrativeMode: game.narrativeMode} : {}),
+    ...(game.confirmedDeadCharacters ? {confirmedDeadCharacters: [...game.confirmedDeadCharacters]} : {}),
     scene: game.scene,
     history: game.history,
     status: game.status,
@@ -349,6 +365,9 @@ async function undoLastChoiceImpl(gameId: string): Promise<StartGameResponse> {
 
   const snapshot = game.undoSnapshot;
   if (snapshot) {
+    restoreOptional(game, "narrativeMode", snapshot.narrativeMode);
+    game.returnPlanning = {bridges: [], generation: (game.returnPlanning?.generation ?? 0) + 1};
+    game.sceneTrace = {storyCode: newSceneCode(game)};
     game.scene = structuredClone(snapshot.scene);
     game.history = structuredClone(snapshot.history);
     game.status = snapshot.status;
@@ -359,6 +378,7 @@ async function undoLastChoiceImpl(gameId: string): Promise<StartGameResponse> {
     restoreOptional(game, "sourceIntroducedCharacters", snapshot.sourceIntroducedCharacters);
     restoreOptional(game, "storyMemory", snapshot.storyMemory);
     restoreOptional(game, "establishedEvent", snapshot.establishedEvent);
+    restoreOptional(game, "confirmedDeadCharacters", snapshot.confirmedDeadCharacters);
     restoreOptional(game, "turnNumber", snapshot.turnNumber);
     game.turnHistory = (game.turnHistory ?? []).slice(0, snapshot.turnHistoryLength ?? 0);
     restoreOptional(game, "activeConversation", snapshot.activeConversation);
@@ -384,6 +404,42 @@ async function undoLastChoiceImpl(gameId: string): Promise<StartGameResponse> {
   return gameResponse(game);
 }
 
+async function enterCanonicalBridgePrelude(game: GameState, bridge: ReturnBridge, book: NonNullable<Awaited<ReturnType<typeof getBook>>>): Promise<boolean> {
+  const prelude = bridge.canonicalPrelude;
+  if (!prelude?.beats.length) return false;
+  const draft = structuredClone(game);
+  draft.narrativeMode = 'canonical';
+  applyBridgeEntry(draft, bridge);
+  const candidate = sourceCandidateForKnownEvent(book, draft, prelude.eventId);
+  if (!candidate) return false;
+  traceEvent('free_world.bridge_canonical_prelude', {
+    bridgeId:bridge.id, entryEventId:prelude.eventId, startBeatIndex:prelude.startBeatIndex,
+    targetEventId:prelude.targetEventId, targetBeatIndex:prelude.targetBeatIndex, beats:prelude.beats,
+  });
+  const freeText = draft.scene.text;
+  const result = await gameEngine().continueFromSource(draft, [candidate]);
+  if (!result) return false;
+  if (result.requiresExplicitPlayerChoice) {
+    draft.scene = {...draft.scene, choices:result.scene.choices};
+  } else {
+    await applyReviewedGeneratedScene(draft, {
+      ...result.scene,
+      sourceProgress: {
+        chapterPosition: result.chapterPosition,
+        textOffset: result.nextTextOffset,
+        ...(result.eventId ? {eventId:result.eventId} : {}),
+      },
+    }, book, false);
+    if (draft.scene.text.trim() && freeText.trim() && draft.scene.text.trim() !== freeText.trim())
+      draft.scene.text = `${freeText.trim()}\n\n${draft.scene.text.trim()}`;
+  }
+  const stored = draft.returnPlanning?.bridges.find(b => b.id === bridge.id);
+  if (stored) stored.status = 'used';
+  if (draft.returnPlanning?.activeBridgeId === bridge.id) delete draft.returnPlanning.activeBridgeId;
+  Object.assign(game, draft);
+  return true;
+}
+
 export async function makeChoice(gameId: string, request: MakeChoiceRequest): Promise<StartGameResponse | TalkResponse> {
   return withFlowTrace("makeChoice", { gameId, request }, () => makeChoiceImpl(gameId, request));
 }
@@ -402,20 +458,81 @@ async function makeChoiceImpl(gameId: string, request: MakeChoiceRequest): Promi
   if (choice.id === SOURCE_CONTINUATION_CHOICE_ID) {
     return continueFromSource(gameId);
   }
-  const anchorDirected = !freeAction
+  let anchorDirected = !freeAction
     && isAnchorDirectedChoice(game.scene, choice.id);
 
+  // Once the player explicitly selects an anchor, returning to canon is already
+  // decided. Do not spend background calls preparing alternative return routes
+  // while the canonical turn is being generated. Removing a claimed job also
+  // invalidates its lease token, so an in-flight worker cannot publish afterward.
+  if (anchorDirected && game.returnPlanning?.job) {
+    const cancelledJob = {...game.returnPlanning.job};
+    delete game.returnPlanning.job;
+    await changeReturnPlanning(gameId, current => {
+      if (!current.returnPlanning?.job) return false;
+      delete current.returnPlanning.job;
+      return true;
+    });
+    traceEvent('free_world.bridge_planning_cancelled', {
+      reason: 'anchor selected',
+      revision: game.gameRevision,
+      jobRevision: cancelledJob.revision,
+      hadLease: Boolean(cancelledJob.token),
+    });
+  }
+
+  const narrativeModeBeforeChoice = game.narrativeMode ?? 'canonical';
+  const previousCanonicalAnchor = !anchorDirected && narrativeModeBeforeChoice === 'canonical'
+    ? game.scene.choices.find(candidate =>
+        candidate.id === SOURCE_ANCHOR_CHOICE_ID
+        && candidate.sourceAnchorRoute === 'event'
+        && Boolean(candidate.sourceBeatSelection)
+      )
+    : undefined;
+  const preserveCanonicalSideTurn = Boolean(previousCanonicalAnchor);
   game.undoSnapshot = createUndoSnapshot(game);
   game.history.push({ kind: "choice", text: choice.text });
+  const planning = game.returnPlanning;
+  let selectedBridgeStep: ReturnBridge | undefined;
+  if (planning) {
+    const step = planning.bridges.find(b => b.id === choice.bridgeStepId && bridgeStillPossible(b, game));
+    if (step) {
+      selectedBridgeStep = step;
+      planning.activeBridgeId = step.id;
+      traceEvent('free_world.bridge_started', {bridgeId:step.id, action:choice.text, target:step.target,
+        canonicalPrelude:step.canonicalPrelude ?? null});
+    } else if (!choice.bridgeId && planning.activeBridgeId) {
+      traceEvent('free_world.bridge_abandoned', {bridgeId:planning.activeBridgeId, action:choice.text});
+      const old = planning.bridges.find(b => b.id === planning.activeBridgeId);
+      if (old) old.status = 'ready';
+      delete planning.activeBridgeId;
+    }
+  }
+  retirePreviousBridgeMenu(game, choice.bridgeId);
+  const bridge = choice.bridgeId ? game.returnPlanning?.bridges.find(b => b.id === choice.bridgeId && b.status === 'offered') : undefined;
+  let bridgeCandidate;
+  // Undo/expiration can leave a menu whose prepared opportunity no longer exists.
+  // Never turn that stale metadata into a fresh source search.
+  if (choice.bridgeId && !bridge) anchorDirected = false;
+  if (bridge) {
+    const bridgeBook = await getBook(game.book.bookId);
+    if (bridgeBook && bridgeStillPossible({...bridge, status: 'ready'}, game))
+      bridgeCandidate = sourceCandidateForKnownEvent(bridgeBook, game, bridge.eventId);
+    bridge.status = bridgeCandidate ? 'used' : 'retired';
+    anchorDirected = Boolean(bridgeCandidate);
+  }
+  // Any non-anchor side interaction from a canonical menu keeps the pending
+  // server-owned player beat. Talking, custom actions, waiting, looking around,
+  // etc. do not become a permanent divergence by themselves.
+  game.narrativeMode = anchorDirected || preserveCanonicalSideTurn ? 'canonical' : 'free';
+  game.sceneTrace = {storyCode: newSceneCode(game), ...(bridgeCandidate ? {bridgeId: bridge!.id, sourceEventId: bridge!.eventId} : anchorDirected && choice.sourceEventId ? {sourceEventId: choice.sourceEventId} : {})};
 
   if (choice.type === "talk") {
     const character = choice.character || choice.text.replace(/^talk to\s+/i, "");
-    const { candidates } = await sourceContextForGame(
-      game,
-      anchorDirected ? choice.sourceEventId : undefined,
-    );
-    const conversation = await gameEngine().startTalk(
-      game,
+    const { candidates } = anchorDirected
+      ? await sourceContextForGame(game, choice.sourceEventId) : {candidates: []};
+    const conversation = !anchorDirected ? await startFreeWorldTalk(game, character) : await gameEngine().startTalk(
+      anchorDirected ? game : {...game, selectedText: ""},
       character,
       candidates,
       {
@@ -439,6 +556,51 @@ async function makeChoiceImpl(gameId: string, request: MakeChoiceRequest): Promi
   game.activeConversation = undefined;
   game.activeConversationAnchorDirected = undefined;
   const book = await getBook(game.book.bookId);
+  if (!anchorDirected) {
+    const freeResult = await applyFreeWorldTurn(
+      game,
+      choice.text,
+      'action',
+      book,
+      preserveCanonicalSideTurn
+        ? {preserveNarrativeMode:true, suppressBridgeRouting:true}
+        : undefined,
+    );
+    if (preserveCanonicalSideTurn) {
+      const restored = restoreSideTurnSourceAnchor(game, book, previousCanonicalAnchor);
+      traceEvent('side_turn.anchor_restore', {
+        ...restored,
+        selectedInput: choice.text,
+        previousAnchorText: previousCanonicalAnchor?.text ?? null,
+        restoredAnchorText: restored.restored ? game.scene.choices[0]?.text ?? null : null,
+        sourceBeatSelection: previousCanonicalAnchor?.sourceBeatSelection ?? null,
+      });
+      if (!restored.restored) {
+        game.scene = addSourceContinuationAnchorChoice(game.scene);
+      }
+    }
+    if (selectedBridgeStep?.canonicalPrelude && book && freeResult.bridgePreludeReady) {
+      const reentered = await enterCanonicalBridgePrelude(game, selectedBridgeStep, book);
+      traceEvent('free_world.bridge_reentry_result', {bridgeId:selectedBridgeStep.id,reentered});
+    }
+  } else if (bridgeCandidate) {
+    if (bridge!.canonicalPrelude?.beats.length && book) {
+      // Legacy/offered menus may already contain a direct target anchor. Do not
+      // skip the newly reserved automatic source prelude; play it first and stop
+      // at the real target decision boundary.
+      const reentered = await enterCanonicalBridgePrelude(game, bridge!, book);
+      if (!reentered) throw new Error('Bridge canonical prelude could not be entered');
+    } else {
+      const draft = structuredClone(game);
+      applyBridgeEntry(draft, bridge!);
+      traceEvent('free_world.bridge_reentry', {bridgeId:bridge!.id, selection:bridgeBeatSelection(bridge!),
+        reason:bridge!.selectionReason, previousProgress:game.sourceEventProgress, entryProgress:draft.sourceEventProgress});
+      await applyReviewedGeneratedScene(draft, await gameEngine().continue(draft, choice.text, [bridgeCandidate],
+        {anchorDirected: true, sourceEventId: bridgeCandidate.requiredEventId, sourceAnchorRoute: 'event',
+          sourceBeatSelection: bridgeBeatSelection(bridge!)}), book);
+      Object.assign(game, draft);
+    }
+  } else {
   await applyReviewedGeneratedScene(
     game,
     await generateWithSourceContext(
@@ -452,12 +614,14 @@ async function makeChoiceImpl(gameId: string, request: MakeChoiceRequest): Promi
           choiceStakes: choice.stakes,
           sourceEventId: choice.sourceEventId,
           sourceAnchorRoute: choice.sourceAnchorRoute,
+          sourceBeatSelection: anchorDirected ? choice.sourceBeatSelection : undefined,
         },
       ),
       anchorDirected ? choice.sourceEventId : undefined,
     ),
     book,
   );
+  }
   game.status = game.scene.outcome ?? "active";
   game.history.push({
     kind: "scene",
@@ -487,6 +651,18 @@ async function continueSceneImpl(
     throw new Error(`Game has already ended with status ${game.status}`);
   }
 
+  const pendingCanonicalAnchor = game.narrativeMode !== 'free'
+    ? game.scene.choices.find(choice => choice.id === SOURCE_ANCHOR_CHOICE_ID)
+    : undefined;
+  if (pendingCanonicalAnchor) {
+    traceEvent('canonical.continuation_stopped_at_player_decision', {
+      anchorText: pendingCanonicalAnchor.text,
+      sourceEventId: pendingCanonicalAnchor.sourceEventId ?? null,
+      sourceBeatSelection: pendingCanonicalAnchor.sourceBeatSelection ?? null,
+    });
+    return gameResponse(game);
+  }
+
   game.undoSnapshot = createUndoSnapshot(game);
   game.activeConversation = undefined;
   game.activeConversationAnchorDirected = undefined;
@@ -494,12 +670,13 @@ async function continueSceneImpl(
     kind: "continuation",
     text: "Narrate the next moment as the scene progresses without choosing a player action.",
   });
-  const { book, candidates } = await sourceContextForGame(game);
-  await applyReviewedGeneratedScene(
-    game,
-    await gameEngine().continueScene(game, candidates),
-    book,
-  );
+  if (game.narrativeMode === 'free') {
+    await applyFreeWorldTurn(game, 'Let the situation develop without choosing a player action.', 'observe', await getBook(game.book.bookId));
+  } else {
+    game.narrativeMode = 'canonical';
+    const { book, candidates } = await sourceContextForGame(game);
+    await applyReviewedGeneratedScene(game, await gameEngine().continueScene(game, candidates), book);
+  }
   game.status = game.scene.outcome ?? "active";
   game.history.push({
     kind: "scene",
@@ -535,23 +712,8 @@ async function initiateEventImpl(
   game.activeConversation = undefined;
   game.activeConversationAnchorDirected = undefined;
   const book = await getBook(game.book.bookId);
-  try {
-    await applyReviewedGeneratedScene(
-      game,
-      await generateWithSourceContext(
-        game,
-        async (candidates) => await gameEngine().continueEvent(game, eventText, candidates),
-      ),
-      book,
-    );
-  } catch (error) {
-    if (!(error instanceof SceneGenerationError)) throw error;
-    applyGeneratedScene(
-      game,
-      eventGenerationFailureScene(eventText, error),
-      book,
-    );
-  }
+  retirePreviousBridgeMenu(game);
+  await applyFreeWorldTurn(game, eventText, 'event', book);
   game.status = game.scene.outcome ?? "active";
   game.history.push({
     kind: "scene",
@@ -607,10 +769,45 @@ async function sayImpl(gameId: string, request: DialogueRequest): Promise<StartG
   if (!character) throw new Error("No active conversation");
   const anchorDirected = game.activeConversationAnchorDirected ?? false;
   const sourceEventId = game.activeConversation?.sourceEventId;
+  const preserveCanonicalAnchor = !anchorDirected && game.narrativeMode === 'canonical';
+  const previousAnchor = preserveCanonicalAnchor
+    ? game.undoSnapshot?.scene.choices.find(choice => choice.id === SOURCE_ANCHOR_CHOICE_ID)
+    : undefined;
   if (!request.text?.trim()) throw new Error("Dialogue text is required");
 
   game.history.push({ kind: "dialogue", text: `${game.playerName} to ${character}: ${request.text.trim()}` });
   const book = await getBook(game.book.bookId);
+  if (!anchorDirected) {
+    await applyFreeWorldTurn(
+      game,
+      `${game.playerName} says to ${character}: ${request.text.trim()}`,
+      'dialogue',
+      book,
+      preserveCanonicalAnchor ? {preserveNarrativeMode:true, suppressBridgeRouting:true} : undefined,
+    );
+    if (preserveCanonicalAnchor) {
+      // A side conversation is not a new canonical decision. Freeze source
+      // progress and restore the same server-owned player beat deterministically.
+      // The visible label is regenerated from the same source beat and current scope.
+      game.activeConversation = undefined;
+      game.activeConversationAnchorDirected = undefined;
+      const restored = restoreSideTurnSourceAnchor(game, book, previousAnchor);
+      traceEvent('dialogue.anchor_restore', {
+        ...restored,
+        previousAnchorId: previousAnchor?.id ?? null,
+        previousAnchorText: previousAnchor?.text ?? null,
+        restoredAnchorText: restored.restored ? game.scene.choices[0]?.text ?? null : null,
+        sourceBeatSelection: previousAnchor?.sourceBeatSelection ?? null,
+      });
+      if (!restored.restored) {
+        // Keep an explicit canonical route visible even when the exact target was
+        // consumed or irreversibly invalidated. The next continuation will use
+        // the updated source/invalidated-target state and find the next viable beat.
+        game.scene = addSourceContinuationAnchorChoice(game.scene);
+      }
+    }
+  } else {
+    game.narrativeMode = 'canonical';
   await applyReviewedGeneratedScene(
     game,
     await generateWithSourceContext(
@@ -626,6 +823,7 @@ async function sayImpl(gameId: string, request: DialogueRequest): Promise<StartG
     ),
     book,
   );
+  }
   game.status = game.scene.outcome ?? "active";
   game.history.push({
     kind: "scene",

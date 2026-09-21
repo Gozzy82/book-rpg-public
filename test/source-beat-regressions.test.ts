@@ -379,7 +379,7 @@ test("source-directed anchors advance Toto past an involuntary Dorothy beat", ()
   };
 
   assert.equal(selectedAnchorRequiresSourceEvent("event", event, "Toto"), true);
-  assert.equal(selectedAnchorRequiresSourceEvent("transition", event, "Toto"), true);
+  assert.equal(selectedAnchorRequiresSourceEvent("transition", event, "Toto"), false);
 });
 
 test("source transition still does not force a meaningful player-controlled beat", () => {
@@ -399,7 +399,7 @@ test("source transition still does not force a meaningful player-controlled beat
   assert.equal(selectedAnchorRequiresSourceEvent("transition", event, "Toto"), false);
 });
 
-test("opening progression accepts a source-grounded decision boundary without inventing missing beats", () => {
+test("opening progression waits for the ordered prefix before accepting the decision boundary", () => {
   const request: AiResponseRequest = {
     model: "test",
     input: JSON.stringify({
@@ -431,11 +431,13 @@ test("opening progression accepts a source-grounded decision boundary without in
     completedSourceEventBeatIndexes: number[];
     futureActionSetupRequired: boolean;
     futureActionSetupSupported: boolean;
+    futureActionSetupReason: string;
   };
 
   assert.deepEqual(review.completedSourceEventBeatIndexes, []);
   assert.equal(review.futureActionSetupRequired, false);
-  assert.equal(review.futureActionSetupSupported, true);
+  assert.equal(review.futureActionSetupSupported, false);
+  assert.match(review.futureActionSetupReason, /missing ordered source beats 0-4/i);
 
   const ready = correctScenePresenceBeatOrder(request, {
     status: "completed",

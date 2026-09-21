@@ -10,6 +10,7 @@ import type {
 } from "../src/shared/contracts.js";
 import {
   CHAPTER_SOURCE_INDEX_VERSION,
+  FREE_ACTION_CHOICE_ID,
   SOURCE_ANCHOR_CHOICE_ID,
   SOURCE_CONTINUATION_CHOICE_ID,
   SOURCE_CONTINUATION_CHOICE_TEXT,
@@ -20,7 +21,9 @@ process.env.BOOKRPG_DATA_DIR = testDataDir;
 process.env.BOOKRPG_FAKE_AI = "1";
 
 const { getGame, saveGame } = await import("../src/games/repository.js");
+const { sourceIndexFingerprint } = await import("../src/books/source-index/game-version.js");
 const { saveBook } = await import("../src/books/repository.js");
+const { titleForTurn } = await import("../src/games/service/game-state.js");
 const {
   alignRecoveryCandidateToCursor,
   buildSceneRecoveryCandidates,
@@ -121,6 +124,21 @@ test("game saves omit indexed book metadata and reload it from the book index", 
   assert.deepEqual(reloaded?.characterProfiles, characterProfiles);
 });
 
+test("continued model titles collapse to one clean server-owned turn marker", () => {
+  assert.equal(
+    titleForTurn("A Gray Morning (Turn 1, Continued) — Toward the Cellar (Turn 5, Continued) (Turn 6)", 7),
+    "Toward the Cellar (Turn 7)",
+  );
+  assert.equal(
+    titleForTurn("Beneath the Gray Sky (Turn 1, Cont.) (Turn 2)", 2),
+    "Beneath the Gray Sky (Turn 2)",
+  );
+  assert.equal(
+    titleForTurn("Beneath the Gray Sky (Turn 1, anything the model invents) (Turn 2, Draft)", 3),
+    "Beneath the Gray Sky (Turn 3)",
+  );
+});
+
 test("new games number the opening scene as turn 1", async () => {
   const book: ImportedBook = {
     bookId: "book_turn_numbering",
@@ -161,9 +179,190 @@ test("talk choices persist the complete pending conversation", async () => {
   assert.equal(persisted?.activeConversationAnchorDirected, undefined);
 });
 
+test("a side conversation from a canonical menu preserves and restores the existing anchor", async () => {
+  const indexedBook: ImportedBook = {
+    bookId: "book_dialogue_anchor",
+    title: "Dialogue Anchor",
+    sourceSha256: "dialogue-anchor-sha",
+    importedAt: "2026-09-19T00:00:00.000Z",
+    chapters: [{ index: 0, title: "Opening", text: "Alex listens to the wind while Mary waits nearby." }],
+    worldBible: {
+      summary: "",
+      characters: ["Alex", "Mary"],
+      locations: [],
+      characterProfiles: [
+        { name: "Alex", aliases: [], role: "Player", description: "", traits: [], relationships: [], storyArc: "" },
+        { name: "Mary", aliases: [], role: "Companion", description: "", traits: [], relationships: [], storyArc: "" },
+      ],
+    },
+    storyEvents: [{
+      eventId: "event_listen",
+      sequence: 1,
+      category: "investigation",
+      description: "Alex listens to the wind.",
+      chapterPosition: 0,
+      actors: ["Alex"],
+      targets: [],
+      sourceReferences: [],
+      beats: [{
+        actor: "Alex",
+        action: "Listens carefully to the wind.",
+        resultingState: "Alex has listened carefully to the wind.",
+        targets: [],
+        agency: "intentional",
+        stakes: "significant",
+        sourceReferences: [],
+      }],
+    }],
+  };
+  await saveBook(indexedBook);
+
+  const sourceAnchor = {
+    id: SOURCE_ANCHOR_CHOICE_ID,
+    type: "action" as const,
+    text: "Listen carefully to the wind",
+    sourceEventId: "event_listen",
+    sourceAnchorRoute: "event" as const,
+    sourceBeatSelection: {
+      eventId: "event_listen",
+      beatIndex: 0,
+      endBeatIndex: 0,
+      kind: "beat" as const,
+    },
+  };
+  const game = createGame({
+    gameId: "game_dialogue_keeps_anchor",
+    book: { bookId: indexedBook.bookId, title: indexedBook.title },
+    narrativeMode: "canonical",
+    sourceIndexFingerprint: sourceIndexFingerprint(indexedBook),
+    sourceCursor: { chapterPosition: 0, textOffset: 0 },
+    sourceEventProgress: { eventId: "event_listen", completedBeatIndexes: [] },
+    characterProfiles: indexedBook.worldBible?.characterProfiles,
+    scene: {
+      title: "At the window",
+      text: "I stand beside Mary while the wind moves outside.",
+      sceneScope: {
+        currentLocation: "the room",
+        peoplePresent: ["Alex", "Mary"],
+        peopleWithinSpeakingDistance: ["Alex", "Mary"],
+      },
+      choices: [
+        sourceAnchor,
+        { id: "talk_mary", type: "talk", text: "Talk to Mary", character: "Mary" },
+      ],
+    },
+  });
+  await saveGame(game);
+
+  const conversation = await makeChoice(game.gameId, { choiceId: "talk_mary" });
+  assert.ok("suggestions" in conversation);
+  assert.equal((await getGame(game.gameId))?.narrativeMode, "canonical");
+
+  await say(game.gameId, { text: "What do you think about this weather?" });
+  const next = (await getGame(game.gameId))!;
+  assert.equal(next.narrativeMode, "canonical");
+  assert.equal(next.scene.choices[0]?.id, SOURCE_ANCHOR_CHOICE_ID);
+  assert.equal(next.scene.choices[0]?.text, sourceAnchor.text);
+  assert.deepEqual(next.scene.choices[0]?.sourceBeatSelection, sourceAnchor.sourceBeatSelection);
+  assert.deepEqual(next.sourceEventProgress, game.sourceEventProgress);
+  assert.equal(next.turnHistory?.at(-1)?.kind, "dialogue");
+});
+
+test("a custom side action from a canonical menu keeps the same pending anchor", async () => {
+  const indexedBook: ImportedBook = {
+    bookId: "book_custom_action_anchor",
+    title: "Custom Action Anchor",
+    sourceSha256: "custom-action-anchor-sha",
+    importedAt: "2026-09-20T00:00:00.000Z",
+    chapters: [{ index: 0, title: "Opening", text: "Alex listens to the wind while Mary waits nearby." }],
+    worldBible: {
+      summary: "",
+      characters: ["Alex", "Mary"],
+      locations: [],
+      characterProfiles: [
+        { name: "Alex", aliases: [], role: "Player", description: "", traits: [], relationships: [], storyArc: "" },
+        { name: "Mary", aliases: [], role: "Companion", description: "", traits: [], relationships: [], storyArc: "" },
+      ],
+    },
+    storyEvents: [{
+      eventId: "event_listen_custom",
+      sequence: 1,
+      category: "investigation",
+      description: "Alex listens to the wind.",
+      chapterPosition: 0,
+      actors: ["Alex"],
+      targets: [],
+      sourceReferences: [],
+      beats: [{
+        actor: "Alex",
+        action: "Listens carefully to the wind.",
+        resultingState: "Alex has listened carefully to the wind.",
+        targets: [],
+        agency: "intentional",
+        stakes: "significant",
+        sourceReferences: [],
+      }],
+    }],
+  };
+  await saveBook(indexedBook);
+
+  const sourceAnchor = {
+    id: SOURCE_ANCHOR_CHOICE_ID,
+    type: "action" as const,
+    text: "Listen carefully to the wind",
+    sourceEventId: "event_listen_custom",
+    sourceAnchorRoute: "event" as const,
+    sourceBeatSelection: {
+      eventId: "event_listen_custom",
+      beatIndex: 0,
+      endBeatIndex: 0,
+      kind: "beat" as const,
+    },
+  };
+  const game = createGame({
+    gameId: "game_custom_action_keeps_anchor",
+    book: { bookId: indexedBook.bookId, title: indexedBook.title },
+    narrativeMode: "canonical",
+    sourceIndexFingerprint: sourceIndexFingerprint(indexedBook),
+    sourceCursor: { chapterPosition: 0, textOffset: 0 },
+    sourceEventProgress: { eventId: "event_listen_custom", completedBeatIndexes: [] },
+    characterProfiles: indexedBook.worldBible?.characterProfiles,
+    scene: {
+      title: "At the window",
+      text: "I stand beside Mary while the wind moves outside.",
+      sceneScope: {
+        currentLocation: "the room",
+        peoplePresent: ["Alex", "Mary"],
+        peopleWithinSpeakingDistance: ["Alex", "Mary"],
+      },
+      choices: [
+        sourceAnchor,
+        { id: "wait", type: "action", text: "Wait with Mary" },
+      ],
+    },
+  });
+  await saveGame(game);
+
+  await makeChoice(game.gameId, {
+    choiceId: FREE_ACTION_CHOICE_ID,
+    actionText: "Tell Mary I am worried about the storm.",
+  });
+  const next = (await getGame(game.gameId))!;
+  assert.equal(next.narrativeMode, "canonical");
+  assert.equal(next.scene.choices[0]?.id, SOURCE_ANCHOR_CHOICE_ID);
+  assert.deepEqual(next.scene.choices[0]?.sourceBeatSelection, sourceAnchor.sourceBeatSelection);
+  assert.deepEqual(next.sourceEventProgress, game.sourceEventProgress);
+  assert.deepEqual(next.sourceCursor, game.sourceCursor);
+  assert.equal(next.turnHistory?.at(-1)?.kind, "choice");
+});
+
 test("resume sanitizes legacy scene scope to the player and living non-player characters", async () => {
   const game = createGame({
     gameId: "game_legacy_scene_scope",
+    book: {
+      bookId: "book_legacy_scene_scope",
+      title: "Legacy Scene Scope",
+    },
     playerName: "Alex",
     characterProfiles: [
       {
@@ -331,7 +530,9 @@ test("undo restores state after an action generated a new scene", async () => {
   assert.ok(!("suggestions" in result));
   assert.notDeepEqual(result.scene, before.scene);
   assert.equal(result.turnHistory.length, 2);
+  assert.match(result.turnHistory.at(-1)?.storyCode ?? "", /^#brpg_scene_/);
   assert.deepEqual(result.turnHistory.at(-1), {
+    storyCode: result.turnHistory.at(-1)?.storyCode,
     turnNumber: 5,
     kind: "choice",
     action: "Enter the room",
@@ -376,6 +577,41 @@ test("undo supports legacy saved talk choices without a snapshot", async () => {
   assert.equal(persisted?.activeConversation, undefined);
 });
 
+test("canonical scene continuation stops at an existing player anchor without generating a turn", async () => {
+  const game = createGame({
+    gameId: "game_canonical_player_boundary",
+    narrativeMode: "canonical",
+    turnNumber: 5,
+    sourceEventProgress: { eventId: "trapdoor", completedBeatIndexes: [0] },
+    scene: {
+      title: "The Ear Beneath the Trapdoor (Turn 5)",
+      text: "Toto is below the open trapdoor and one ear is visible.",
+      choices: [{
+        id: SOURCE_ANCHOR_CHOICE_ID,
+        type: "action",
+        text: "Rescue Toto through the trapdoor",
+        sourceEventId: "trapdoor",
+        sourceAnchorRoute: "event",
+      }],
+    },
+    history: [{ kind: "scene", text: "Toto is below the open trapdoor and one ear is visible." }],
+    turnHistory: [],
+  });
+  await saveGame(game);
+  const before = structuredClone(game);
+
+  const result = await continueScene(game.gameId);
+
+  assert.equal(result.scene.choices[0]?.id, SOURCE_ANCHOR_CHOICE_ID);
+  assert.equal(result.scene.choices[0]?.text, "Rescue Toto through the trapdoor");
+  assert.equal(result.scene.title, before.scene.title);
+  assert.deepEqual(result.turnHistory, before.turnHistory);
+  const persisted = await getGame(game.gameId);
+  assert.deepEqual(persisted?.history, before.history);
+  assert.deepEqual(persisted?.scene, before.scene);
+  assert.equal(persisted?.turnNumber, before.turnNumber);
+});
+
 test("scene progression advances without selecting an option and preserves runtime settings", async () => {
   const game = createGame({
     gameId: "game_scene_continuation",
@@ -409,7 +645,7 @@ test("scene progression advances without selecting an option and preserves runti
   assert.match(first.scene.title, /\(Turn 2\)$/);
   assert.match(second.scene.title, /\(Turn 3\)$/);
   assert.deepEqual(
-    first.turnHistory.map(({ completedAt: _completedAt, ...turn }) => turn),
+    first.turnHistory.map(({ completedAt: _completedAt, storyCode: _storyCode, ...turn }) => turn),
     [{
       turnNumber: 2,
       kind: "continuation",
@@ -716,6 +952,7 @@ test("resuming removes talk choices for characters explicitly awaiting arrival",
     scene: {
       title: "A rehearsed evening",
       text: "You listen for Patrick’s return while the kettle boils.",
+      sceneScope: { currentLocation: "Kitchen", peoplePresent: [], peopleWithinSpeakingDistance: [] },
       choices: [
         { id: "wait", type: "action", text: "Keep waiting by the stove" },
         {
@@ -1390,6 +1627,7 @@ test("a canonical player action remains option one and dead characters cannot be
   };
 
   const refreshed = refreshCanonicalFirstChoice({
+    peopleKilledInScene: ["Patrick"],
     title: "After the blow",
     text: "Patrick lies dead while Mary steadies herself.",
     choices: [
@@ -1419,6 +1657,7 @@ test("a canonical player action remains option one and dead characters cannot be
   ]);
 
   const sparseRefreshed = refreshCanonicalFirstChoice({
+    peopleKilledInScene: ["Patrick"],
     title: "After the blow",
     text: "Patrick lies dead while Mary steadies herself.",
     choices: [
@@ -1493,6 +1732,7 @@ test("canonical death filtering removes only the explicitly deceased participant
   };
 
   const refreshed = refreshCanonicalFirstChoice({
+    peopleKilledInScene: ["Wicked Witch of the East"],
     title: "After the landing",
     text: "Dorothy stands beside the remains of the Wicked Witch.",
     choices: [
@@ -1999,7 +2239,7 @@ test("explicit source continuation recovers from an exhausted cursor using chapt
   assert.equal(persisted?.history.at(-2)?.kind, "story");
 });
 
-test("ordinary turns advance the source cursor when canonical material is adapted", async () => {
+test("non-anchor turns preserve the source cursor instead of aligning to canonical material", async () => {
   const book: ImportedBook = {
     bookId: "book_automatic_source",
     sourceSha256: "automatic-source-sha",
@@ -2029,12 +2269,12 @@ test("ordinary turns advance the source cursor when canonical material is adapte
   await makeChoice(game.gameId, { choiceId: "wait" });
 
   const persisted = await getGame(game.gameId);
-  assert.deepEqual(persisted?.sourceCursor, { chapterPosition: 1, textOffset: 0 });
-  assert.equal(persisted?.position?.chapterTitle, "Opening");
+  assert.deepEqual(persisted?.sourceCursor, { chapterPosition: 0, textOffset: "Start.".length });
+  assert.equal(persisted?.narrativeMode, "free");
   assert.equal("sourceProgress" in (persisted?.scene ?? {}), false);
 });
 
-test("ordinary turns preselect a viable later chapter before scene generation", async () => {
+test("non-anchor turns do not preselect a later chapter before scene generation", async () => {
   const book: ImportedBook = {
     bookId: "book_proactive_later_anchor",
     sourceSha256: "proactive-later-anchor-sha",
@@ -2072,12 +2312,12 @@ test("ordinary turns preselect a viable later chapter before scene generation", 
   await makeChoice(game.gameId, { choiceId: "wait" });
 
   const persisted = await getGame(game.gameId);
-  assert.deepEqual(persisted?.sourceCursor, { chapterPosition: 2, textOffset: 0 });
-  assert.equal(persisted?.position?.chapterIndex, 1);
-  assert.equal(persisted?.position?.chapterTitle, "Concrete arrival");
+  assert.deepEqual(persisted?.sourceCursor, { chapterPosition: 0, textOffset: "The current scene.".length });
+  assert.equal(persisted?.narrativeMode, "free");
+  assert.ok(persisted?.returnPlanning?.job);
 });
 
-test("ordinary choices recover through a chapter summary when the cursor is exhausted", async () => {
+test("non-anchor choices keep playing freely when the source cursor is exhausted", async () => {
   const book: ImportedBook = {
     bookId: "book_automatic_recovery",
     sourceSha256: "automatic-recovery-sha",
@@ -2108,4 +2348,39 @@ test("ordinary choices recover through a chapter summary when the cursor is exha
   const persisted = await getGame(game.gameId);
   assert.deepEqual(persisted?.sourceCursor, { chapterPosition: 1, textOffset: 0 });
   assert.match(persisted?.scene.text ?? "", /Wait for something to change/);
+});
+
+
+test('accepted structured deaths persist, survive later empty fields and undo restores the prior ledger',async()=>{
+  const {applyGeneratedScene}=await import('../src/games/service/game-state.js');
+  const {createUndoSnapshot}=await import('../src/games/service/operations.js');
+  const game=createGame({gameId:'game_death_ledger',confirmedDeadCharacters:[],
+    characterProfiles:[{name:'Dorothy',aliases:['Dorothy Gale'],role:'character',description:'',traits:[],relationships:[],storyArc:''}]});
+  game.undoSnapshot=createUndoSnapshot(game);
+  applyGeneratedScene(game,{title:'Death',text:'Dorothy died.',choices:[],peopleKilledInScene:['Dorothy Gale']});
+  assert.deepEqual(game.confirmedDeadCharacters,['Dorothy']);
+  applyGeneratedScene(game,{title:'Waiting',text:'The others waited.',choices:[],peopleKilledInScene:[]});
+  assert.deepEqual(game.confirmedDeadCharacters,['Dorothy']);
+  await saveGame(game);
+  assert.deepEqual((await getGame(game.gameId))?.confirmedDeadCharacters,['Dorothy']);
+  await undoLastChoice(game.gameId);
+  assert.deepEqual((await getGame(game.gameId))?.confirmedDeadCharacters,[]);
+});
+
+test('resume persists the one-time legacy death assessment without inferring death from text',async()=>{
+  const {gameEngine}=await import('../src/games/service/engine-access.js');
+  const engine=gameEngine();
+  const original=engine.assessEstablishedDeaths;
+  let calls=0;
+  engine.assessEstablishedDeaths=async()=>{calls++;return [];};
+  try {
+    const game=createGame({gameId:'game_legacy_death_assessment',
+      scene:{title:'Condition',text:'Oz will not help unless Dorothy killed the Witch.',choices:[]}});
+    await saveGame(game);
+    await resumeGame(game.gameId);
+    assert.deepEqual((await getGame(game.gameId))?.confirmedDeadCharacters,[]);
+    await resumeGame(game.gameId);
+    assert.deepEqual((await getGame(game.gameId))?.confirmedDeadCharacters,[]);
+    assert.equal(calls,1);
+  } finally {engine.assessEstablishedDeaths=original;}
 });

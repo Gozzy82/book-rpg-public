@@ -1,3 +1,8 @@
+import {parseStoryEventCategory} from '../../shared/story-event-category.js';
+import type {StoryEventCategory} from '../../shared/contracts.js';
+import { parsePlayerAction } from "../../shared/player-actions.js";
+import { validateSourceBeatSemantics } from "../../shared/source-beat-semantics.js";
+import type { PlayerAction, SourceBeatSemantics } from "../../shared/contracts.js";
 import {
   CHAPTER_SOURCE_INDEX_VERSION,
   MIN_VERIFIED_IDENTITY_CONFIDENCE,
@@ -22,9 +27,14 @@ export interface ChapterPartSourceIndex {
   summary: string;
   significantEvents: Array<{
     description: string;
+    category?: StoryEventCategory;
     beats: Array<{
       actor: string | null;
       action: string;
+      resultingState?: string;
+      sourceSemantics?: SourceBeatSemantics;
+      playerAction?: PlayerAction;
+      decisionBoundaryBefore?: string;
       targets: string[];
       agency: StoryEventBeatAgency;
       stakes: ChoiceStakes;
@@ -372,7 +382,7 @@ export function parseChapterPartSourceIndex(
     if (!Array.isArray(event.beats) || event.beats.length === 0) {
       throw new Error(`OpenAI returned no beats for significant event ${index + 1}`);
     }
-    const beats = event.beats.map((beat, beatIndex) => {
+    const beats: ChapterPartSourceIndex["significantEvents"][number]["beats"] = event.beats.map((beat, beatIndex) => {
       const field = `beat ${beatIndex + 1} of significant event ${index + 1}`;
       if (!isRecord(beat) || !isNonEmptyString(beat.action)) {
         throw new Error(`OpenAI returned an invalid ${field}`);
@@ -408,12 +418,25 @@ export function parseChapterPartSourceIndex(
       return {
         actor,
         action: beat.action.trim(),
+        ...(beat.sourceSemantics !== undefined ? {sourceSemantics: structuredClone(beat.sourceSemantics) as SourceBeatSemantics} : {}),
+        ...(isNonEmptyString(beat.decisionBoundaryBefore) ? {decisionBoundaryBefore: beat.decisionBoundaryBefore.trim()} : {}),
+        ...(isNonEmptyString(beat.resultingState)
+          ? { resultingState: beat.resultingState.trim() }
+          : {}),
         targets,
         agency,
         stakes,
         references: beatReferences,
       };
     });
+    for (let i = 0; i < beats.length; i++) {
+      try {
+        const playerAction = parsePlayerAction((event.beats[i] as Record<string, unknown>).playerAction, i, beats);
+        if (playerAction) Object.assign(beats[i]!, {playerAction});
+      } catch (error) {
+        throw new Error(`Significant event ${index + 1}: ${error instanceof Error ? error.message : String(error)}`, {cause: error});
+      }
+    }
     const actors = [...new Set(
       beats.flatMap((beat) => beat.actor ? [beat.actor] : []),
     )];
@@ -432,6 +455,7 @@ export function parseChapterPartSourceIndex(
       );
     return {
       description: event.description.trim(),
+      ...(event.category !== undefined ? {category: parseStoryEventCategory(event.category)} : {}),
       beats,
       actors,
       targets,
@@ -442,6 +466,8 @@ export function parseChapterPartSourceIndex(
   if (!Array.isArray(value.actions)) {
     throw new Error(`OpenAI returned an invalid action list for ${bounds.sourceId}`);
   }
+  validateSourceBeatSemantics(significantEvents.flatMap(e => e.beats), false);
+
   const actions = value.actions.map((action, index) => {
     if (!isRecord(action) || !isNonEmptyString(action.description)) {
       throw new Error(`OpenAI returned an invalid action ${index + 1} for ${bounds.sourceId}`);
@@ -597,14 +623,20 @@ export function mergeChapterPartSourceIndexes(
       })),
     }))
   );
-  const significantEvents = parts.flatMap((part) =>
+  const significantEvents = parts.flatMap((part, partPosition) =>
     part.significantEvents.map((event) => ({
       description: event.description,
+      ...(event.category !== undefined ? {category: parseStoryEventCategory(event.category)} : {}),
       actors: event.actors,
       targets: event.targets,
       beats: event.beats.map((beat) => ({
         actor: beat.actor,
         action: beat.action,
+        ...(beat.sourceSemantics ? {sourceSemantics: {...structuredClone(beat.sourceSemantics), jointAction: beat.sourceSemantics.jointAction
+          ? {...structuredClone(beat.sourceSemantics.jointAction), id: `part_${partPosition}_${beat.sourceSemantics.jointAction.id}`} : null}} : {}),
+        ...(beat.decisionBoundaryBefore ? {decisionBoundaryBefore: beat.decisionBoundaryBefore} : {}),
+        ...(beat.resultingState ? { resultingState: beat.resultingState } : {}),
+        ...(beat.playerAction ? { playerAction: structuredClone(beat.playerAction) } : {}),
         targets: beat.targets,
         agency: beat.agency,
         stakes: beat.stakes,
@@ -624,6 +656,9 @@ export function mergeChapterPartSourceIndexes(
     left.sourceReferences[0]!.lineStart - right.sourceReferences[0]!.lineStart
     || left.sourceReferences[0]!.lineEnd - right.sourceReferences[0]!.lineEnd
   );
+  significantEvents.forEach((event, eventIndex) => event.beats.forEach((beat, beatIndex) => {
+    if (beat.playerAction) beat.playerAction.id = `action_c${chapterPosition}_e${eventIndex}_b${beatIndex}`;
+  }));
   const relationships: ChapterRelationshipObservation[] = parts.flatMap((part) =>
     part.relationships.map((relationship) => ({
       character: relationship.character,
@@ -646,3 +681,4 @@ export function mergeChapterPartSourceIndexes(
     relationships,
   };
 }
+

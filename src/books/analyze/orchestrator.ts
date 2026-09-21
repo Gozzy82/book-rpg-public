@@ -1,8 +1,9 @@
+import { ImportRunStopped } from "./import-run.js";
+import { requestStagedChapterIndexes } from "./staged-index.js";
 import {
   configuredIndexModel,
 } from "../../ai/provider.js";
 import {
-  CHAPTER_SOURCE_INDEX_VERSION,
   WORLD_BIBLE_SCHEMA_VERSION,
 } from "../../shared/contracts.js";
 import type {
@@ -43,9 +44,10 @@ import {
   createDefaultResponse,
   resolveCharacterIdentities,
 } from "./identity.js";
-import {
-  requestChapterSourceIndexes,
-} from "./requests.js";
+
+import { isReusableChapterSourceIndex } from "../source-index/reuse.js";
+
+const MAX_CHAPTER_SOURCE_INDEX_ATTEMPTS = 5;
 
 export async function analyzeBook(
   book: ImportedBook,
@@ -71,8 +73,8 @@ export async function analyzeBook(
   let generatedChapterIndexes = false;
   const completedChapterPositions = new Set(
     book.chapters.flatMap((chapter, index) =>
-      chapter.sourceIndex?.schemaVersion === CHAPTER_SOURCE_INDEX_VERSION
-      && chapter.sourceIndex.summary.trim()
+      isReusableChapterSourceIndex(chapter.sourceIndex)
+        && (!options.sharedEventsOnly || chapter.sourceIndex.extractionMode === "shared_events_v1")
         ? [index]
         : []
     ),
@@ -84,73 +86,10 @@ export async function analyzeBook(
     );
   }
 
-  for (const [index, batch] of batches.entries()) {
-    let pendingParts = batch.parts.filter(
-      (part) => !completedChapterPositions.has(part.chapterPosition),
-    );
-    if (pendingParts.length === 0) {
-      continue;
-    }
-
-    log(
-      `Building chapter source indexes ${formatChapterRange(pendingParts)}/${book.chapters.length}`
-      + ` (batch ${index + 1}/${batches.length})...`,
-    );
-    let validationErrors = new Map<string, string>();
-    for (let attempt = 1; pendingParts.length > 0 && attempt <= 3; attempt += 1) {
-      if (attempt > 1) {
-        log(
-          `Retrying ${pendingParts.length} invalid chapter source`
-          + ` ${pendingParts.length === 1 ? "index" : "indexes"}`
-          + ` from batch ${index + 1} (attempt ${attempt}/3)...`,
-        );
-      }
-
-      let result: Awaited<ReturnType<typeof requestChapterSourceIndexes>>;
-      try {
-        result = await requestChapterSourceIndexes(
-          createResponse,
-          model,
-          book,
-          pendingParts,
-          index + 1,
-          attempt,
-          validationErrors,
-        );
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        validationErrors = new Map(
-          pendingParts.map((part) => [part.sourceId, message]),
-        );
-        log(`Chapter source validation failed: ${message}`);
-        if (attempt === 3) {
-          throw new Error(
-            `OpenAI failed to return a valid chapter source index batch`
-            + ` after 3 attempts: ${message}`,
-            { cause: error },
-          );
-        }
-        continue;
-      }
-      for (const [id, sourceIndex] of result.indexes) {
-        partialIndexes.set(id, sourceIndex);
-      }
-      pendingParts = result.invalidParts;
-      validationErrors = result.validationErrors;
-    }
-
-    if (pendingParts.length > 0) {
-      throw new Error(
-        `OpenAI returned invalid source indexes after 3 attempts for:`
-        + ` ${pendingParts.map((part) => {
-          const message = validationErrors.get(part.sourceId);
-          return message ? `${part.sourceId} (${message})` : part.sourceId;
-        }).join(", ")}`,
-      );
-    }
-
+  const checkpointCompletedChapters = async (
+    chapterPositions: Iterable<number>,
+  ): Promise<void> => {
     let savedNewIndexes = false;
-    const chapterPositions = new Set(batch.parts.map((part) => part.chapterPosition));
     for (const chapterPosition of chapterPositions) {
       if (completedChapterPositions.has(chapterPosition)) continue;
       const chapterParts = allParts.filter(
@@ -203,20 +142,62 @@ export async function analyzeBook(
         summary,
         completePartIndexes,
       );
+      if (options.sharedEventsOnly) book.chapters[chapterPosition]!.sourceIndex!.extractionMode = "shared_events_v1";
       completedChapterPositions.add(chapterPosition);
       savedNewIndexes = true;
       generatedChapterIndexes = true;
     }
     if (savedNewIndexes && options.saveProgress) {
       await options.saveProgress();
+      log(
+        `Checkpointed ${completedChapterPositions.size}/${book.chapters.length}`
+        + " completed chapter source indexes.",
+      );
     }
+  };
+
+  // Round-robin repair queue: first give every chapter a chance, then retry only unresolved parts.
+  let pendingParts = allParts.filter(part => !completedChapterPositions.has(part.chapterPosition));
+  const finalErrors = new Map<string, string>();
+  for (let attempt = 1; pendingParts.length && attempt <= MAX_CHAPTER_SOURCE_INDEX_ATTEMPTS; attempt++) {
+    const pendingIds = new Set(pendingParts.map(part => part.sourceId));
+    const nextPending: typeof pendingParts = [];
+    log(`Source queue round ${attempt}/${MAX_CHAPTER_SOURCE_INDEX_ATTEMPTS}: ${pendingParts.length} pending parts`);
+    for (const [index, batch] of batches.entries()) {
+      const work = batch.parts.filter(part => pendingIds.has(part.sourceId));
+      if (!work.length) continue;
+      log(`Building chapter source indexes ${formatChapterRange(work)}/${book.chapters.length} (batch ${index + 1}/${batches.length}, round ${attempt})...`);
+      try {
+        const result = await requestStagedChapterIndexes(createResponse, model, book, work, attempt, log,
+          options.saveStageProgress ?? options.saveProgress ?? (async () => {}), {sharedEventsOnly: options.sharedEventsOnly});
+        for (const [id, sourceIndex] of result.indexes) {
+          partialIndexes.set(id, sourceIndex);
+          finalErrors.delete(id);
+        }
+        await checkpointCompletedChapters(new Set(work.map(part => part.chapterPosition)));
+        nextPending.push(...result.invalidParts.filter(part => !completedChapterPositions.has(part.chapterPosition)));
+        for (const [id, message] of result.validationErrors) {
+          finalErrors.set(id, message);
+          log(`Queued source repair ${id}: ${message}`);
+        }
+      } catch (error) {
+        if (error instanceof ImportRunStopped) throw error;
+        const message = error instanceof Error ? error.message : String(error);
+        nextPending.push(...work.filter(part => !completedChapterPositions.has(part.chapterPosition)));
+        for (const part of work) finalErrors.set(part.sourceId, message);
+        log(`Source batch deferred: ${message}`);
+      }
+    }
+    pendingParts = nextPending;
+  }
+  if (pendingParts.length) {
+    throw new Error(`Import paused after ${MAX_CHAPTER_SOURCE_INDEX_ATTEMPTS} source rounds; ${completedChapterPositions.size}/${book.chapters.length} chapters saved. Unresolved: ${pendingParts.map(part => part.sourceId + " (" + finalErrors.get(part.sourceId) + ")").join("; ")}. Resume without --reanalyze.`);
   }
 
   const chapterSummaries = book.chapters.map((chapter, chapterPosition) => {
     const sourceIndex = chapter.sourceIndex;
     if (
-      sourceIndex?.schemaVersion !== CHAPTER_SOURCE_INDEX_VERSION
-      || !sourceIndex.summary.trim()
+      !isReusableChapterSourceIndex(sourceIndex)
     ) {
       throw new Error(`Missing final source index for chapter ${chapterPosition + 1}`);
     }
@@ -448,3 +429,5 @@ export async function analyzeBook(
 
   throw new Error("Whole-book character index generation ended unexpectedly");
 }
+
+

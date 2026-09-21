@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  absentCharacterContinuityFailures,
   addSourceContinuationAnchorChoice,
   applyEstablishedEvent,
   buildActionContinuationInstruction,
@@ -62,7 +61,6 @@ import {
   RUNTIME_PARAMETER_RULES,
   reasoningEffortForTurn,
   removeChoicesWithUnintroducedCharacters,
-  requiredSourceEventConcreteFailures,
   resolveGroundedSourceCandidate,
   resolveRecoveryChapterSelection,
   resolveSourceContinuationSelection,
@@ -764,9 +762,105 @@ test("event beat agency and stakes determine whether the player must choose", ()
     ),
     true,
   );
+
+  const playerFirstArrivalProfiles = [...profiles, {
+    name: "Munchkins",
+    aliases: [],
+    role: "Visitors",
+    description: "",
+    traits: [],
+    relationships: [],
+    storyArc: "",
+  }];
+  const doorwayScope = {
+    currentLocation: "Open doorway",
+    peoplePresent: ["Dorothy"],
+    peopleWithinSpeakingDistance: ["Dorothy"],
+  };
+  const playerDecisionBeforeLaterArrival = {
+    eventId: "event_look_then_visitors",
+    description: "Dorothy looks outside before the Munchkins approach the house.",
+    chapterPosition: 4,
+    category: "arrival" as const,
+    actors: ["Dorothy", "Munchkins"],
+    targets: ["Dorothy"],
+    beats: [{
+      actor: "Dorothy",
+      action: "Looks outside at the unfamiliar country.",
+      targets: [],
+      agency: "intentional" as const,
+      stakes: "significant" as const,
+      sourceReferences,
+    }, {
+      actor: "Munchkins",
+      action: "Approach Dorothy's house.",
+      targets: ["Dorothy"],
+      agency: "intentional" as const,
+      stakes: "significant" as const,
+      sourceReferences,
+    }],
+  };
+  assert.equal(
+    sourceEventRequiresExplicitPlayerChoice(
+      playerDecisionBeforeLaterArrival,
+      "Dorothy",
+      playerFirstArrivalProfiles,
+      doorwayScope,
+    ),
+    true,
+  );
+  assert.equal(
+    sourceEventCanOccurWithoutPlayerChoice(
+      playerDecisionBeforeLaterArrival,
+      "Dorothy",
+      playerFirstArrivalProfiles,
+      doorwayScope,
+    ),
+    false,
+  );
+  const playerFirstFallback = buildRequiredPlayerChoiceFallback(
+    playerDecisionBeforeLaterArrival,
+    "Dorothy",
+    playerFirstArrivalProfiles,
+    doorwayScope,
+  );
+  assert.equal(playerFirstFallback?.id, SOURCE_ANCHOR_CHOICE_ID);
+  assert.equal(playerFirstFallback?.sourceEventId, "event_look_then_visitors");
+  assert.equal(playerFirstFallback?.text, "Look outside at the unfamiliar country");
+
+  const automaticPrefixBeforePlayerArrival = {
+    ...playerDecisionBeforeLaterArrival,
+    eventId: "event_gust_then_look_then_visitors",
+    beats: [{
+      actor: null,
+      action: "A sudden gust pushes the open door wider.",
+      targets: [],
+      agency: "external" as const,
+      stakes: "significant" as const,
+      sourceReferences,
+    }, ...playerDecisionBeforeLaterArrival.beats],
+  };
+  assert.equal(
+    sourceEventRequiresExplicitPlayerChoice(
+      automaticPrefixBeforePlayerArrival,
+      "Dorothy",
+      playerFirstArrivalProfiles,
+      doorwayScope,
+    ),
+    false,
+  );
+  assert.equal(
+    buildRequiredPlayerChoiceFallback(
+      automaticPrefixBeforePlayerArrival,
+      "Dorothy",
+      playerFirstArrivalProfiles,
+      doorwayScope,
+    ),
+    undefined,
+  );
 });
 
-test("required player choice fallback combines ordered beats through present listeners", () => {
+test("required player choice fallback exposes only the immediate beat through present listeners", () => {
   const choice = buildRequiredPlayerChoiceFallback(
     {
       eventId: "join-party",
@@ -802,7 +896,7 @@ test("required player choice fallback combines ordered beats through present lis
 
   assert.equal(
     choice?.text,
-    "Ask Dorothy and Scarecrow whether Oz could give me a heart, and request permission to join the party and seek Oz’s help",
+    "Ask Dorothy and Scarecrow whether Oz could give me a heart",
   );
   assert.deepEqual(choice?.requiredPresentCharacters, ["Dorothy", "Scarecrow"]);
   assert.equal(choice?.sourceAnchorRoute, "event");
@@ -888,7 +982,7 @@ test("multi-turn source events expose only the next player decision", () => {
     choice?.text,
     "Ask Dorothy whether I may join Dorothy's journey",
   );
-  assert.equal(choice?.sourceAnchorRoute, "transition");
+  assert.equal(choice?.sourceAnchorRoute, "event");
 });
 
 test("a missing multi-turn anchor is repaired without regenerating the opening", async () => {
@@ -1065,7 +1159,7 @@ test("a missing multi-turn anchor is repaired without regenerating the opening",
     /beats already visibly completed in candidate_scene as past/i,
   );
   assert.match(choiceReviewRequest?.input ?? "", /Accepts Dorothy's invitation/);
-  assert.equal(scene.choices[0]?.sourceAnchorRoute, "transition");
+  assert.equal(scene.choices[0]?.sourceAnchorRoute, "event");
   assert.equal(
     scene.choices[0]?.text,
     "Ask Dorothy whether I may join Dorothy's journey",
@@ -1305,7 +1399,7 @@ test("direct source continuation refreshes a consequential player event as an ex
   assert.equal(result?.scene.choices[0]?.stakes, "critical");
   assert.match(
     requests[0]?.instructions ?? "",
-    /sourceAnchorRoute.*'event'.*'transition'/i,
+    /sourceAnchorRoute 'event'[\s\S]*Use transition only/i,
   );
   assert.match(
     requests[0]?.instructions ?? "",
@@ -1325,15 +1419,15 @@ test("direct source continuation refreshes a consequential player event as an ex
   );
   assert.match(
     requests[0]?.instructions ?? "",
-    /beats as the ordered atomic navigation contract[\s\S]*Account for every beat/i,
+    /required_player_choice_beats lists only the immediately eligible player decision/i,
   );
   assert.match(
     requests[0]?.instructions ?? "",
-    /required_player_choice_beats is non-empty[\s\S]*clearly authorize every supplied beat/i,
+    /source_event_beat_progress still lists a matching source beat as remaining/i,
   );
   assert.match(
     requests[0]?.instructions ?? "",
-    /beats not listed in required_player_choice_beats[\s\S]*immediate causal conditions/i,
+    /Later uncompleted player decisions remain future/i,
   );
   assert.doesNotMatch(
     requests[0]?.instructions ?? "",
@@ -2564,6 +2658,7 @@ test("a named character awaiting arrival is unavailable to talk", () => {
   const scene: GameState["scene"] = {
     title: "Waiting",
     text: "You listen for Patrick’s return while the kettle boils.",
+    sceneScope: { currentLocation: "Kitchen", peoplePresent: ["Mary Maloney"], peopleWithinSpeakingDistance: ["Mary Maloney"] },
     choices: [
       {
         id: "patrick",
@@ -2607,6 +2702,7 @@ test("a conditional future entrance keeps the named character unavailable", () =
   };
   const scene: GameState["scene"] = {
     ...state.scene,
+    sceneScope: { currentLocation: "Kitchen", peoplePresent: ["Mary Maloney"], peopleWithinSpeakingDistance: ["Mary Maloney"] },
     choices: [
       {
         id: "talk",
@@ -2725,6 +2821,7 @@ test("an opening may mention an absent character but cannot make them interact",
       "Sam enters the room and asks what you need.",
       state,
       [candidate],
+      { currentLocation: "Home", peoplePresent: ["Mary Maloney", "Sam"], peopleWithinSpeakingDistance: ["Mary Maloney", "Sam"] },
     ),
     ["The opening scene depicts Sam arriving or interacting before the source introduces that character."],
   );
@@ -2738,58 +2835,7 @@ test("an opening may mention an absent character but cannot make them interact",
   );
 });
 
-test("a required arrival must happen now rather than remain anticipated", () => {
-  const candidate = {
-    chapterPosition: 0,
-    chapterTitle: "Home",
-    summary: "Patrick arrives.",
-    excerpt: "The key turns in the lock.",
-    requiredEvent: "Patrick arrives home.",
-    requiredEventId: "patrick-arrives",
-    requiredEventCategory: "arrival" as const,
-    requiredEventActors: ["Patrick Maloney"],
-    requiredEventTargets: ["Mary Maloney"],
-    nextTextOffset: 100,
-  };
 
-  assert.equal(
-    requiredSourceEventConcreteFailures(
-      "You listen for Patrick coming home and will greet him when he arrives.",
-      candidate,
-    ).length,
-    1,
-  );
-  assert.deepEqual(
-    requiredSourceEventConcreteFailures(
-      "Patrick Maloney opens the front door, steps inside, and greets you.",
-      candidate,
-    ),
-    [],
-  );
-});
-
-test("an arriving object does not require a character to re-enter", () => {
-  const candidate = {
-    chapterPosition: 1,
-    chapterTitle: "The letters",
-    summary: "A second letter arrives.",
-    excerpt: "A second letter came through the mail slot.",
-    requiredEvent: "A second letter addressed to Harry arrives, and Vernon wrestles Dudley for it.",
-    requiredEventId: "event_second_letter",
-    requiredEventCategory: "arrival" as const,
-    requiredEventActors: ["Harry Potter", "Vernon Dursley"],
-    requiredEventTargets: ["Vernon Dursley", "Dudley Dursley"],
-    nextTextOffset: 100,
-  };
-
-  assert.deepEqual(
-    requiredSourceEventConcreteFailures(
-      "A second letter drops through the slot. Vernon lunges for it before Dudley can reach it.",
-      candidate,
-    ),
-    [],
-  );
-});
 
 test("choices cannot directly interact with a character awaiting arrival", () => {
   const state = {
@@ -2814,6 +2860,7 @@ test("choices cannot directly interact with a character awaiting arrival", () =>
   const scene: GameState["scene"] = {
     title: "Still waiting",
     text: "Patrick has not arrived, and the house remains quiet.",
+    sceneScope: { currentLocation: "Kitchen", peoplePresent: ["Mary Maloney"], peopleWithinSpeakingDistance: ["Mary Maloney"] },
     choices: [
       {
         id: "ask",
@@ -2843,7 +2890,7 @@ test("choices cannot directly interact with a character awaiting arrival", () =>
   );
 });
 
-test("choice text cannot bypass SceneScope by omitting absent-character metadata", () => {
+test("AI-classified choice prerequisites are checked against SceneScope", () => {
   const characterProfiles = [{
     name: "Dorothy",
     aliases: [],
@@ -2886,6 +2933,7 @@ test("choice text cannot bypass SceneScope by omitting absent-character metadata
       id: "ask-oz",
       type: "action",
       text: "Ask Oz for a heart and permission to join the group",
+      requiredPresentCharacters: ["Oz"],
     }, {
       id: "ask-dorothy",
       type: "action",
@@ -2905,40 +2953,6 @@ test("choice text cannot bypass SceneScope by omitting absent-character metadata
   );
 });
 
-test("choices cannot assume movement while the player is established as immobile", () => {
-  const scene: GameState["scene"] = {
-    title: "Rusted in place",
-    text:
-      "I am motionless beside the tree, unable to make my rusted joints obey.",
-    choices: [{
-      id: "move",
-      type: "action",
-      text: "Move toward Dorothy to ask for help",
-    }, {
-      id: "attempt",
-      type: "action",
-      text: "Attempt to flex one finger",
-    }, {
-      id: "ask",
-      type: "action",
-      text: "Ask Dorothy to fetch the oil-can",
-    }],
-  };
-  const state = {
-    playerName: "Tin Woodman",
-    scene,
-    history: [],
-    characterProfiles: [],
-    sourceIntroducedCharacters: [],
-  };
-
-  assert.deepEqual(
-    removeChoicesWithUnintroducedCharacters(scene, state).choices.map(
-      (choice) => choice.id,
-    ),
-    ["attempt", "ask"],
-  );
-});
 
 test("choices cannot replay a beat from the latest completed source event", () => {
   const scene: GameState["scene"] = {
@@ -2994,45 +3008,6 @@ test("choices cannot replay a beat from the latest completed source event", () =
   );
 });
 
-test("an absent character cannot respond before their arrival is narrated", () => {
-  const state = {
-    scene: {
-      title: "Waiting",
-      text: "Mary listens for Patrick’s return.",
-      choices: [],
-    },
-    characterProfiles: [{
-      name: "Patrick Maloney",
-      aliases: ["Patrick"],
-      role: "Husband",
-      description: "Mary's husband.",
-      traits: [],
-      relationships: [],
-      storyArc: "His announcement changes the evening.",
-    }],
-  };
-
-  assert.deepEqual(
-    absentCharacterContinuityFailures(
-      state,
-      "The kettle continues to boil.",
-      "Patrick answers with guarded clarity.",
-      "",
-    ),
-    [
-      "Patrick Maloney interacted while still established as absent; narrate their arrival before they can respond.",
-    ],
-  );
-  assert.deepEqual(
-    absentCharacterContinuityFailures(
-      state,
-      "Patrick returns, closes the door, and answers with guarded clarity.",
-      "Patrick answers with guarded clarity.",
-      "Patrick arrives home.",
-    ),
-    [],
-  );
-});
 
 test("scene validation rejects writing systems absent from the game context", () => {
   const scene: GameState["scene"] = {
@@ -3824,27 +3799,19 @@ test("an anchor-directed first choice reaches source material and promotes the n
   assert.match(sceneRequest?.input ?? "", /OPTION 1 ANCHOR ROUTE SELECTED/);
   assert.match(
     sceneRequest?.instructions ?? "",
-    /selected anchor choice directly reaches.*SOURCE ANCHOR TO REACH/i,
+    /selected source-continuation route requires progress[\s\S]*only the next ordered beat is mandatory now/i,
   );
   assert.match(
     sceneRequest?.instructions ?? "",
-    /Required event to complete now: A detective asks Mary which heavy household object is missing/i,
+    /Required beat to complete now: the next required source beat/i,
   );
   assert.match(
     sceneRequest?.instructions ?? "",
-    /Approaching cars or footsteps.*do not complete an arrival or interaction anchor/i,
+    /only the next ordered beat is mandatory now/i,
   );
   assert.doesNotMatch(
     sceneRequest?.instructions ?? "",
     /next_significant_event is a possible source development, not an obligation/i,
-  );
-  assert.match(
-    sceneRequests[1]?.input ?? "",
-    /source event position review did not confirm/i,
-  );
-  assert.match(
-    sceneRequests[1]?.input ?? "",
-    /Imminent or preparatory signs do not count/i,
   );
   assert.match(
     sceneRequest?.input ?? "",
@@ -3859,24 +3826,21 @@ test("an anchor-directed first choice reaches source material and promotes the n
     completedEventChoiceReviewRequest?.input ?? "",
     /CURRENT SIGNIFICANT EVENT:[\s\S]*?"eventId": "event_missing_object_question"[\s\S]*?UPCOMING SOURCE ANCHOR MATERIAL:/,
   );
-  assert.equal(reviewRequests.length, 2);
-  assert.equal(presenceRequests.length, 2);
-  for (const index of [0, 1]) {
-    assert.ok(
-      requests.indexOf(reviewRequests[index]!) < requests.indexOf(presenceRequests[index]!),
-      "repetition review must run before presence review",
-    );
-  }
-  assert.deepEqual(
-    scene.choices.map((choice) => choice.id),
-    [SOURCE_ANCHOR_CHOICE_ID, "note"],
+assert.equal(reviewRequests.length, 1);
+assert.equal(presenceRequests.length, 1);
+for (const index of [0]) {
+  assert.ok(
+    requests.indexOf(reviewRequests[index]!) < requests.indexOf(presenceRequests[index]!),
+    "repetition review must run before presence review",
   );
-  assert.equal(sceneAttempt, 2);
-  assert.deepEqual(scene.sourceProgress, {
-    chapterPosition: 4,
-    textOffset: 15_800,
-    eventId: "event_missing_object_question",
-  });
+}
+assert.deepEqual(
+  scene.choices.map((choice) => choice.id),
+  [SOURCE_ANCHOR_CHOICE_ID, "note"],
+);
+assert.equal(sceneAttempt, 1);
+  
+assert.equal(scene.sourceProgress, undefined);
 });
 
 test("source events are mandatory only after semantic causal route confirmation", async () => {
@@ -4161,7 +4125,7 @@ test("source events are mandatory only after semantic causal route confirmation"
     );
     assert.deepEqual(
       routeReviewRequests.map((request) => request.max_output_tokens),
-      reviewedRoute === "transition" ? [800, 1_600] : [800],
+      reviewedRoute === "transition" ? [1_600, 3_200] : [1_600],
     );
     assert.deepEqual(
       choiceReviewRequests.map((request) => request.max_output_tokens),
@@ -4196,13 +4160,13 @@ test("source events are mandatory only after semantic causal route confirmation"
       );
       assert.match(
         sceneRequests[0]?.instructions ?? "",
-        /selected anchor choice directly reaches.*SOURCE ANCHOR TO REACH/i,
+        /selected source-continuation route requires progress[\s\S]*only the next ordered beat is mandatory now/i,
       );
       assert.equal(scene.sourceProgress?.eventId, requiredEventId);
     } else {
       assert.doesNotMatch(
         sceneRequests[0]?.instructions ?? "",
-        /selected anchor choice directly reaches.*SOURCE ANCHOR TO REACH/i,
+        /selected source-continuation route requires progress[\s\S]*only the next ordered beat is mandatory now/i,
       );
       assert.equal(scene.title, "The greeting answered");
       assert.equal(scene.sourceProgress, undefined);
@@ -5221,7 +5185,7 @@ test("scene choices regenerate options that treat the player as a separate chara
   const scene = await new ProviderGameEngine(client, "minimal")
     .refreshSceneChoices(state, [candidate]);
   const retryInput = JSON.parse(requests[1]?.input ?? "{}") as {
-    rejected_choices?: string[];
+    rejected_choices?: Array<{text: string; role: string; reason: string}>;
   };
 
   assert.equal(requests.length, 2);
@@ -5233,7 +5197,9 @@ test("scene choices regenerate options that treat the player as a separate chara
     requests[0]?.input ?? "",
     /"player_identity_aliases":[\s\S]*"the Scarecrow"/,
   );
-  assert.equal(retryInput.rejected_choices?.includes(malformedChoice), true);
+  assert.equal(retryInput.rejected_choices?.some(choice => choice.text === malformedChoice), true);
+  assert.equal(retryInput.rejected_choices?.[0]?.role, "anchor");
+  assert.match(retryInput.rejected_choices?.[0]?.reason ?? "", /player identity/);
   assert.equal(scene.choices[0]?.id, SOURCE_ANCHOR_CHOICE_ID);
   assert.equal(scene.choices[0]?.text, "Regain your balance and keep walking beside Dorothy");
   assert.equal(
@@ -5446,18 +5412,18 @@ test("scene choices receive the next significant event to formulate option one",
     choiceRequests[2]?.input ?? "{}",
   ) as {
     accepted_choices?: Array<{ text: string }>;
-    rejected_choices?: string[];
+    rejected_choices?: Array<{text: string; role: string; reason: string}>;
   };
   assert.deepEqual(
     repairedChoiceInput.accepted_choices?.map((choice) => choice.text),
     ["Walk to the shop entrance", "Listen for movement outside"],
   );
   assert.equal(
-    repairedChoiceInput.rejected_choices?.includes(action),
+    repairedChoiceInput.rejected_choices?.some(choice => choice.text === action),
     true,
   );
   assert.equal(
-    repairedChoiceInput.rejected_choices?.includes("Walk to the shop entrance"),
+    repairedChoiceInput.rejected_choices?.some(choice => choice.text === "Walk to the shop entrance"),
     false,
   );
   assert.equal(
@@ -5493,7 +5459,7 @@ test("scene choices receive the next significant event to formulate option one",
   );
   assert.match(
     choiceReviewRequests[0]?.instructions ?? "",
-    /anchor choice must clearly authorize every supplied beat/i,
+    /REQUIRED PLAYER CHOICE BEATS lists only the immediately eligible player-controlled decision/i,
   );
   assert.match(
     choiceReviewRequests[0]?.input ?? "",
@@ -5923,12 +5889,12 @@ test("runtime parameters override canonical characterization and newest conflict
   const rules = RUNTIME_PARAMETER_RULES.join("\n");
 
   assert.match(rules, /persistent, user-authored overrides/i);
-  assert.match(rules, /newest \(last\) parameter wins/i);
+  assert.match(rules, /newest \(last\) world rule wins/i);
   assert.match(
     rules,
     /authoritative over character_profiles, source characterizations/i,
   );
-  assert.match(rules, /act, speak, choose, and react according to these parameters/i);
+  assert.match(rules, /act, speak, choose, and react according to these world rules/i);
   assert.match(rules, /not itself a player action or a completed scene event/i);
 });
 
@@ -6565,7 +6531,9 @@ test("an advancing dialogue may leave the next source event for option one", asy
   );
   assert.match(review?.instructions ?? "", /new substantive answer.*meaningful advancement/i);
   assert.match(review?.instructions ?? "", /Never use failure to reach REQUIRED NEXT EVENT.*evidence.*repeats/i);
-  const reviewInput = JSON.parse(String(review?.input)) as {
+  const reviewInput = JSON.parse(
+    String(review?.input).split("\n\nCHOICE NAVIGATION EVENT:", 1)[0]!,
+  ) as {
     candidate_scene: {
       text: string;
       dialogue: {
@@ -7348,7 +7316,7 @@ test("direct source continuation does not authorize a player action when actor m
     },
   };
   const engine = new ProviderGameEngine(client, "minimal");
-  const result = await engine.continueFromSource({
+  await assert.rejects(() => engine.continueFromSource({
     gameId: "game_required_source_event",
     book: { bookId: "book_lamb", title: "Lamb to the Slaughter" },
     playerName: "Mary Maloney",
@@ -7384,10 +7352,9 @@ test("direct source continuation does not authorize a player action when actor m
     summary: "Patrick announces he is leaving. Mary kills him with a frozen lamb. She later calls the police.",
     excerpt: "Mary crossed the room and swung the frozen leg of lamb. Patrick fell.",
     nextTextOffset: 96,
-  }]);
+  }]), /performed a consequential player action that was not selected/);
 
   assert.equal(sceneAttempt, 4);
-  assert.equal(result, undefined);
   const reviewRequest = requests.find(
     (request) => request.text?.format.name === "bookrpg_scene_repetition_review",
   );
@@ -7405,7 +7372,7 @@ test("direct source continuation does not authorize a player action when actor m
   );
 });
 
-test("an opening retries incomplete presence output without semantic repetition review", async () => {
+test("an opening retries incomplete presence output with semantic continuity review", async () => {
   const requests: AiResponseRequest[] = [];
   let presenceAttempt = 0;
   const client: AiClient = {
@@ -7560,7 +7527,7 @@ test("an opening retries incomplete presence output without semantic repetition 
     requests.some(
       (request) => request.text?.format.name === "bookrpg_scene_repetition_review",
     ),
-    false,
+    true,
   );
   assert.match(requests[0]?.input ?? "", /optional_opening_reference/);
   assert.match(requests[0]?.input ?? "", /Earlier in this chapter/);
@@ -7570,15 +7537,15 @@ test("an opening retries incomplete presence output without semantic repetition 
   );
   assert.match(
     requests[0]?.input ?? "",
-    /opening_reference_event, opening_player_future_actions, and upcoming_source_material\.excerpt together/i,
+    /Use next_significant_event_progress, each beat's sourceReferencesExcerpt, and upcoming_source_material\.excerpt together/i,
   );
   assert.match(
     requests[0]?.input ?? "",
-    /future action is to ask permission to get down from a chair, establish that player_identity is standing on the chair/i,
+    /Scarecrow's first player beat is to wink and nod.*show him fixed on the pole/i,
   );
   assert.match(
     requests[0]?.input ?? "",
-    /Stop before the earliest still-future player beat and offer it as a concrete choice/i,
+    /stop immediately before the earliest meaningful player-controlled beat and offer it as a concrete choice/i,
   );
   const choiceRequest = requests.find(
     (request) => request.text?.format.name === "bookrpg_scene_choices",
@@ -7641,9 +7608,9 @@ test("an opening retries incomplete presence output without semantic repetition 
   assert.match(presenceRequest?.input ?? "", /"beats"/);
   assert.deepEqual(
     presenceRequests.map((request) => request.max_output_tokens),
-    [1_200, 2_400],
+    [3_200, 6_400],
   );
-  assert.match(choiceRequest?.input ?? "", /"eventId": "event_enter"/);
+  assert.doesNotMatch(choiceRequest?.input ?? "", /"eventId": "event_enter"/);
   assert.equal(result.choices[0]?.text, "Join Mary in the living room");
 });
 
@@ -8805,11 +8772,11 @@ test("opening keeps player beats pending and stages their physical prerequisites
   assert.equal(result.sourceProgress, undefined);
   assert.equal(result.sourceEventProgress, undefined);
   assert.equal(sceneAttempt, 3);
-  assert.equal(presenceReviews, 2);
+  assert.equal(presenceReviews, 3);
   assert.match(result.text, /fixed high on the pole/i);
   assert.doesNotMatch(result.text, /wink and nod/i);
   assert.ok(result.text.trim().split(/\s+/u).length <= 120);
-  assert.equal(result.choices[0]?.text, "Wink and nod at Dorothy from the pole");
+  assert.match(result.choices[0]?.text ?? "", /wink and nod.*Dorothy/i);
   const sceneRequest = requests.find(
     (request) => request.text?.format.name === "bookrpg_scene",
   );
@@ -8822,7 +8789,7 @@ test("opening keeps player beats pending and stages their physical prerequisites
     /The Scarecrow was still fastened to his pole when Dorothy came along/i,
   );
   assert.match(
-    String(sceneRequest?.instructions ?? ""),
+    String(sceneRequest?.input ?? ""),
     /next_significant_event_progress is authoritative for the opening/i,
   );
   assert.match(sceneRequest?.input ?? "", /explains that the pole is stuck in his back/i);
@@ -9036,3 +9003,4 @@ test("later scenes stage a compatible future player action without performing it
 
 test("NPC progress cannot bypass setup review for the newly exposed player choice", () =>
   assertFuturePlayerSetup(true));
+

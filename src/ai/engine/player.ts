@@ -1,3 +1,4 @@
+import { PLAYER_PERSPECTIVE_POLICY } from "./shared-policy.js";
 import type {
   CharacterProfile,
 } from "../../shared/contracts.js";
@@ -40,10 +41,6 @@ export function buildPlayerPerspective(
   return [
     `The user controls exactly this player identity: ${JSON.stringify(playerName)}.`,
     `The canonical profile for this player identity is: ${JSON.stringify(profileSummary)}.`,
-    "Narrate player-facing scene prose in first-person singular from that identity's perspective, using I, me, and my for the player.",
-    "Do not address the player as you in narration or refer to the player by name or third-person pronouns. Non-player dialogue may address the player as you.",
-    "The source passage establishes the situation only; its narrator, viewpoint character, actions, and private knowledge do not define the player.",
-    "Never switch the player to another character because that character dominates the source passage.",
     ...(spoilerSafe
       ? [
           "This is an opening scene with no selected player action yet. Establish the immediate situation and stop at the first meaningful player decision; do not invent a consequential voluntary action, promise, goal, departure, speech, or decision for the player.",
@@ -51,6 +48,7 @@ export function buildPlayerPerspective(
       : []),
     "Only give the player actions and knowledge appropriate to the chosen identity at this point in the story.",
     "Preserve the player's established self-beliefs, perceived limitations, motives, and unmet goals from the canonical profile. Do not make the player confidently claim to already possess a capability, quality, knowledge, or condition that the profile says they believe they lack or are currently seeking to gain.",
+    ...PLAYER_PERSPECTIVE_POLICY,
     ...PLAYER_EMBODIMENT_RULES,
   ].join("\n");
 }

@@ -105,3 +105,36 @@ test("NPC-only source events are not blocked by the player-action preflight", ()
     [],
   );
 });
+
+
+test("completed co-actors cannot divert an ordered automatic continuation into prerequisite recovery", () => {
+  const candidate: SourceContinuationCandidate = {...greetingEvent,
+    requiredEventActors: ["Mary Maloney", "Patrick Maloney"],
+    requiredEventBeats: [
+      {actor: "Patrick Maloney", action: "Leaves the room", agency: "intentional", stakes: "significant", targets: [], sourceReferences: []},
+      {actor: null, action: "The lights go out", agency: "involuntary", stakes: "significant", targets: [], sourceReferences: []},
+      {actor: "Mary Maloney", action: "Opens the window", agency: "intentional", stakes: "significant", targets: [], sourceReferences: []},
+    ]};
+  const game = {...gameWithPresentCharacters(["Mary Maloney"]),
+    sourceEventProgress: {eventId: greetingEvent.requiredEventId, completedBeatIndexes: [0]}};
+  assert.deepEqual(missingPresentSourceEventCharacters(game, book, candidate), []);
+  assert.deepEqual(missingPresentSourceEventCharacters({...game,
+    sourceEventProgress: {...game.sourceEventProgress, completedBeatIndexes: [0, 1]}}, book, candidate), []);
+  const needsPatrick = {...candidate, requiredEventBeats: [
+    ...candidate.requiredEventBeats!.slice(0, 2),
+    {...candidate.requiredEventBeats![2]!, action: "Hands Patrick a glass", targets: ["Patrick Maloney"]},
+  ]};
+  assert.deepEqual(missingPresentSourceEventCharacters({...game,
+    sourceEventProgress: {...game.sourceEventProgress, completedBeatIndexes: [0, 1]}}, book, needsPatrick), ["Patrick Maloney"]);
+});
+
+
+test("automatic player discovery establishes an absent target before the intentional interaction", () => {
+ const candidate: SourceContinuationCandidate={...greetingEvent,requiredEventBeats:[
+  {actor:'Mary Maloney',action:'Notices Patrick at the gate',agency:'intentional',stakes:'routine',targets:['Patrick Maloney'],sourceReferences:[],resultingState:'Mary sees Patrick at the gate.'},
+  {actor:'Mary Maloney',action:'Greets Patrick',agency:'intentional',stakes:'significant',targets:['Patrick Maloney'],sourceReferences:[]},
+ ]};
+ const game=gameWithPresentCharacters(['Mary Maloney']);
+ assert.deepEqual(missingPresentSourceEventCharacters(game,book,candidate),[]);
+ assert.deepEqual(missingPresentSourceEventCharacters({...game,sourceEventProgress:{eventId:greetingEvent.requiredEventId,completedBeatIndexes:[0]}},book,candidate),['Patrick Maloney']);
+});

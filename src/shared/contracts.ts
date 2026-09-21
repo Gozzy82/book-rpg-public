@@ -1,3 +1,4 @@
+import type { CharacterDynamics } from "./character-dynamics.js";
 export type ChoiceType = "action" | "talk";
 export type ChoiceStakes = "routine" | "significant" | "critical";
 export type SourceAnchorRoute = "event" | "transition";
@@ -46,8 +47,9 @@ export interface BookRef {
   author?: string;
 }
 
-export const CHAPTER_SOURCE_INDEX_VERSION = 6;
-export const WORLD_BIBLE_SCHEMA_VERSION = 8;
+// v17 re-audits passive perception so automatic observations cannot become player decisions.
+export const CHAPTER_SOURCE_INDEX_VERSION = 17;
+export const WORLD_BIBLE_SCHEMA_VERSION = 15;
 export const MIN_VERIFIED_IDENTITY_CONFIDENCE = 0.75;
 
 export interface SourceReference {
@@ -63,12 +65,60 @@ export type StoryEventBeatAgency =
   | "external"
   | "ambiguous";
 
+/** One source-backed player goal; categories do not grant additional authorization. */
+export interface PlayerAction {
+  /** Assigned by the server within the pinned book index, never inferred from the label. */
+  id?: string;
+  kind: "player_action";
+  /** Final authorized beat, including an NPC reply or automatic consequence. */
+  endBeatIndex: number;
+  boundaryReason: string;
+  choiceText: string;
+  playerBeatIndexes: number[];
+  completion: string;
+  preconditions: string[];
+  interruptWhen: string[];
+}
+
+export interface SourceBeatSemantics {
+  mode: "present" | "narration";
+  /** History being told; never a present physical state or action. */
+  narratedContent: string | null;
+  intentionalRole: "meaningful" | "other";
+  /** Multiple actor representations of one joint act, not successive phases. */
+  jointAction: {id: string; participants: string[]; resultingState: string} | null;
+}
+
+/** Exact onset of the action; sourceReferences remain broader supporting evidence. */
+export interface SourceActionStart {
+  chapterPosition: number;
+  chapterIndex: number;
+  /** One-based line in chapter.text.trim(), matching sourceReferences. */
+  line: number;
+  /** Zero-based JavaScript string offset within that line. */
+  column: number;
+  /** Exact nonempty source text starting at column, within the same line. */
+  quote: string;
+}
+
 export interface StoryEventBeat {
+  sourceActionStart?: SourceActionStart;
+  /** Optional character-perspective grouping over unchanged source beats. Null suppresses a legacy choice on a continuation. */
+  characterActionGroup?: PlayerAction | null;
+  sourceSemantics?: SourceBeatSemantics;
+  /** Present only on the first beat of an indexed player action. Absolute event-local indexes. */
+  playerAction?: PlayerAction;
+  /** A new goal, information-dependent choice or material commitment by this actor. */
+  decisionBoundaryBefore?: string;
   actor: string | null;
   action: string;
   targets: string[];
   agency: StoryEventBeatAgency;
   stakes: ChoiceStakes;
+  /** Concrete world/character state immediately after this source beat. */
+  resultingState?: string;
+  /** Character-specific state established by the automatic beats preceding this beat. */
+  automaticPreludeEndState?: string;
   sourceReferences: SourceReference[];
 }
 
@@ -89,6 +139,7 @@ export interface CharacterRelationship extends CharacterReference {
 }
 
 export interface CharacterProfile {
+  dynamics?: CharacterDynamics;
   characterId?: string;
   name: string;
   aliases: string[];
@@ -134,11 +185,13 @@ export interface ChapterRelationshipObservation {
 
 export interface ChapterSignificantEvent {
   description: string;
+  /** AI classification; absent in legacy indexes. */
+  category?: StoryEventCategory;
   /** Direct grammatical actors of this event; absent in legacy source indexes. */
   actors?: string[];
   /** Character recipients or affected participants; absent in legacy source indexes. */
   targets?: string[];
-  /** Atomic agency-classified event actions; absent in legacy source indexes. */
+  /** Atomic agency-classified event actions; absent in legacy imported books. */
   beats?: StoryEventBeat[];
   sourceReferences: SourceReference[];
 }
@@ -168,6 +221,8 @@ export interface BookStoryEvent {
 }
 
 export interface ChapterSourceIndex {
+  /** Shared extraction contains no character goal partitions. */
+  extractionMode?: "shared_events_v1";
   schemaVersion: typeof CHAPTER_SOURCE_INDEX_VERSION;
   summary: string;
   significantEvents?: ChapterSignificantEvent[];
@@ -199,6 +254,8 @@ export interface SourceCursor {
 
 /** Cumulative, ordered beat progress for the next source event. */
 export interface SourceEventProgress {
+  /** Entry or later bridge re-entry boundary; earlier indexes are not required again and are not implicitly completed. */
+  startBeatIndex?: number;
   eventId: string;
   completedBeatIndexes: number[];
 }
@@ -208,7 +265,22 @@ export interface StartGameRequest {
   playerName?: string;
 }
 
+/** Server-owned identity of the canonical action; display text is not authorization. */
+export interface SourceBeatSelection {
+  actionId?: string;
+  playerBeatIndexes?: readonly number[];
+  eventId: string;
+  beatIndex: number;
+  endBeatIndex: number;
+  kind: "beat" | "player_action";
+}
+
 export interface GameChoice {
+  /** Server-owned link to a prepared opportunity; never rendered in prose. */
+  bridgeId?: string;
+  /** Free intermediate action toward a prepared bridge; never canonical authorization. */
+  bridgeStepId?: string;
+  sourceBeatSelection?: SourceBeatSelection;
   id: string;
   type: ChoiceType;
   text: string;
@@ -238,6 +310,10 @@ export interface SceneScope {
 }
 
 export interface Scene {
+  /** Structured AI assessment of actual deaths established in this scene. */
+  peopleKilledInScene?: string[];
+  /** Derived from grounded review, never trusted from writer metadata. */
+  sourceActionOutcome?: "interrupted" | "failed";
   title: string;
   text: string;
   choices: GameChoice[];
@@ -358,6 +434,9 @@ export type GameHistoryEntry = {
 export type GameTurnKind = "start" | "choice" | "dialogue" | "event" | "continuation";
 
 export interface GameTurnHistoryEntry {
+  storyCode?: string;
+  bridgeId?: string;
+  sourceEventId?: string;
   turnNumber: number;
   kind: GameTurnKind;
   action: string;
@@ -366,6 +445,8 @@ export interface GameTurnHistoryEntry {
 }
 
 export interface GameUndoSnapshot {
+  narrativeMode?: "canonical" | "free";
+  confirmedDeadCharacters?: string[];
   scene: Scene;
   history: GameHistoryEntry[];
   status: GameStatus;
@@ -383,6 +464,16 @@ export interface GameUndoSnapshot {
 }
 
 export interface GameState {
+  gameRevision?: number;
+  narrativeMode?: "canonical" | "free";
+  returnPlanning?: import("../games/return-bridges.js").ReturnPlanning;
+  /** Current scene provenance; no control codes are embedded in prose. */
+  sceneTrace?: {storyCode: string; bridgeId?: string; sourceEventId?: string};
+  /** Accumulated accepted AI death assessments; never inferred from prose. */
+  confirmedDeadCharacters?: string[];
+  /** New games pin source semantics; reindexing never remaps stored beat positions. */
+  sourceIndexFingerprint?: string;
+  playerActionVersion?: 2;
   gameId: string;
   /** Present for cloud saves; omitted from legacy and local save files. */
   ownerId?: string;
@@ -415,7 +506,22 @@ export interface GameState {
   updatedAt: string;
 }
 
+export interface CharacterAnchorRoute {
+  character: string;
+  events: Array<{eventId: string; sourceFingerprint: string; anchors: Array<{startBeatIndex: number; action: PlayerAction}>}>;
+}
+export interface CharacterAnchorIndex {
+  version: 1;
+  sourceFingerprint: string;
+  playableCharacters: string[];
+  routes: CharacterAnchorRoute[];
+}
 export interface ImportedBook {
+  /** Approved routes only; partial work must never become playable. */
+  characterAnchors?: CharacterAnchorIndex;
+  anchorImport?: {version: 1; playableCharacters: string[]; events: Record<string, unknown>};
+  /** Durable import work, not approved game data. Keyed by source part and source fingerprint. */
+  importAnalysis?: {version: number; parts: Record<string, unknown>};
   bookId: string;              // KOReader-compatible partial MD5
   sourceSha256: string;        // full-file integrity/debug hash
   title: string;
@@ -433,7 +539,7 @@ export interface ImportedBook {
   importedAt: string;
 }
 
-export type BookListItem = Omit<ImportedBook, "chapters"> & {
+export type BookListItem = Omit<ImportedBook, "chapters" | "importAnalysis" | "anchorImport"> & {
   chapterCount: number;
   pageCount: number;
   startingCharacters: string[];
@@ -446,3 +552,4 @@ export interface BookPage {
   chapterTitle: string;
   text: string;
 }
+

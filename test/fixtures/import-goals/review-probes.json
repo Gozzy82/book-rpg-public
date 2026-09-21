@@ -1,0 +1,274 @@
+[
+  {
+    "name": "toto-false-success",
+    "sourceFixture": "toto",
+    "plans": [
+      {
+        "startBeatIndex": 0,
+        "endBeatIndex": 1,
+        "goal": "Toto’s goal is to evade Dorothy by getting under the bed.",
+        "boundaryReason": "The hiding attempt is complete at beat 1; no further Toto-controlled action appears in the source part."
+      },
+      {
+        "startBeatIndex": 2,
+        "endBeatIndex": 5,
+        "goal": "Dorothy’s goal is to retrieve Toto from under the bed.",
+        "boundaryReason": "The retrieval succeeds when Dorothy catches Toto at beat 5; following Aunt Em afterward is a new objective."
+      },
+      {
+        "startBeatIndex": 3,
+        "endBeatIndex": 4,
+        "goal": "Aunt Em’s goal is to reach the shelter through the trap door.",
+        "boundaryReason": "Opening the trap door is the means for the existing shelter objective, which is completed when Aunt Em climbs down at beat 4."
+      },
+      {
+        "startBeatIndex": 6,
+        "endBeatIndex": 10,
+        "goal": "Dorothy’s goal is to follow Aunt Em to the shelter while holding Toto.",
+        "boundaryReason": "The attempt is interrupted when the wind and shaking house make Dorothy lose her footing and sit down, preventing her from continuing within the source part."
+      }
+    ],
+    "labels": {
+      "beat_0": {
+        "choiceText": "Evade Dorothy by jumping out of her arms and hiding under the bed.",
+        "completion": "Toto is out of Dorothy’s arms and under the bed.",
+        "preconditions": [
+          "Toto is in Dorothy’s arms.",
+          "Toto is able to move away and reach the bed."
+        ],
+        "interruptWhen": [
+          "Dorothy catches Toto before Toto reaches or remains under the bed."
+        ]
+      },
+      "beat_2": {
+        "choiceText": "Retrieve Toto from under the bed.",
+        "completion": "Dorothy catches Toto.",
+        "preconditions": [
+          "Toto is under the bed.",
+          "Dorothy is present and able to reach under the bed."
+        ],
+        "interruptWhen": [
+          "Toto escapes the retrieval attempt or an obstacle makes reaching him impossible."
+        ]
+      },
+      "beat_3": {
+        "choiceText": "Reach the shelter through the trap door.",
+        "completion": "Aunt Em opens the trap door and climbs down the ladder into the shelter.",
+        "preconditions": [
+          "Aunt Em is present and able to reach and open the trap door."
+        ],
+        "interruptWhen": [
+          "The trap door or ladder becomes inaccessible before Aunt Em reaches the shelter."
+        ]
+      },
+      "beat_6": {
+        "choiceText": "Follow Aunt Em to the shelter while holding Toto.",
+        "completion": "Dorothy reaches the shelter with Toto without being stopped.",
+        "preconditions": [
+          "Dorothy has caught Toto.",
+          "Aunt Em is already in the shelter ahead of Dorothy.",
+          "Dorothy is able to move across the room toward the trap door."
+        ],
+        "interruptWhen": [
+          "The wind and violently shaking house make Dorothy lose her footing and stop before reaching the shelter."
+        ]
+      }
+    },
+    "expectedTarget": "labels",
+    "rubric": "Reject completion claiming shelter arrival when the source endpoint is an interrupted attempt on the floor."
+  },
+  {
+    "name": "toto-interrupted-control",
+    "sourceFixture": "toto",
+    "plans": [
+      {
+        "startBeatIndex": 0,
+        "endBeatIndex": 1,
+        "goal": "Toto’s goal is to evade Dorothy by getting under the bed.",
+        "boundaryReason": "The hiding attempt is complete at beat 1; no further Toto-controlled action appears in the source part."
+      },
+      {
+        "startBeatIndex": 2,
+        "endBeatIndex": 5,
+        "goal": "Dorothy’s goal is to retrieve Toto from under the bed.",
+        "boundaryReason": "The retrieval succeeds when Dorothy catches Toto at beat 5; following Aunt Em afterward is a new objective."
+      },
+      {
+        "startBeatIndex": 3,
+        "endBeatIndex": 4,
+        "goal": "Aunt Em’s goal is to reach the shelter through the trap door.",
+        "boundaryReason": "Opening the trap door is the means for the existing shelter objective, which is completed when Aunt Em climbs down at beat 4."
+      },
+      {
+        "startBeatIndex": 6,
+        "endBeatIndex": 10,
+        "goal": "Dorothy’s goal is to follow Aunt Em to the shelter while holding Toto.",
+        "boundaryReason": "The attempt is interrupted when the wind and shaking house make Dorothy lose her footing and sit down, preventing her from continuing within the source part."
+      }
+    ],
+    "labels": {
+      "beat_0": {
+        "choiceText": "Evade Dorothy by jumping out of her arms and hiding under the bed.",
+        "completion": "Toto is out of Dorothy’s arms and under the bed.",
+        "preconditions": [
+          "Toto is in Dorothy’s arms.",
+          "Toto is able to move away and reach the bed."
+        ],
+        "interruptWhen": [
+          "Dorothy catches Toto before Toto reaches or remains under the bed."
+        ]
+      },
+      "beat_2": {
+        "choiceText": "Retrieve Toto from under the bed.",
+        "completion": "Dorothy catches Toto.",
+        "preconditions": [
+          "Toto is under the bed.",
+          "Dorothy is present and able to reach under the bed."
+        ],
+        "interruptWhen": [
+          "Toto escapes the retrieval attempt or an obstacle makes reaching him impossible."
+        ]
+      },
+      "beat_3": {
+        "choiceText": "Reach the shelter through the trap door.",
+        "completion": "Aunt Em opens the trap door and climbs down the ladder into the shelter.",
+        "preconditions": [
+          "Aunt Em is present and able to reach and open the trap door."
+        ],
+        "interruptWhen": [
+          "The trap door or ladder becomes inaccessible before Aunt Em reaches the shelter."
+        ]
+      },
+      "beat_6": {
+        "choiceText": "Follow Aunt Em to the shelter while holding Toto.",
+        "completion": "Dorothy reaches halfway across the room with Toto, loses her footing when the house shakes, and sits on the floor without reaching the shelter.",
+        "preconditions": [
+          "Dorothy has caught Toto.",
+          "Aunt Em is already in the shelter ahead of Dorothy.",
+          "Dorothy is able to move across the room toward the trap door."
+        ],
+        "interruptWhen": [
+          "The wind and violently shaking house make Dorothy lose her footing and stop before reaching the shelter."
+        ]
+      }
+    },
+    "expectedTarget": null,
+    "rubric": "Accept the same group with an accurate interrupted outcome."
+  },
+  {
+    "name": "story-split-commitment",
+    "sourceFixture": "story",
+    "plans": [
+      {
+        "startBeatIndex": 0,
+        "endBeatIndex": 0,
+        "goal": "Ask why the Tin Woodman is anxious to get a new heart.",
+        "boundaryReason": "The Scarecrow’s question is a completed request for an explanation and ends before the Tin Woodman responds."
+      },
+      {
+        "startBeatIndex": 1,
+        "endBeatIndex": 1,
+        "goal": "Offer to explain the reason by telling his story.",
+        "boundaryReason": "The offer is completed when the Tin Woodman commits to giving the explanation; the subsequent life-story narration is a new concrete storytelling action."
+      },
+      {
+        "startBeatIndex": 2,
+        "endBeatIndex": 7,
+        "goal": "Tell the continuous life story explaining the Tin Woodman’s loss of his heart and his resolve to ask Oz for one.",
+        "boundaryReason": "The account runs continuously from his early life through his injuries, loss of love, rusting and rescue, and final resolution; it ends when the full explanation is told. Beats 8–9 are automatic listener understanding and are not intentional goals."
+      }
+    ],
+    "expectedTarget": "groups",
+    "rubric": "Reject splitting the concrete storytelling commitment from its immediate continuous execution."
+  },
+  {
+    "name": "story-continuous-control",
+    "sourceFixture": "story",
+    "plans": [
+      {
+        "startBeatIndex": 0,
+        "endBeatIndex": 0,
+        "goal": "Ask why the Tin Woodman is anxious to get a new heart.",
+        "boundaryReason": "The Scarecrow’s question is a completed request for an explanation and ends before the Tin Woodman responds."
+      },
+      {
+        "startBeatIndex": 1,
+        "endBeatIndex": 7,
+        "goal": "Tell the life story explaining why he wants a heart.",
+        "boundaryReason": "The commitment and continuous narration complete the explanation at beat 7; later listener understanding is automatic."
+      }
+    ],
+    "expectedTarget": null,
+    "rubric": "Accept the whole storytelling goal including its opening commitment."
+  },
+  {
+    "name": "question-after-completion",
+    "sourceFixture": "story",
+    "plans": [
+      {
+        "startBeatIndex": 0,
+        "endBeatIndex": 0,
+        "goal": "Ask why the Tin Woodman is anxious to get a new heart.",
+        "boundaryReason": "The Scarecrow’s question is a completed request for an explanation and ends before the Tin Woodman responds."
+      },
+      {
+        "startBeatIndex": 1,
+        "endBeatIndex": 7,
+        "goal": "Tell the life story explaining why he wants a heart.",
+        "boundaryReason": "The commitment and continuous narration complete the explanation at beat 7; later listener understanding is automatic."
+      }
+    ],
+    "labels": {
+      "beat_0": {
+        "choiceText": "Ask why the Tin Woodman wants a heart.",
+        "completion": "The Scarecrow has asked the question.",
+        "preconditions": [],
+        "interruptWhen": [
+          "The Tin Woodman does not respond to the question."
+        ]
+      },
+      "beat_1": {
+        "choiceText": "Tell the story explaining why he wants a heart.",
+        "completion": "The Tin Woodman has told the full story, ending with his intention to ask Oz for a heart; that request and marriage remain future intentions.",
+        "preconditions": [],
+        "interruptWhen": []
+      }
+    },
+    "expectedTarget": "conditions",
+    "rubric": "Reject lack of an answer as an interruption of a singleton question that is already complete once asked."
+  },
+  {
+    "name": "question-empty-conditions-control",
+    "sourceFixture": "story",
+    "plans": [
+      {
+        "startBeatIndex": 0,
+        "endBeatIndex": 0,
+        "goal": "Ask why the Tin Woodman is anxious to get a new heart.",
+        "boundaryReason": "The Scarecrow’s question is a completed request for an explanation and ends before the Tin Woodman responds."
+      },
+      {
+        "startBeatIndex": 1,
+        "endBeatIndex": 7,
+        "goal": "Tell the life story explaining why he wants a heart.",
+        "boundaryReason": "The commitment and continuous narration complete the explanation at beat 7; later listener understanding is automatic."
+      }
+    ],
+    "labels": {
+      "beat_0": {
+        "choiceText": "Ask why the Tin Woodman wants a heart.",
+        "completion": "The Scarecrow has asked the question.",
+        "preconditions": [],
+        "interruptWhen": []
+      },
+      "beat_1": {
+        "choiceText": "Tell the story explaining why he wants a heart.",
+        "completion": "The Tin Woodman has told the full story, ending with his intention to ask Oz for a heart; that request and marriage remain future intentions.",
+        "preconditions": [],
+        "interruptWhen": []
+      }
+    },
+    "expectedTarget": null,
+    "rubric": "Accept empty conditions where no extra execution constraint is needed; do not require generic filler."
+  }
+]

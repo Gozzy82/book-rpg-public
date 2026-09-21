@@ -83,10 +83,8 @@ export function applyStoryMemory(
     openThreads: update
       ? uniqueMemoryItems(update.openThreads ?? [], MAX_OPEN_THREADS)
       : fallbackOpenThreads(game, scene),
-    canonFacts: uniqueMemoryItems([
-      ...(game.storyMemory?.canonFacts ?? []),
-      ...(update?.canonFacts ?? []),
-    ], MAX_CANON_FACTS),
+    // Model memory is a complete current snapshot, not an append-only fact log.
+    canonFacts: uniqueMemoryItems(update ? update.canonFacts : game.storyMemory?.canonFacts ?? [], MAX_CANON_FACTS),
   };
 }
 

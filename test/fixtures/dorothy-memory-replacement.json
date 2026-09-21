@@ -1,0 +1,43 @@
+{
+  "prior": {
+    "summary": "Dorothy saw Toto\u2019s ear through the open trapdoor, crept to the opening, caught him, and dragged him back into the room. She now has physical control of Toto and has closed the trapdoor. Aunt Em remains in the little cellar below, while the farmhouse is still airborne.",
+    "openThreads": [
+      "The airborne farmhouse's continued journey",
+      "Aunt Em remains in the little cellar below the room",
+      "Uncle Henry is protecting the livestock at the sheds"
+    ],
+    "canonFacts": [
+      "The cyclone continues to carry the farmhouse away.",
+      "The house rocks gently while the wind remains loud.",
+      "The farmhouse remains airborne and has not landed.",
+      "Dorothy is inside the farmhouse.",
+      "The trapdoor is open, with Aunt Em in the little cellar below the room.",
+      "Toto fell through the open trapdoor when he came too close to it.",
+      "Toto is below the room at the trapdoor opening and is being held up by air pressure.",
+      "Dorothy is not holding Toto.",
+      "Dorothy is inside the farmhouse room.",
+      "Toto is back inside the room with Dorothy, and she has regained physical control of him.",
+      "The trapdoor is closed.",
+      "Aunt Em remains in the little cellar below the room."
+    ]
+  },
+  "replacement": {
+    "summary": "As the hours pass without anything terrible happening, Dorothy gradually becomes less frightened. She remains inside the swaying airborne farmhouse with Toto, while Aunt Em stays in the little cellar below.",
+    "openThreads": [
+      "The airborne farmhouse's continued journey",
+      "Aunt Em remains in the little cellar below the room",
+      "Uncle Henry is protecting the livestock at the sheds"
+    ],
+    "canonFacts": [
+      "The cyclone continues to carry the farmhouse away.",
+      "The house rocks gently while the wind remains loud.",
+      "The farmhouse remains airborne and has not landed.",
+      "Dorothy is inside the farmhouse and is less frightened than before.",
+      "Toto is inside the room with Dorothy and remains physically safe with her.",
+      "The trapdoor is closed.",
+      "Aunt Em remains in the little cellar below the room.",
+      "Uncle Henry remains at the sheds protecting the livestock."
+    ]
+  },
+  "scene": "As the hours passed, nothing terrible happened. The farmhouse still swayed in the air, and the wind still roared outside, but I grew less frightened little by little.\n\nI kept Toto close beside me. Aunt Em remained in the little cellar below, and I knew that she was safe there. The house had not fallen, and no new danger came. So I stayed inside the room with Toto while the strange journey continued."
+}

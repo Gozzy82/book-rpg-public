@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { RUNTIME_PARAMETER_RULES } from "../src/ai/engine/rules.js";
+import { DIALOGUE_SUGGESTION_TIMELINE_RULES } from "../src/ai/engine/rules.js";
 
 test("dialogue suggestion rules stop at the current required source beat", () => {
-  const rules = RUNTIME_PARAMETER_RULES.join("\n");
+  const rules = DIALOGUE_SUGGESTION_TIMELINE_RULES.join("\n");
 
   assert.match(
     rules,

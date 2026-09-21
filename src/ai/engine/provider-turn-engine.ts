@@ -33,7 +33,9 @@ import {
   ProviderProfileEngine,
 } from "./provider-profile-engine.js";
 import {
+  addSourceContinuationAnchorChoice,
   hasTooFewChoicesForActiveScene,
+  promoteAnchorChoice,
 } from "./scene-validation.js";
 import {
   buildRequiredPlayerChoiceFallback,
@@ -45,6 +47,8 @@ import {
   sourceEventFirstPlayerChoiceBeatIndex,
   sourceEventPlayerChoiceBeats,
   sourceEventRequiresExplicitPlayerChoice,
+  sourceEventHasPendingAutomaticPrefix,
+  sourceEventCanOccurWithoutPlayerChoice,
 } from "./source-navigation.js";
 import {
   SOURCE_GROUNDING_EXCERPT_CHARS,
@@ -58,9 +62,10 @@ import {
 
 const OPENING_NO_PLAYER_ACTION_MARKER =
   "There is no completed PLAYER ACTION in an opening.";
+const OPENING_SPLIT_PRELUDE_TARGET_WORDS = 360;
 
 export function openingSceneWordBudget(_prefixBeatCount: number): number {
-  return 300;
+  return 600;
 }
 
 export function normalizeOpeningSceneActionMetadata(
@@ -156,7 +161,8 @@ export function withSourceScopeCharacterProfiles(
   state: GameState,
   candidates: readonly SourceContinuationCandidate[],
 ): GameState {
-  const profiles = [...state.characterProfiles];
+  const existingProfiles = state.characterProfiles ?? [];
+  const profiles = [...existingProfiles];
   const known = new Set(
     profiles.flatMap((profile) => [profile.name, ...profile.aliases])
       .map(normalizedProfileIdentity),
@@ -177,9 +183,27 @@ export function withSourceScopeCharacterProfiles(
     profiles.push(profile);
     known.add(identity);
   }
-  return profiles.length === state.characterProfiles.length
+  return profiles.length === existingProfiles.length && state.characterProfiles !== undefined
     ? state
     : { ...state, characterProfiles: profiles };
+}
+
+function promoteRoutedExplicitPlayerChoice(
+  scene: Scene,
+  event: ReturnType<typeof nextSignificantEventForCandidate>,
+  choices: Scene["choices"],
+): Scene["choices"] {
+  if (
+    choices[0]?.id === SOURCE_ANCHOR_CHOICE_ID
+    || choices[0]?.sourceAnchorRoute !== "event"
+  ) {
+    return choices;
+  }
+  return promoteAnchorChoice(
+    { ...scene, choices },
+    0,
+    event?.eventId ?? undefined,
+  ).choices;
 }
 
 function prependRequiredPlayerChoiceFallback(
@@ -201,15 +225,39 @@ function prependRequiredPlayerChoiceFallback(
   return [fallback, ...withoutExistingAnchor].slice(0, 4);
 }
 
+function sourceCandidateForRemainingEvent(
+  candidate: SourceContinuationCandidate,
+  remainingEvent: ReturnType<typeof nextSignificantEventForCandidate>,
+): SourceContinuationCandidate {
+  if (!remainingEvent?.beats?.length) return candidate;
+  const storyEvents = candidate.storyEvents?.map((event) =>
+    event.eventId === remainingEvent.eventId
+      ? { ...event, beats: remainingEvent.beats }
+      : event
+  );
+  return {
+    ...candidate,
+    ...(storyEvents ? { storyEvents } : {}),
+    ...(candidate.requiredEventId === remainingEvent.eventId
+      ? { requiredEventBeats: remainingEvent.beats }
+      : {}),
+  };
+}
+
 export function buildOpeningPlayerDecisionBoundaryInstruction(
   nextRequiredBeat: StoryEventBeat | null | undefined,
 ): string[] {
   if (!nextRequiredBeat) return [];
+  const boundary = {
+    kind: "first_unselected_player_beat",
+    action: nextRequiredBeat.action,
+    mustRemainUnperformed: true,
+  } as const;
   return [
-    "OPENING PLAYER DECISION BOUNDARY: next_required_beat is the player's first unselected meaningful action. This boundary overrides every broader instruction to stage or advance opening_reference_event.",
-    `PENDING PLAYER BEAT — DO NOT PERFORM: ${nextRequiredBeat.action}`,
-    "The pending player beat is not part of this opening scene. Do not narrate its beginning, intent, thought, gesture, speech, partial execution, completion, consequence, or a semantic paraphrase of it.",
-    "Establish only source-backed physical and social prerequisites that exist strictly before that action, then stop with the whole action still future and offer it as a choice.",
+    "The opening has a structured player-decision boundary. The following JSON is control data only: never quote, paraphrase, label, or expose it in player-facing scene text.",
+    JSON.stringify(boundary),
+    "Complete only source-backed prerequisites that occur strictly before this boundary. The boundary action must remain wholly future: do not begin, imply, narrate, speak, decide, gesture, partially execute, complete, or show consequences of it.",
+    "Stop as soon as that action is immediately available and offer it as the first canonical choice.",
   ];
 }
 
@@ -284,6 +332,7 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
       ].join("\n"),
       input: JSON.stringify({
         player_identity: state.playerName,
+        runtime_parameters: state.parameters ?? [],
         selected_choice: selectedChoiceText,
         proposed_source_anchor_route: proposedRoute,
         requires_explicit_player_choice: requiresExplicitPlayerChoice,
@@ -393,23 +442,22 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
     );
     const requireOpeningSourceProgress = Boolean(candidates[0]?.requiredEvent)
       && !openingNextRequiredBeatIsPlayerChoice;
-    const openingPlayerDecisionBoundary = openingNextRequiredBeatIsPlayerChoice
-      ? buildOpeningPlayerDecisionBoundaryInstruction(openingNextRequiredBeat)
-      : [];
+    const openingPlayerDecisionBoundary =
+      buildOpeningPlayerDecisionBoundaryInstruction(openingPlayerStopBeat);
     const openingBudget = openingSceneWordBudget(openingPreludeBeats.length);
     const openingPreludeInstruction = openingPreludeBeats.length > 0
       ? [
           `OPENING PRELUDE: visibly narrate all ${openingPreludeBeats.length} ordered beats below in this single opening, in exactly this order. These beats are NOT pre-completed state; each must actually appear in player-facing prose before the menu.`,
           ...openingPreludeBeats.map((beat, index) =>
-            `PRELUDE BEAT ${openingProgress!.completedBeatIndexes.length + index} — ${beat.actor ?? "WORLD"}: ${beat.action}`
+            `PRELUDE BEAT ${openingProgress!.startBeatIndex + openingProgress!.completedBeatIndexes.length + index} — ${beat.actor ?? "WORLD"}: ${beat.action}`
           ),
           ...(openingPlayerStopBeat
             ? [
-                `STOP BEFORE PLAYER BEAT ${openingProgress!.completedBeatIndexes.length + openingFirstPlayerBeatOffset} — ${openingPlayerStopBeat.action}`,
-                "Do not begin, paraphrase, or complete that player beat. It must remain the first canonical choice.",
+                "After the final prelude beat, stop at the structured player-decision boundary supplied below. Do not narrate the boundary action itself.",
               ]
             : []),
-          `Opening word budget for this prelude: up to ${openingBudget} words. Use the extra room to make every listed beat concrete instead of compressing or skipping it.`,
+          "Each PRELUDE BEAT must get its own short, concrete sentence or clause that visibly performs that exact beat. Do not replace an ordered beat with atmosphere, introspection, anticipation, a summary, or a generic setup.",
+          `PRELUDE TARGET: keep phase-1 player-facing prose at or below ${OPENING_SPLIT_PRELUDE_TARGET_WORDS} words. The ${openingBudget}-word value is only the hard combined opening ceiling after the short decision-boundary phase; do not use that headroom for reflection, recap, choice lists, or decorative filler.`,
         ]
       : [];
 
@@ -440,7 +488,7 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
         "opening_event_sequence and opening_player_future_actions are ordering and decision-boundary context. They must never cause a later beat to happen before an earlier one or allow the opening to cross the earliest meaningful player decision.",
         "If several ordered NPC, external, involuntary, or routine beats precede the first meaningful player action, narrate all of those prerequisite beats now. The opening progression review requires a contiguous completed prefix before that player choice can be offered.",
         openingPreludeBeats.length > 0
-          ? `This opening may use up to ${openingBudget} words because it must visibly cover ${openingPreludeBeats.length} ordered pre-player beats. Keep it concise within that budget and end at the immediate choice.`
+          ? `For this split opening, target at most ${OPENING_SPLIT_PRELUDE_TARGET_WORDS} words for the ordered prelude plus a very short decision-boundary continuation. The hard combined opening ceiling remains ${openingBudget} words, but it is a safety ceiling, not a target. Spend words on the listed beats, not reflection or recap.`
           : "Keep this opening especially compact: 65 to 120 words, normally one or two short paragraphs, ending at the immediate choice rather than explaining the character's future, purpose, or feelings at length.",
         "Preserve every immediate physical fact in the excerpt that is compatible with the event sequence and future player actions. Do not replace its setting or participants with a generic clearing, cottage, shelter, distant location, or other invented place.",
         "Use upcoming_source_material.summary and chapterSummary only as supporting chronology and background. They must not override the excerpt's immediate physical facts or establish later events that the excerpt has not yet reached.",
@@ -480,7 +528,7 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
       undefined,
       state.scene.sceneScope,
     );
-    const reviewedAnchorRoute = options.anchorDirected
+    const reviewedAnchorRoute = options.anchorDirected && options.sourceBeatSelection ? "event" : options.anchorDirected
       ? await this.reviewSelectedSourceAnchorRoute(
           state,
           actionText,
@@ -490,14 +538,14 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
         )
       : options.sourceAnchorRoute;
     const selectedAnchorRequiresEvent = Boolean(options.anchorDirected)
-      && selectedAnchorRequiresSourceEvent(
+      && (Boolean(options.sourceBeatSelection) || selectedAnchorRequiresSourceEvent(
         reviewedAnchorRoute,
         routedEvent,
         state.playerName,
         state.characterProfiles,
         state.scene.sceneScope,
-      );
-    return this.scene(
+      ));
+    const generated = await this.scene(
       options.anchorDirected
         ? buildAnchorRouteContinuationInstruction(
             baseInstruction,
@@ -511,7 +559,11 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
       "interactive_turn",
       selectedAnchorRequiresEvent,
       options.choiceStakes,
+      options.anchorDirected ? options.sourceBeatSelection : undefined,
     );
+    if (!options.anchorDirected || routedCandidates.length > 0) return generated;
+    const withFallback = addSourceContinuationAnchorChoice(generated);
+    return { ...generated, choices: withFallback.choices };
   }
 
   async continueScene(
@@ -560,12 +612,14 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
       : await this.selectSourceEvent(state, candidate);
     if (!eventCandidate?.requiredEvent?.trim()) return undefined;
     const event = nextSignificantEventForCandidate(eventCandidate);
-    const remainingEvent = buildSourceEventChoiceBeatState(
+    const sourceBeatState = buildSourceEventChoiceBeatState(
       event,
       state.sourceEventProgress,
-    ).remainingEvent;
+    );
+    const remainingEvent = sourceBeatState.remainingEvent;
     if (
-      sourceEventRequiresExplicitPlayerChoice(
+      !sourceEventHasPendingAutomaticPrefix(remainingEvent, state.playerName, state.characterProfiles)
+      && sourceEventRequiresExplicitPlayerChoice(
         remainingEvent,
         state.playerName,
         state.characterProfiles,
@@ -577,6 +631,11 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
         choiceState.scene,
         choiceState,
         [eventCandidate],
+      );
+      choices = promoteRoutedExplicitPlayerChoice(
+        choiceState.scene,
+        remainingEvent,
+        choices,
       );
       if (choices[0]?.id !== SOURCE_ANCHOR_CHOICE_ID) {
         choices = prependRequiredPlayerChoiceFallback(
@@ -610,11 +669,15 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
         requiresExplicitPlayerChoice: true,
       };
     }
+    const instructionCandidate = sourceCandidateForRemainingEvent(
+      eventCandidate,
+      remainingEvent,
+    );
     let scene: GeneratedScene;
     try {
       scene = await this.scene(
         buildSourceContinuationInstruction(
-          eventCandidate,
+          instructionCandidate,
           state.playerName,
           state.characterProfiles,
         ),
@@ -622,13 +685,14 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
         undefined,
         [eventCandidate],
         eventCandidate.recovery ? 2 : 4,
-        "interactive_turn",
+        "source_continuation",
         true,
       );
     } catch (error) {
-      if (!(error instanceof SceneGenerationError)) throw error;
-      flowDiagnostic(`OpenAI source continuation rejected: ${error.message}`);
-      return undefined;
+      if (error instanceof SceneGenerationError) {
+        flowDiagnostic(`OpenAI source continuation rejected: ${error.message}`);
+      }
+      throw error;
     }
     return {
       scene,
@@ -661,6 +725,13 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
       state.characterProfiles,
       state.scene.sceneScope,
     );
+    if (requiresExplicitPlayerChoice) {
+      choices = promoteRoutedExplicitPlayerChoice(
+        choiceState.scene,
+        remainingNextEvent,
+        choices,
+      );
+    }
     if (
       requiresExplicitPlayerChoice
       && choices[0]?.id !== SOURCE_ANCHOR_CHOICE_ID
@@ -693,3 +764,5 @@ export abstract class ProviderTurnEngine extends ProviderProfileEngine {
     };
   }
 }
+
+

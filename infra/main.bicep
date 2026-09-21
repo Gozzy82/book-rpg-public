@@ -30,6 +30,9 @@ param enableSocialAuth bool = false
 @description('Microsoft Entra application client ID.')
 param entraClientId string = ''
 
+@description('Optional Microsoft Entra issuer URL override. Use the ciamlogin.com issuer from External ID user-flow metadata.')
+param entraIssuerUrl string = ''
+
 @secure()
 @description('Microsoft Entra application client secret.')
 param entraClientSecret string = ''
@@ -67,6 +70,7 @@ module application 'modules/application.bicep' = {
     indexModel: indexModel
     enableSocialAuth: enableSocialAuth
     entraClientId: entraClientId
+    entraIssuerUrl: entraIssuerUrl
     entraClientSecret: entraClientSecret
     githubClientId: githubClientId
     githubClientSecret: githubClientSecret

@@ -26,3 +26,8 @@ test("scene normalization preserves prose that merely mentions choices", () => {
 
   assert.equal(stripEmbeddedChoiceMenu(text), text);
 });
+
+test("scene normalization removes a terminal single Choice label", () => {
+  assert.equal(stripEmbeddedChoiceMenu("My arms are freed.\n\nChoice: Lower and set aside my axe."), "My arms are freed.");
+  assert.equal(stripEmbeddedChoiceMenu('Dorothy says, "Choice: left or right?"'), 'Dorothy says, "Choice: left or right?"');
+});

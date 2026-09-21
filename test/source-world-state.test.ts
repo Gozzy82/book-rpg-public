@@ -155,11 +155,13 @@ function game(): GameState {
   };
 }
 
-test("interactive death becomes irreversible source world state", () => {
+test("AI-confirmed death becomes irreversible source world state", () => {
+  const current = game();
+  current.confirmedDeadCharacters = ["Dorothy"];
   const state = sourceWorldStateForGame(
-    game(),
+    current,
     book(),
-    game().sourceCursor!,
+    current.sourceCursor!,
   );
 
   assert.ok(state.irreversiblyUnavailableCharacterIdentities.includes("dorothy"));
@@ -204,8 +206,9 @@ test("death detection does not mistake a later participant or a victim's owner f
   }
 });
 
-test("directly named victims still become unavailable without a separate death sentence", () => {
+test("structured victim identity becomes unavailable without scanning the death sentence", () => {
   const currentGame = game();
+  currentGame.confirmedDeadCharacters = ["Dorothy"];
   currentGame.storyMemory = {
     summary: "The monster killed Dorothy Gale.", openThreads: [], canonFacts: [],
   };
@@ -219,6 +222,7 @@ test("directly named victims still become unavailable without a separate death s
 
 test("canonical navigation skips a future event that requires a dead actor", () => {
   const currentGame = game();
+  currentGame.confirmedDeadCharacters = ["Dorothy"];
   const currentBook = book();
   const worldState = sourceWorldStateForGame(
     currentGame,
@@ -303,4 +307,16 @@ test("an unavailable actor in a remaining required beat invalidates the event", 
     sourceEventInvalidatingActors(mixedEvent, worldState),
     ["Dorothy"],
   );
+});
+
+
+test("unreviewed prose, including actual-looking death text, never infers death", () => {
+  for (const text of [
+    "Oz would not send her home unless she first killed the Wicked Witch of the West.",
+    "Dorothy is dead.", "The monster killed Dorothy.", "Dorothy might die.",
+  ]) {
+    const current = game();
+    current.scene.text = text;
+    assert.deepEqual(sourceWorldStateForGame(current, book(), current.sourceCursor!).irreversiblyUnavailableCharacterIdentities, []);
+  }
 });

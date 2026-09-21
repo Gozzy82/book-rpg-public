@@ -1,6 +1,7 @@
 import { FakeGameEngine } from "./engine/fake-game-engine.js";
 import type { GameEngine } from "./engine/core.js";
-import { BookRpgProviderGameEngine } from "./engine/provider-bookrpg-engine.js";
+import { TurnPipelineGameEngine } from "./engine/turn-pipeline-engine.js";
+export { TurnPipelineGameEngine } from "./engine/turn-pipeline-engine.js";
 
 export {
   InvalidAiJsonError,
@@ -115,8 +116,6 @@ export {
   developmentRepeatsHistory,
   removeChoicesWithPlayerIdentityReferences,
   filterSceneScopeForState,
-  requiredSourceEventConcreteFailures,
-  absentCharacterContinuityFailures,
   repairGeneratedChoices,
   removeChoicesWithUnintroducedCharacters,
 } from "./engine/scene-validation.js";
@@ -152,8 +151,31 @@ export {
   bookRpgWorldRulesFromRequest,
   withBookRpgWorldRuleTerminology,
 } from "./engine/provider-bookrpg-engine.js";
+export {
+  PacedBookRpgProviderGameEngine,
+  withAutomaticFollowupWindow,
+  withSemanticAutomaticBeatReview,
+} from "./engine/provider-paced-bookrpg-engine.js";
+export {
+  GuardedPacedBookRpgProviderGameEngine,
+  enforceAutomaticFollowupReview,
+} from "./engine/provider-guarded-paced-bookrpg-engine.js";
+export {
+  E2eRecoveryBookRpgProviderGameEngine,
+  withConcreteAutomaticSceneWindow,
+  normalizeOpeningBoundaryRepetitionReview,
+  enforceFirstPersonPlayerIdentity,
+} from "./engine/provider-e2e-recovery-engine.js";
+export {
+  E2eHardeningBookRpgProviderGameEngine,
+  relaxMissingAutomaticFollowupReview,
+  withNonInteractableConsistencyContract,
+  withOpeningBoundaryReviewContract,
+  withOpeningProgressReviewContract,
+} from "./engine/provider-e2e-hardening-engine.js";
 
 export function createGameEngine(): GameEngine {
   if (process.env.BOOKRPG_FAKE_AI === "1") return new FakeGameEngine();
-  return new BookRpgProviderGameEngine();
+  return new TurnPipelineGameEngine();
 }
+

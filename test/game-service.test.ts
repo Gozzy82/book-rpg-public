@@ -1031,3 +1031,17 @@ test("exhausted source generation uses the unchanged-scene availability path", a
 
   assert.equal(result, undefined);
 });
+
+
+test('rejected source continuation reports its actual reason instead of claiming no anchor exists', async () => {
+  const rejection = new SceneGenerationError(['Source event entry scopeAndMemory: Rescue history was omitted.'], 1);
+  let captured: SceneGenerationError | undefined;
+  const result = await attemptSourceContinuation(async () => { throw rejection; }, error => { captured = error; });
+  assert.equal(result, undefined);
+  assert.equal(captured, rejection);
+  const notice = storyContinuationUnavailableNotice({title: 'Farmhouse', text: 'We wait.', choices: []}, captured);
+  assert.equal(notice.code, 'STORY_CONTINUATION_UNAVAILABLE');
+  assert.match(notice.message, /Rescue history was omitted/);
+  assert.match(notice.message, /scene is unchanged/);
+  assert.doesNotMatch(notice.message, /lost the story thread|Use 101/);
+});

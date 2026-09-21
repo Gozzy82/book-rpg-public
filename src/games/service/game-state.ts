@@ -1,8 +1,15 @@
+import {joinAutomaticContinuations} from './automatic-continuation.js';
+import {startFreeWorldTalk, isConversationUtterance} from '../../ai/free-world.js';
+import {newSceneCode} from '../return-bridges.js';
+import {restoreResumeSourceAnchor} from './resume-source-anchor.js';
+import {SOURCE_ANCHOR_CHOICE_ID} from '../../shared/contracts.js';
+import {ensureDeathLedger} from './engine-access.js';
+import {normalizeSceneDeaths} from '../../shared/scene-deaths.js';
 import { withFlowTrace, traceGameState, traceEvent } from "../../util/flow-trace.js";
 import {
   addSourceContinuationChoiceFallback,
   addSourceContinuationAnchorChoice,
-  filterSceneScopeForState,
+  filterSceneScope,
   firstChoiceWasFiltered,
   removeDuplicateChoices,
   removeChoicesWithPlayerIdentityReferences,
@@ -40,6 +47,8 @@ import {
   gameEngine,
 } from "./engine-access.js";
 import {
+  buildCanonicalNextEventCandidate,
+  sourceWorldStateForGame,
   sourceIntroducedCharactersAtCursor,
   normalizeSourceProgress,
   refreshCanonicalFirstChoice,
@@ -83,12 +92,20 @@ export function sanitizeStoredScene(game: GameState): boolean {
   }
 
   if (game.scene.sceneScope) {
-    const sceneScope = filterSceneScopeForState(game.scene.sceneScope, game);
+    // Saved spatial metadata has already been reviewed. Do not reinterpret a
+    // phrase like "Dorothy ... returning home" as an offscreen departure here.
+    const sceneScope = filterSceneScope(game.scene.sceneScope, {
+      playerName:game.playerName, knownCharacterProfiles:game.characterProfiles,
+      nonInteractableCharacters:[...(game.confirmedDeadCharacters??[]),
+        ...(game.establishedEvent?.category==='death'?[game.establishedEvent.target]:[])],
+    });
     if (JSON.stringify(sceneScope) !== JSON.stringify(game.scene.sceneScope)) {
       game.scene = { ...game.scene, sceneScope };
       changed = true;
     }
   }
+  // Free scenes retain generic cleanup, but never acquire a source fallback menu.
+  if (game.narrativeMode === "free") return changed;
   const perspectiveSafeScene = removeChoicesWithPlayerIdentityReferences(
     game.scene,
     game.playerName,
@@ -107,7 +124,9 @@ export function sanitizeStoredScene(game: GameState): boolean {
   }
   const availableScene = removeChoicesWithUnintroducedCharacters(game.scene, game);
   if (availableScene.choices.length !== game.scene.choices.length) {
-    game.scene = availableScene;
+    const anchorRemoved = game.scene.choices[0]?.id === SOURCE_ANCHOR_CHOICE_ID
+      && !availableScene.choices.some(c => c.id === SOURCE_ANCHOR_CHOICE_ID);
+    game.scene = anchorRemoved ? addSourceContinuationAnchorChoice(availableScene) : availableScene;
     changed = true;
   }
   const distinctScene = removeDuplicateChoices(game.scene);
@@ -129,13 +148,13 @@ export function gameResponse(game: GameState, notice?: GameNotice): StartGameRes
     scene: {
       ...game.scene,
       title: numberedSceneTitle(game),
-      text: stripEmbeddedChoiceMenu(game.scene.text),
+      text: stripLeakedSceneMetadata(stripEmbeddedChoiceMenu(game.scene.text)),
     },
     turnHistory: (game.turnHistory ?? []).map((turn) => ({
       ...turn,
       scene: {
         ...turn.scene,
-        text: stripEmbeddedChoiceMenu(turn.scene.text),
+        text: stripLeakedSceneMetadata(stripEmbeddedChoiceMenu(turn.scene.text)),
       },
     })),
     gameProfile: game.gameProfile,
@@ -146,9 +165,15 @@ export function gameResponse(game: GameState, notice?: GameNotice): StartGameRes
   };
 }
 
-export const GENERATED_TURN_MARKER = /\s*\(Turn\s+\d+[a-z]?\)\s*/gi;
-const GENERATED_TURN_TITLE_PREFIX =
-  /^.*\(Turn\s+\d+[a-z]?\)(?:\s*\(Turn\s+\d+[a-z]?\))*\s*[—–-]\s*/i;
+const GENERATED_TURN_FRAGMENT = String.raw`\(Turn\s+\d+[a-z]?[^)]*\)`;
+export const GENERATED_TURN_MARKER = new RegExp(
+  String.raw`\s*${GENERATED_TURN_FRAGMENT}\s*`,
+  "gi",
+);
+const GENERATED_TURN_TITLE_PREFIX = new RegExp(
+  String.raw`^.*${GENERATED_TURN_FRAGMENT}(?:\s*${GENERATED_TURN_FRAGMENT})*\s*[—–-]\s*`,
+  "i",
+);
 
 export function currentTurnNumber(game: GameState): number {
   const storedTurnNumber =
@@ -193,7 +218,11 @@ export function recordCompletedTurn(
     throw new Error(`Cannot record turn ${turnNumber} after turn ${previousTurn.turnNumber}`);
   }
 
+  const trace = game.sceneTrace;
   const turn: GameTurnHistoryEntry = {
+    storyCode: trace?.storyCode ?? newSceneCode(game),
+    ...(trace?.bridgeId ? {bridgeId: trace.bridgeId} : {}),
+    ...(trace?.sourceEventId ? {sourceEventId: trace.sourceEventId} : game.narrativeMode !== 'free' && game.sourceEventProgress?.eventId ? {sourceEventId: game.sourceEventProgress.eventId} : {}),
     turnNumber,
     kind,
     action: normalizedAction,
@@ -206,6 +235,7 @@ export function recordCompletedTurn(
     completedAt,
   };
   (game.turnHistory ??= []).push(turn);
+  delete game.sceneTrace;
   game.updatedAt = completedAt;
   return turn;
 }
@@ -222,6 +252,8 @@ export function applyGeneratedScene(
     storyMemory,
     ...scene
   } = generatedScene;
+  const deaths = normalizeSceneDeaths(scene.peopleKilledInScene, game.characterProfiles ?? book?.worldBible?.characterProfiles);
+  if (deaths.length) game.confirmedDeadCharacters = [...new Set([...(game.confirmedDeadCharacters ?? []), ...deaths])];
   const previousSceneScope = game.scene.sceneScope;
   const turnNumber = currentTurnNumber(game) + (advanceTurn ? 1 : 0);
   applyStoryMemory(game, scene, storyMemory);
@@ -231,6 +263,7 @@ export function applyGeneratedScene(
       delete game.sourceEventProgress;
     } else {
       game.sourceEventProgress = {
+        ...(sourceEventProgress.startBeatIndex ? {startBeatIndex: sourceEventProgress.startBeatIndex} : {}),
         eventId: sourceEventProgress.eventId,
         completedBeatIndexes: [...sourceEventProgress.completedBeatIndexes],
       };
@@ -251,7 +284,7 @@ export function applyGeneratedScene(
           }),
     title: titleForTurn(scene.title, turnNumber),
   };
-  if (!book) return;
+  if (!book || game.narrativeMode === "free") return;
 
   // A partial event and a cursor advance can be reported in the same generated
   // scene. Keep the cursor before that event until its ordered beat contract is
@@ -288,11 +321,37 @@ export function applyGeneratedScene(
       book,
       game.sourceCursor,
       game.playerName,
+      game.confirmedDeadCharacters,
     );
   }
 }
 
 export async function applyReviewedGeneratedScene(
+  game: GameState, generatedScene: GeneratedScene, book?: ImportedBook,
+  advanceTurn = true, alignSourceEvents = true,
+): Promise<void> {
+  await applyReviewedGeneratedSceneOnce(game, generatedScene, book, advanceTurn, alignSourceEvents);
+  if (!book || !game.sourceCursor || game.narrativeMode !== 'canonical') return;
+  await joinAutomaticContinuations(game, async draft => {
+    const cursor = draft.sourceCursor!;
+    const candidate = buildCanonicalNextEventCandidate(book, cursor, draft.playerName,
+      sourceWorldStateForGame(draft, book, cursor));
+    if (!candidate) return false;
+    const result = await gameEngine().continueFromSource(draft, [candidate]);
+    if (!result) return false;
+    if (result.requiresExplicitPlayerChoice) {
+      draft.scene.choices = result.scene.choices;
+      return true;
+    }
+    await applyReviewedGeneratedSceneOnce(draft, {...result.scene, sourceProgress: {
+      chapterPosition: result.chapterPosition, textOffset: result.nextTextOffset,
+      ...(result.eventId ? {eventId: result.eventId} : {}),
+    }}, book, false, false);
+    return true;
+  });
+}
+
+async function applyReviewedGeneratedSceneOnce(
   game: GameState,
   generatedScene: GeneratedScene,
   book?: ImportedBook,
@@ -300,16 +359,24 @@ export async function applyReviewedGeneratedScene(
   alignSourceEvents = true,
 ): Promise<void> {
   traceEvent("scene.generated", generatedScene);
+  if (game.narrativeMode === 'free') {
+    const {sourceProgress: _progress, sourceEventProgress: _beats, ...freeScene} = generatedScene;
+    applyGeneratedScene(game, freeScene, book, advanceTurn);
+    return;
+  }
   const reviewedScene = generatedScene.outcome === "lost"
     ? await gameEngine().reviewLoss(game, generatedScene)
     : generatedScene;
-  const hasReviewedPartialSourceEvent =
-    reviewedScene.sourceEventProgress !== undefined
-    && reviewedScene.sourceEventProgress !== null;
+  // Both a reviewed partial prefix and a reviewed completed event already have
+  // an authoritative position. Do not ask a second model to relocate the scene.
+  const hasReviewedSourceEvent = reviewedScene.sourceEventProgress !== undefined
+    && (reviewedScene.sourceEventProgress !== null || Boolean(reviewedScene.sourceProgress?.eventId));
   applyGeneratedScene(game, reviewedScene, book, advanceTurn);
   traceGameState("state.applied", game);
   if (
-    hasReviewedPartialSourceEvent
+    game.narrativeMode === "canonical"
+    || hasReviewedSourceEvent
+    || Boolean(reviewedScene.sourceActionOutcome)
     || !alignSourceEvents
     || !book
     || !game.sourceCursor
@@ -368,6 +435,7 @@ export async function applyReviewedGeneratedScene(
     book,
     game.sourceCursor,
     game.playerName,
+    game.confirmedDeadCharacters,
   );
 }
 
@@ -380,7 +448,7 @@ export function isCompleteConversation(
     && conversation.prompt.trim()
     && Array.isArray(conversation.suggestions)
     && conversation.suggestions.length > 0
-    && conversation.suggestions.every((suggestion) => typeof suggestion === "string" && suggestion.trim()),
+    && conversation.suggestions.every((suggestion) => isConversationUtterance(suggestion, conversation.character)),
   );
 }
 
@@ -423,7 +491,7 @@ async function resumeGameImpl(gameId: string): Promise<ResumeGameResponse> {
   const sourceIntroducedCharacters = book
     ? sourceIntroducedCharactersAtCursor(book, game.sourceCursor)
     : game.sourceIntroducedCharacters ?? [];
-  let gameChanged = false;
+  let gameChanged = await ensureDeathLedger(game);
   gameChanged = compactGameHistory(game) || gameChanged;
   if (
     JSON.stringify(game.sourceIntroducedCharacters ?? [])
@@ -432,22 +500,28 @@ async function resumeGameImpl(gameId: string): Promise<ResumeGameResponse> {
     game.sourceIntroducedCharacters = sourceIntroducedCharacters;
     gameChanged = true;
   }
+  const previousAnchor = game.scene.choices.find(c=>c.id===SOURCE_ANCHOR_CHOICE_ID);
   gameChanged = sanitizeStoredScene(game) || gameChanged;
+  gameChanged = await restoreResumeSourceAnchor(game,book,previousAnchor,
+    (state,anchor)=>gameEngine().reviewResumeAnchor(state,anchor)) || gameChanged;
   let activeConversation: TalkResponse | undefined;
   if (game.activeConversation) {
     if (isCompleteConversation(game.activeConversation)) {
       activeConversation = game.activeConversation;
     } else {
-      const { candidates } = await sourceContextForGame(game);
-      activeConversation = await gameEngine().startTalk(
-        game,
-        game.activeConversation.character,
-        candidates,
-        {
-          anchorDirected: game.activeConversationAnchorDirected,
-          sourceEventId: game.activeConversation.sourceEventId,
-        },
-      );
+      const anchorDirectedConversation = game.activeConversationAnchorDirected === true;
+      const { candidates } = anchorDirectedConversation ? await sourceContextForGame(game) : {candidates: []};
+      activeConversation = !anchorDirectedConversation
+        ? await startFreeWorldTalk(game, game.activeConversation.character)
+        : await gameEngine().startTalk(
+          game,
+          game.activeConversation.character,
+          candidates,
+          {
+            anchorDirected: true,
+            sourceEventId: game.activeConversation.sourceEventId,
+          },
+        );
       game.activeConversation = activeConversation;
       game.updatedAt = new Date().toISOString();
       gameChanged = true;
@@ -465,4 +539,5 @@ async function resumeGameImpl(gameId: string): Promise<ResumeGameResponse> {
     activeConversation,
   };
 }
+
 

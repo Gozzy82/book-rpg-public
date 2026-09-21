@@ -96,6 +96,7 @@ test("opening continuity still rejects source-unintroduced NPC interaction", () 
       sourceIntroducedCharacters: ["Dorothy"],
     } as any,
     [],
+    { currentLocation: "Road", peoplePresent: ["Dorothy", "Glinda"], peopleWithinSpeakingDistance: ["Dorothy", "Glinda"] },
   );
 
   assert.ok(
@@ -115,3 +116,4 @@ test("scene normalization strips prose-style embedded choice prompts", () => {
     "The cyclone's roar closes around the farmhouse, and I brace beside Dorothy.",
   );
 });
+

@@ -41,6 +41,7 @@ import {
   TURN_SCOPE_RULES,
   SCENE_SCOPE_RULES,
   RUNTIME_PARAMETER_RULES,
+  DIALOGUE_SUGGESTION_TIMELINE_RULES,
   STORY_MEMORY_RULES,
   SCENE_TITLE_RULES,
 } from "./rules.js";
@@ -145,6 +146,7 @@ export class ProviderGameEngine extends ProviderSourceEngine {
             ]
           : []),
         ...RUNTIME_PARAMETER_RULES,
+        ...DIALOGUE_SUGGESTION_TIMELINE_RULES,
       ].join("\n"),
       input: `TARGET CHARACTER: ${JSON.stringify(character)}\n`
         + `PLAYER IDENTITY: ${JSON.stringify(state.playerName)}\n\n`
@@ -184,6 +186,16 @@ export class ProviderGameEngine extends ProviderSourceEngine {
           options.sourceEventId,
         )
       : sourceCandidates;
+    return this.resolveDialogue(state, character, playerText, routedCandidates, options);
+  }
+
+  protected async resolveDialogue(
+    state: GameState,
+    character: string,
+    playerText: string,
+    routedCandidates: readonly SourceContinuationCandidate[],
+    options: ContinuationOptions,
+  ): Promise<GeneratedScene> {
     const baseInstruction = buildRequiredSourceRecoveryInstruction(
       buildDialogueContinuationInstruction(
         state.playerName,
@@ -542,6 +554,9 @@ export class ProviderGameEngine extends ProviderSourceEngine {
           nonInteractableCharacters: reviewedUnavailableCharacters,
         },
       );
+      if (presenceReview.turnValidation?.status === "repair_scene") {
+        presenceValidationFailures.push(...presenceReview.turnValidation.findings.map(finding => finding.message));
+      }
       if (presenceValidationFailures.length > 0) {
         flowDiagnostic(
           `OpenAI dialogue draft ${attempt + 1}/4 rejected: ${presenceValidationFailures.join(" ")}`,

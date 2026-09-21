@@ -10,10 +10,6 @@ import {
   establishedEventAssessmentJsonSchema,
   playerAvailabilityJsonSchema,
 } from "../schema.js";
-import type {
-  AiResponse,
-  AiResponseRequest,
-} from "../provider.js";
 import {
   parseAiJson,
 } from "./core.js";
@@ -38,40 +34,7 @@ import {
   sourceEventCompletionReference,
 } from "./source-navigation.js";
 
-const MAX_SCENE_OUTPUT_TOKENS = 25_600;
-
 export abstract class ProviderProfileEngine extends ProviderSceneEngine {
-  protected async createResponse(
-    label: string,
-    bookId: string,
-    request: AiResponseRequest,
-  ): Promise<AiResponse> {
-    let response = await super.createResponse(label, bookId, request);
-    if (request.text?.format.name !== "bookrpg_scene") return response;
-
-    let maxOutputTokens = request.max_output_tokens ?? 1_600;
-    while (
-      response.status === "incomplete"
-      && JSON.stringify(response.incomplete_details).includes("max_output_tokens")
-      && maxOutputTokens < MAX_SCENE_OUTPUT_TOKENS
-    ) {
-      const nextMaxOutputTokens = Math.min(
-        maxOutputTokens * 2,
-        MAX_SCENE_OUTPUT_TOKENS,
-      );
-      flowDiagnostic(
-        `${this.client.provider} scene response was truncated at ${maxOutputTokens} output tokens; `
-        + `retrying the same generation attempt with ${nextMaxOutputTokens} output tokens.`,
-      );
-      maxOutputTokens = nextMaxOutputTokens;
-      response = await super.createResponse(label, bookId, {
-        ...request,
-        max_output_tokens: maxOutputTokens,
-      });
-    }
-    return response;
-  }
-
   async classifyBook(book: ImportedBook): Promise<BookGameProfile> {
     const response = await this.createResponse("book classification", book.bookId, {
       model: this.model,
@@ -213,7 +176,6 @@ export abstract class ProviderProfileEngine extends ProviderSceneEngine {
           "Decide only whether DIRECT NEXT EVENT is visibly completed in CURRENT SCENE TEXT.",
           "CURRENT EVENT is already completed before this check. Do not assess or select any later event.",
           "Use DIRECT NEXT EVENT.description plus any listed criticalBeats as the completion contract. Require every distinct action or outcome named there and every listed critical beat.",
-          "A general outcome phrase does not substitute for a missing critical beat. Do not require unlisted source beats, participants, causes, or details that the completion contract omits.",
           "Use only CURRENT SCENE TEXT as evidence. Ignore metadata, memory, summaries, future knowledge, implications, intentions, preparation, and events merely described as imminent.",
           "An intention or decision to perform a physical act does not complete that act. A concrete physical event requires the text to explicitly depict its action, participants, and named object when applicable.",
           "An internal reaction or decision event counts only when the text explicitly depicts that reaction or decision.",
@@ -270,7 +232,6 @@ export abstract class ProviderProfileEngine extends ProviderSceneEngine {
       instructions: [
         "Identify the latest ordered significant event that is visibly completed in CURRENT SCENE TEXT.",
         "Use each event's short description plus any listed criticalBeats as its completion contract. Require every distinct action or outcome named there and every listed critical beat.",
-        "A general outcome phrase does not substitute for a missing critical beat. Do not require unlisted source beats, participants, causes, or details that the completion contract omits.",
         "Use only CURRENT SCENE TEXT as evidence. Do not use development metadata, memory, summaries, future knowledge, implications, intentions, preparation, or an event merely being imminent.",
         "A decision or intention to perform a physical act is never evidence that the physical act occurred. For an event involving a concrete action or named object, the scene must explicitly depict that action and object.",
         "An internal reaction or decision event counts only when the scene text explicitly depicts that reaction or decision.",

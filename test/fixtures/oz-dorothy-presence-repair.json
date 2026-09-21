@@ -1,0 +1,17 @@
+{
+  "scene_text": "We stood together in Oz’s Palace, and the condition laid upon us seemed harder than any task we had yet faced. Still, I could see no other way to win our wishes. I turned to Dorothy, the Scarecrow, and the Tin Woodman.\n\n“We must travel west to the Winkie country,” I said. “There we may find the Wicked Witch of the West and destroy her.”\n\nThe words were brave enough, though my heart was not. The Witch was said to be powerful and cruel, and I did not wish to meet her. Yet Dorothy wanted to return home, the Scarecrow wanted brains, and the Tin Woodman wanted a heart. I had asked for courage, and Oz had made it depend upon proof that the Witch was dead.\n\nDorothy looked at us with a troubled face. She did not want to kill anyone, even the Wicked Witch, but she understood that our wishes and her journey home all depended upon this dangerous undertaking.\n\n“At least we must try,” she said.\n\nSo the plan stood before us: we would travel west and seek the Witch, though Dorothy remained unwilling to kill willingly.",
+  "original_scope": {
+    "currentLocation": "Oz's Palace",
+    "peoplePresent": [
+      "Cowardly Lion",
+      "Scarecrow",
+      "Tin Woodman"
+    ],
+    "peopleWithinSpeakingDistance": [
+      "Cowardly Lion",
+      "Scarecrow",
+      "Tin Woodman"
+    ]
+  },
+  "rejection": "The narrated scene explicitly includes Dorothy in the conversation and says the Lion turned to Dorothy, but the ending peoplePresent and peopleWithinSpeakingDistance lists omit her. Dorothy should be included in both lists; correcting this is metadata repair, not a narrated arrival."
+}

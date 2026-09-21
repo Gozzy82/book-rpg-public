@@ -1,0 +1,188 @@
+{
+  "event": {
+    "eventId": "event_baf42b9928fceffa5173",
+    "sequence": 7,
+    "description": "Toto falls through the open trapdoor, and Dorothy discovers and rescues him.",
+    "category": "discovery",
+    "chapterPosition": 3,
+    "actors": [
+      "Toto",
+      "Dorothy"
+    ],
+    "targets": [
+      "Toto"
+    ],
+    "beats": [
+      {
+        "actor": "Toto",
+        "action": "Falls through the open trapdoor when he gets too close to it.",
+        "sourceSemantics": {
+          "mode": "present",
+          "narratedContent": null,
+          "intentionalRole": "other",
+          "jointAction": null
+        },
+        "resultingState": "Toto is below the room at the trapdoor opening and is being held up by the air pressure; Dorothy is not holding him.",
+        "targets": [],
+        "agency": "involuntary",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 79,
+            "lineEnd": 79
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Sees one of Toto's ears sticking up through the trapdoor opening.",
+        "sourceSemantics": {
+          "mode": "present",
+          "narratedContent": null,
+          "intentionalRole": "meaningful",
+          "jointAction": null
+        },
+        "resultingState": "Dorothy sees one of Toto\u2019s ears sticking up through the trapdoor opening. Toto remains below the floor, held up by the pressure of the air.",
+        "targets": [
+          "Toto"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 79,
+            "lineEnd": 81
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Creeps to the opening, catches Toto by the ear, and drags him back into the room.",
+        "sourceSemantics": {
+          "mode": "present",
+          "narratedContent": null,
+          "intentionalRole": "meaningful",
+          "jointAction": null
+        },
+        "resultingState": "Toto is back inside the room with Dorothy, and she has regained physical control of him.",
+        "targets": [
+          "Toto"
+        ],
+        "agency": "intentional",
+        "stakes": "critical",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 82,
+            "lineEnd": 83
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "action": "Closes the trapdoor to prevent further accidents.",
+        "sourceSemantics": {
+          "mode": "present",
+          "narratedContent": null,
+          "intentionalRole": "meaningful",
+          "jointAction": null
+        },
+        "resultingState": "The trapdoor is closed, with Dorothy and Toto safely in the room above it.",
+        "targets": [
+          "Toto"
+        ],
+        "agency": "intentional",
+        "stakes": "significant",
+        "sourceReferences": [
+          {
+            "chapterPosition": 3,
+            "chapterIndex": 3,
+            "lineStart": 83,
+            "lineEnd": 84
+          }
+        ]
+      }
+    ],
+    "sourceReferences": [
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 79,
+        "lineEnd": 79
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 79,
+        "lineEnd": 81
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 79,
+        "lineEnd": 84
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 82,
+        "lineEnd": 83
+      },
+      {
+        "chapterPosition": 3,
+        "chapterIndex": 3,
+        "lineStart": 83,
+        "lineEnd": 84
+      }
+    ]
+  },
+  "checkpoint": {
+    "fingerprint": "07e851f3ca82a49870cf014668d292c0d0bda3a401e9b33c0b1c498616cfe103",
+    "attempts": 2,
+    "rejectedCandidate": [
+      {
+        "startBeatIndex": 2,
+        "endBeatIndex": 3,
+        "label": "Rescue Toto through the trapdoor",
+        "boundaryReason": "Ends after Dorothy pulls Toto back into the room and closes the trapdoor, completing the rescue and securing the opening."
+      }
+    ],
+    "usage": [
+      {
+        "input_tokens": 1704,
+        "input_tokens_details": {
+          "cache_write_tokens": 1701,
+          "cached_tokens": 0
+        },
+        "output_tokens": 159,
+        "output_tokens_details": {
+          "reasoning_tokens": 90
+        },
+        "total_tokens": 1863
+      },
+      {
+        "input_tokens": 2323,
+        "input_tokens_details": {
+          "cache_write_tokens": 2320,
+          "cached_tokens": 0
+        },
+        "output_tokens": 627,
+        "output_tokens_details": {
+          "reasoning_tokens": 516
+        },
+        "total_tokens": 2950
+      }
+    ],
+    "error": "Every intentional player beat must belong to exactly one choice range"
+  },
+  "character": {
+    "name": "Dorothy",
+    "aliases": [],
+    "characterId": "dorothy"
+  }
+}

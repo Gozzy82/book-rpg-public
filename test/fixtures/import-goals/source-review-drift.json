@@ -1,0 +1,2271 @@
+{
+  "provenance": "Captured 2026-09-17T21-42-55.759Z; no new generation",
+  "source": {
+    "index": 3,
+    "title": "The Wonderful Wizard of Oz",
+    "text": "The Wonderful Wizard of Oz \nThe Wonderful Wizard of Oz\nChapter I\nThe Cyclone\nDorothy lived in the midst of the great Kansas prairies, with Uncle Henry, who\nwas a farmer, and Aunt Em, who was the farmer’s wife. Their house was\nsmall, for the lumber to build it had to be carried by wagon many miles. There\nwere four walls, a floor and a roof, which made one room; and this room\ncontained a rusty looking cookstove, a cupboard for the dishes, a table, three\nor four chairs, and the beds. Uncle Henry and Aunt Em had a big bed in one\ncorner, and Dorothy a little bed in another corner. There was no garret at all,\nand no cellar—except a small hole dug in the ground, called a cyclone\ncellar, where the family could go in case one of those great whirlwinds arose,\nmighty enough to crush any building in its path. It was reached by a trap door\nin the middle of the floor, from which a ladder led down into the small, dark\nhole.\nWhen Dorothy stood in the doorway and looked around, she could see nothing but\nthe great gray prairie on every side. Not a tree nor a house broke the broad\nsweep of flat country that reached to the edge of the sky in all directions.\nThe sun had baked the plowed land into a gray mass, with little cracks running\nthrough it. Even the grass was not green, for the sun had burned the tops of\nthe long blades until they were the same gray color to be seen everywhere. Once\nthe house had been painted, but the sun blistered the paint and the rains\nwashed it away, and now the house was as dull and gray as everything else.\nWhen Aunt Em came there to live she was a young, pretty wife. The sun and wind\nhad changed her, too. They had taken the sparkle from her eyes and left them a\nsober gray; they had taken the red from her cheeks and lips, and they were gray\nalso. She was thin and gaunt, and never smiled now. When Dorothy, who was an\norphan, first came to her, Aunt Em had been so startled by the child’s\nlaughter that she would scream and press her hand upon her heart whenever\nDorothy’s merry voice reached her ears; and she still looked at the\nlittle girl with wonder that she could find anything to laugh at.\nUncle Henry never laughed. He worked hard from morning till night and did not\nknow what joy was. He was gray also, from his long beard to his rough boots,\nand he looked stern and solemn, and rarely spoke.\nIt was Toto that made Dorothy laugh, and saved her from growing as gray as her\nother surroundings. Toto was not gray; he was a little black dog, with long\nsilky hair and small black eyes that twinkled merrily on either side of his\nfunny, wee nose. Toto played all day long, and Dorothy played with him, and\nloved him dearly.\nToday, however, they were not playing. Uncle Henry sat upon the doorstep and\nlooked anxiously at the sky, which was even grayer than usual. Dorothy stood in\nthe door with Toto in her arms, and looked at the sky too. Aunt Em was washing\nthe dishes.\nFrom the far north they heard a low wail of the wind, and Uncle Henry and\nDorothy could see where the long grass bowed in waves before the coming storm.\nThere now came a sharp whistling in the air from the south, and as they turned\ntheir eyes that way they saw ripples in the grass coming from that direction\nalso.\nSuddenly Uncle Henry stood up.\n“There’s a cyclone coming, Em,” he called to his wife.\n“I’ll go look after the stock.” Then he ran toward the sheds\nwhere the cows and horses were kept.\nAunt Em dropped her work and came to the door. One glance told her of the\ndanger close at hand.\n“Quick, Dorothy!” she screamed. “Run for the cellar!”\nToto jumped out of Dorothy’s arms and hid under the bed, and the girl\nstarted to get him. Aunt Em, badly frightened, threw open the trap door in the\nfloor and climbed down the ladder into the small, dark hole. Dorothy caught\nToto at last and started to follow her aunt. When she was halfway across the\nroom there came a great shriek from the wind, and the house shook so hard that\nshe lost her footing and sat down suddenly upon the floor.\nThen a strange thing happened.\nThe house whirled around two or three times and rose slowly through the air.\nDorothy felt as if she were going up in a balloon.\nThe north and south winds met where the house stood, and made it the exact\ncenter of the cyclone. In the middle of a cyclone the air is generally still,\nbut the great pressure of the wind on every side of the house raised it up\nhigher and higher, until it was at the very top of the cyclone; and there it\nremained and was carried miles and miles away as easily as you could carry a\nfeather.\nIt was very dark, and the wind howled horribly around her, but Dorothy found\nshe was riding quite easily. After the first few whirls around, and one other\ntime when the house tipped badly, she felt as if she were being rocked gently,\nlike a baby in a cradle.\nToto did not like it. He ran about the room, now here, now there, barking\nloudly; but Dorothy sat quite still on the floor and waited to see what would\nhappen.\nOnce Toto got too near the open trap door, and fell in; and at first the little\ngirl thought she had lost him. But soon she saw one of his ears sticking up\nthrough the hole, for the strong pressure of the air was keeping him up so that\nhe could not fall. She crept to the hole, caught Toto by the ear, and dragged\nhim into the room again, afterward closing the trap door so that no more\naccidents could happen.\nHour after hour passed away, and slowly Dorothy got over her fright; but she\nfelt quite lonely, and the wind shrieked so loudly all about her that she\nnearly became deaf. At first she had wondered if she would be dashed to pieces\nwhen the house fell again; but as the hours passed and nothing terrible\nhappened, she stopped worrying and resolved to wait calmly and see what the\nfuture would bring. At last she crawled over the swaying floor to her bed, and\nlay down upon it; and Toto followed and lay down beside her.\nIn spite of the swaying of the house and the wailing of the wind, Dorothy soon\nclosed her eyes and fell fast asleep."
+  },
+  "before": {
+    "summary": "Dorothy lives with Uncle Henry, Aunt Em, and her dog Toto on the Kansas prairie. When a cyclone approaches, the family responds, but Dorothy is caught inside the house as the storm lifts and carries it away. During the journey, Toto falls through the open trapdoor, and Dorothy rescues him before settling with him on her bed.",
+    "significantEvents": [
+      {
+        "description": "Uncle Henry and Dorothy observe signs of an approaching storm while Aunt Em continues washing dishes.",
+        "category": "investigation",
+        "beats": [
+          {
+            "actor": "Uncle Henry",
+            "action": "Looks anxiously at the unusually gray sky.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Uncle Henry is outside the house, watching the darkening sky with concern.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 41,
+                "lineEnd": 42
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Looks toward the sky while holding Toto in her arms.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy stands in the doorway holding Toto and watching the sky.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 42,
+                "lineEnd": 43
+              }
+            ]
+          },
+          {
+            "actor": null,
+            "action": "Wind from the north and south creates visible waves in the prairie grass as the storm approaches.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Wind is coming from both directions, and the approaching storm is visibly close.",
+            "targets": [],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 45,
+                "lineEnd": 49
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Uncle Henry",
+          "Dorothy"
+        ],
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 41,
+            "lineEnd": 42
+          },
+          {
+            "lineStart": 41,
+            "lineEnd": 49
+          },
+          {
+            "lineStart": 42,
+            "lineEnd": 43
+          },
+          {
+            "lineStart": 45,
+            "lineEnd": 49
+          }
+        ]
+      },
+      {
+        "description": "Uncle Henry identifies the cyclone and runs to protect the livestock; Aunt Em recognizes the danger and orders Dorothy to the cellar.",
+        "category": "decision",
+        "beats": [
+          {
+            "actor": "Uncle Henry",
+            "action": "Stands up and calls to Aunt Em that a cyclone is coming.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Uncle Henry has warned Aunt Em that the cyclone is approaching.",
+            "targets": [
+              "Aunt Em"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 50,
+                "lineEnd": 51
+              }
+            ]
+          },
+          {
+            "actor": "Uncle Henry",
+            "action": "Runs toward the sheds to look after the cows and horses.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Uncle Henry has left the house and is running toward the livestock sheds.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 51,
+                "lineEnd": 53
+              }
+            ]
+          },
+          {
+            "actor": "Aunt Em",
+            "action": "Drops her work, comes to the door, and recognizes the immediate danger.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Aunt Em is at the doorway and understands that the cyclone is close.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 54,
+                "lineEnd": 55
+              }
+            ]
+          },
+          {
+            "actor": "Aunt Em",
+            "action": "Screams for Dorothy to run to the cellar.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has been urgently directed to reach the cyclone cellar.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 56,
+                "lineEnd": 56
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Uncle Henry",
+          "Aunt Em"
+        ],
+        "targets": [
+          "Aunt Em",
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 50,
+            "lineEnd": 51
+          },
+          {
+            "lineStart": 50,
+            "lineEnd": 56
+          },
+          {
+            "lineStart": 51,
+            "lineEnd": 53
+          },
+          {
+            "lineStart": 54,
+            "lineEnd": 55
+          },
+          {
+            "lineStart": 56,
+            "lineEnd": 56
+          }
+        ]
+      },
+      {
+        "description": "Toto escapes beneath the bed while Dorothy tries to retrieve him, and Aunt Em opens the cellar and descends.",
+        "category": "departure",
+        "beats": [
+          {
+            "actor": "Toto",
+            "action": "Jumps out of Dorothy's arms and hides under the bed.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Toto is under the bed, and Dorothy is no longer holding him.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 57,
+                "lineEnd": 57
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Starts trying to get Toto from under the bed.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has begun retrieving Toto but does not yet have him back in her arms.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 57,
+                "lineEnd": 58
+              }
+            ]
+          },
+          {
+            "actor": "Aunt Em",
+            "action": "Throws open the trapdoor and climbs down the ladder into the cellar.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The trapdoor is open, and Aunt Em is in the small cellar below the room.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 58,
+                "lineEnd": 59
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Catches Toto and starts following Aunt Em toward the cellar.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is holding Toto and has begun crossing the room toward the open trapdoor; she has not yet reached it.",
+            "targets": [
+              "Toto",
+              "Aunt Em"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 60,
+                "lineEnd": 60
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Toto",
+          "Dorothy",
+          "Aunt Em"
+        ],
+        "targets": [
+          "Toto",
+          "Aunt Em"
+        ],
+        "references": [
+          {
+            "lineStart": 57,
+            "lineEnd": 57
+          },
+          {
+            "lineStart": 57,
+            "lineEnd": 58
+          },
+          {
+            "lineStart": 57,
+            "lineEnd": 60
+          },
+          {
+            "lineStart": 58,
+            "lineEnd": 59
+          },
+          {
+            "lineStart": 60,
+            "lineEnd": 60
+          }
+        ]
+      },
+      {
+        "description": "The shaking house interrupts Dorothy's attempt to reach the cellar, causing her to fall onto the floor.",
+        "category": "violence",
+        "beats": [
+          {
+            "actor": null,
+            "action": "A great shriek of wind strikes as the house shakes violently.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The house is shaking violently while Dorothy is partway across the room with Toto.",
+            "targets": [],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 60,
+                "lineEnd": 62
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Loses her footing and sits down suddenly on the floor.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is seated on the floor halfway across the room, still holding Toto; she has not reached the cellar.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "involuntary",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 61,
+                "lineEnd": 62
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 60,
+            "lineEnd": 62
+          },
+          {
+            "lineStart": 61,
+            "lineEnd": 62
+          }
+        ]
+      },
+      {
+        "description": "The cyclone lifts the house into the air and carries it away from its original location.",
+        "category": "departure",
+        "beats": [
+          {
+            "actor": null,
+            "action": "The house whirls around and rises slowly through the air.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The house is airborne and being lifted by the cyclone; Dorothy and Toto remain inside it.",
+            "targets": [],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 63,
+                "lineEnd": 65
+              }
+            ]
+          },
+          {
+            "actor": null,
+            "action": "The opposing winds carry the house miles away within the cyclone.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The house is at the top of the cyclone and is being transported far from its original site; it has not yet landed.",
+            "targets": [],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 66,
+                "lineEnd": 71
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Experiences the house's motion as a gentle rocking after the initial whirls and tipping.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is inside the airborne house and feels it rocking, though the wind remains loud and the house is still traveling.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 72,
+                "lineEnd": 75
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 63,
+            "lineEnd": 65
+          },
+          {
+            "lineStart": 63,
+            "lineEnd": 75
+          },
+          {
+            "lineStart": 66,
+            "lineEnd": 71
+          },
+          {
+            "lineStart": 72,
+            "lineEnd": 75
+          }
+        ]
+      },
+      {
+        "description": "Toto runs around the moving room while Dorothy remains seated and waits.",
+        "category": "other",
+        "beats": [
+          {
+            "actor": "Toto",
+            "action": "Runs back and forth around the room and barks loudly.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Toto is moving unpredictably around the room inside the swaying house and is no longer settled beside Dorothy.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 76,
+                "lineEnd": 76
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Sits still on the floor and waits to see what will happen.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy remains seated on the floor while the house continues its airborne journey; Toto is moving around the room.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 77,
+                "lineEnd": 78
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Toto",
+          "Dorothy"
+        ],
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 76,
+            "lineEnd": 76
+          },
+          {
+            "lineStart": 76,
+            "lineEnd": 78
+          },
+          {
+            "lineStart": 77,
+            "lineEnd": 78
+          }
+        ]
+      },
+      {
+        "description": "Toto falls through the open trapdoor, and Dorothy discovers and rescues him.",
+        "category": "discovery",
+        "beats": [
+          {
+            "actor": "Toto",
+            "action": "Falls through the open trapdoor when he gets too close to it.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Toto is below the room at the trapdoor opening and is being held up by the air pressure; Dorothy is not holding him.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 79,
+                "lineEnd": 79
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Sees one of Toto's ears sticking up through the trapdoor opening.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy knows Toto is still reachable at the opening because she can see his ear, while he remains below the room's floor level.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 79,
+                "lineEnd": 81
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Creeps to the opening, catches Toto by the ear, and drags him back into the room.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Toto is back inside the room with Dorothy, and she has regained physical control of him.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 82,
+                "lineEnd": 83
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Closes the trapdoor to prevent further accidents.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The trapdoor is closed, with Dorothy and Toto safely in the room above it.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 83,
+                "lineEnd": 84
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Toto",
+          "Dorothy"
+        ],
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 79,
+            "lineEnd": 79
+          },
+          {
+            "lineStart": 79,
+            "lineEnd": 81
+          },
+          {
+            "lineStart": 79,
+            "lineEnd": 84
+          },
+          {
+            "lineStart": 82,
+            "lineEnd": 83
+          },
+          {
+            "lineStart": 83,
+            "lineEnd": 84
+          }
+        ]
+      },
+      {
+        "description": "After enduring the journey for hours, Dorothy overcomes her fright and decides to wait calmly for what comes next.",
+        "category": "decision",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Gradually gets over her fright as the hours pass without anything terrible happening.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is still inside the swaying airborne house but is less frightened than before.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 85,
+                "lineEnd": 89
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Resolves to wait calmly and see what the future will bring.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has chosen to remain calm and wait for the journey's outcome.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 87,
+                "lineEnd": 89
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 85,
+            "lineEnd": 89
+          },
+          {
+            "lineStart": 87,
+            "lineEnd": 89
+          }
+        ]
+      },
+      {
+        "description": "Dorothy goes to bed, Toto follows, and both fall asleep inside the swaying house.",
+        "category": "other",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Crawls across the swaying floor to her bed and lies down.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is lying on her bed inside the still-swaying house; Toto remains nearby in the room.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 90,
+                "lineEnd": 90
+              }
+            ]
+          },
+          {
+            "actor": "Toto",
+            "action": "Follows Dorothy to the bed and lies down beside her.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Toto is lying beside Dorothy on the bed, and both remain inside the moving house.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 90,
+                "lineEnd": 91
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Closes her eyes and falls fast asleep despite the swaying and wind.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is asleep on the bed with Toto beside her while the house continues to sway and the wind wails outside.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 92,
+                "lineEnd": 93
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy",
+          "Toto"
+        ],
+        "targets": [
+          "Dorothy",
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 90,
+            "lineEnd": 90
+          },
+          {
+            "lineStart": 90,
+            "lineEnd": 91
+          },
+          {
+            "lineStart": 90,
+            "lineEnd": 93
+          },
+          {
+            "lineStart": 92,
+            "lineEnd": 93
+          }
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "name": "Dorothy",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          },
+          {
+            "lineStart": 17,
+            "lineEnd": 19
+          },
+          {
+            "lineStart": 28,
+            "lineEnd": 32
+          },
+          {
+            "lineStart": 36,
+            "lineEnd": 43
+          },
+          {
+            "lineStart": 57,
+            "lineEnd": 65
+          },
+          {
+            "lineStart": 72,
+            "lineEnd": 93
+          }
+        ]
+      },
+      {
+        "name": "Uncle Henry",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          },
+          {
+            "lineStart": 10,
+            "lineEnd": 10
+          },
+          {
+            "lineStart": 33,
+            "lineEnd": 35
+          },
+          {
+            "lineStart": 41,
+            "lineEnd": 53
+          }
+        ]
+      },
+      {
+        "name": "Aunt Em",
+        "aliases": [
+          "Em"
+        ],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 6
+          },
+          {
+            "lineStart": 10,
+            "lineEnd": 10
+          },
+          {
+            "lineStart": 25,
+            "lineEnd": 32
+          },
+          {
+            "lineStart": 43,
+            "lineEnd": 44
+          },
+          {
+            "lineStart": 51,
+            "lineEnd": 59
+          }
+        ]
+      },
+      {
+        "name": "Toto",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 36,
+            "lineEnd": 40
+          },
+          {
+            "lineStart": 43,
+            "lineEnd": 43
+          },
+          {
+            "lineStart": 57,
+            "lineEnd": 60
+          },
+          {
+            "lineStart": 72,
+            "lineEnd": 91
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "actor": "Uncle Henry",
+        "description": "Warns Aunt Em that a cyclone is coming.",
+        "targets": [
+          "Aunt Em"
+        ],
+        "references": [
+          {
+            "lineStart": 50,
+            "lineEnd": 51
+          }
+        ]
+      },
+      {
+        "actor": "Uncle Henry",
+        "description": "Runs toward the sheds to look after the cows and horses.",
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 51,
+            "lineEnd": 53
+          }
+        ]
+      },
+      {
+        "actor": "Aunt Em",
+        "description": "Orders Dorothy to run for the cellar.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 54,
+            "lineEnd": 56
+          }
+        ]
+      },
+      {
+        "actor": "Aunt Em",
+        "description": "Opens the trapdoor and climbs down into the cellar.",
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 58,
+            "lineEnd": 59
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Catches Toto and later rescues him from the trapdoor opening.",
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 60,
+            "lineEnd": 60
+          },
+          {
+            "lineStart": 82,
+            "lineEnd": 83
+          }
+        ]
+      },
+      {
+        "actor": "Toto",
+        "description": "Jumps from Dorothy's arms, hides under the bed, and later runs around the room.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 57,
+            "lineEnd": 57
+          },
+          {
+            "lineStart": 76,
+            "lineEnd": 76
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Closes the trapdoor after bringing Toto back into the room.",
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 82,
+            "lineEnd": 84
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Uncle Henry",
+        "description": "Dorothy lives with Uncle Henry, who is her uncle and guardian figure.",
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Aunt Em",
+        "description": "Dorothy lives with Aunt Em, who cares for her after Dorothy becomes an orphan.",
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          },
+          {
+            "lineStart": 28,
+            "lineEnd": 32
+          }
+        ]
+      },
+      {
+        "character": "Uncle Henry",
+        "relatedCharacter": "Aunt Em",
+        "description": "Uncle Henry and Aunt Em are married; he is the farmer and she is his wife.",
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Toto",
+        "description": "Toto is Dorothy's beloved dog and playmate.",
+        "references": [
+          {
+            "lineStart": 36,
+            "lineEnd": 40
+          }
+        ]
+      },
+      {
+        "character": "Toto",
+        "relatedCharacter": "Dorothy",
+        "description": "Toto is Dorothy's beloved dog and playmate.",
+        "references": [
+          {
+            "lineStart": 36,
+            "lineEnd": 40
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "summary": "Dorothy lives with Uncle Henry, Aunt Em, and her dog Toto on the Kansas prairie. When a cyclone approaches, the family responds, but Dorothy is caught inside the house as the storm lifts and carries it away. During the journey, Toto falls through the open trapdoor, and Dorothy rescues him before settling with him on her bed.",
+    "significantEvents": [
+      {
+        "description": "Uncle Henry and Dorothy observe signs of an approaching storm while Aunt Em continues washing dishes.",
+        "category": "investigation",
+        "beats": [
+          {
+            "actor": "Uncle Henry",
+            "action": "Looks anxiously at the unusually gray sky.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Uncle Henry is outside the house, watching the darkening sky with concern.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 41,
+                "lineEnd": 42
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Looks toward the sky while holding Toto in her arms.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy stands in the doorway holding Toto and watching the sky.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 42,
+                "lineEnd": 43
+              }
+            ]
+          },
+          {
+            "actor": null,
+            "action": "Wind from the north and south creates visible waves in the prairie grass as the storm approaches.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Wind is coming from both directions, and the approaching storm is visibly close.",
+            "targets": [],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 45,
+                "lineEnd": 49
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Uncle Henry",
+          "Dorothy"
+        ],
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 41,
+            "lineEnd": 42
+          },
+          {
+            "lineStart": 41,
+            "lineEnd": 49
+          },
+          {
+            "lineStart": 42,
+            "lineEnd": 43
+          },
+          {
+            "lineStart": 45,
+            "lineEnd": 49
+          }
+        ]
+      },
+      {
+        "description": "Uncle Henry identifies the cyclone and runs to protect the livestock; Aunt Em recognizes the danger and orders Dorothy to the cellar.",
+        "category": "decision",
+        "beats": [
+          {
+            "actor": "Uncle Henry",
+            "action": "Stands up and calls to Aunt Em that a cyclone is coming.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Uncle Henry has warned Aunt Em that the cyclone is approaching.",
+            "targets": [
+              "Aunt Em"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 50,
+                "lineEnd": 51
+              }
+            ]
+          },
+          {
+            "actor": "Uncle Henry",
+            "action": "Runs toward the sheds to look after the cows and horses.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Uncle Henry has left the house and is running toward the livestock sheds.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 51,
+                "lineEnd": 53
+              }
+            ]
+          },
+          {
+            "actor": "Aunt Em",
+            "action": "Drops her work, comes to the door, and recognizes the immediate danger.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Aunt Em is at the doorway and understands that the cyclone is close.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 54,
+                "lineEnd": 55
+              }
+            ]
+          },
+          {
+            "actor": "Aunt Em",
+            "action": "Screams for Dorothy to run to the cellar.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has been urgently directed to reach the cyclone cellar.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 56,
+                "lineEnd": 56
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Uncle Henry",
+          "Aunt Em"
+        ],
+        "targets": [
+          "Aunt Em",
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 50,
+            "lineEnd": 51
+          },
+          {
+            "lineStart": 50,
+            "lineEnd": 56
+          },
+          {
+            "lineStart": 51,
+            "lineEnd": 53
+          },
+          {
+            "lineStart": 54,
+            "lineEnd": 55
+          },
+          {
+            "lineStart": 56,
+            "lineEnd": 56
+          }
+        ]
+      },
+      {
+        "description": "Toto escapes beneath the bed while Dorothy tries to retrieve him, and Aunt Em opens the cellar and descends.",
+        "category": "departure",
+        "beats": [
+          {
+            "actor": "Toto",
+            "action": "Jumps out of Dorothy's arms and hides under the bed.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Toto is under the bed, and Dorothy is no longer holding him.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 57,
+                "lineEnd": 57
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Starts trying to get Toto from under the bed.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has begun retrieving Toto but does not yet have him back in her arms.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 57,
+                "lineEnd": 58
+              }
+            ]
+          },
+          {
+            "actor": "Aunt Em",
+            "action": "Throws open the trapdoor and climbs down the ladder into the cellar.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The trapdoor is open, and Aunt Em is in the small cellar below the room.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 58,
+                "lineEnd": 59
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Catches Toto and starts following Aunt Em toward the cellar.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is holding Toto and has begun crossing the room toward the open trapdoor; she has not yet reached it.",
+            "targets": [
+              "Toto",
+              "Aunt Em"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 60,
+                "lineEnd": 60
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Toto",
+          "Dorothy",
+          "Aunt Em"
+        ],
+        "targets": [
+          "Toto",
+          "Aunt Em"
+        ],
+        "references": [
+          {
+            "lineStart": 57,
+            "lineEnd": 57
+          },
+          {
+            "lineStart": 57,
+            "lineEnd": 58
+          },
+          {
+            "lineStart": 57,
+            "lineEnd": 60
+          },
+          {
+            "lineStart": 58,
+            "lineEnd": 59
+          },
+          {
+            "lineStart": 60,
+            "lineEnd": 60
+          }
+        ]
+      },
+      {
+        "description": "The shaking house interrupts Dorothy's attempt to reach the cellar, causing her to fall onto the floor.",
+        "category": "violence",
+        "beats": [
+          {
+            "actor": null,
+            "action": "A great shriek of wind strikes as the house shakes violently.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The house is shaking violently while Dorothy is partway across the room with Toto.",
+            "targets": [],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 60,
+                "lineEnd": 62
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Loses her footing and sits down suddenly on the floor.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is seated on the floor halfway across the room, still holding Toto; she has not reached the cellar.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "involuntary",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 61,
+                "lineEnd": 62
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 60,
+            "lineEnd": 62
+          },
+          {
+            "lineStart": 61,
+            "lineEnd": 62
+          }
+        ]
+      },
+      {
+        "description": "The cyclone lifts the house into the air and carries it away from its original location.",
+        "category": "departure",
+        "beats": [
+          {
+            "actor": null,
+            "action": "The house whirls around and rises slowly through the air.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The house is airborne and being lifted by the cyclone; Dorothy and Toto remain inside it.",
+            "targets": [],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 63,
+                "lineEnd": 65
+              }
+            ]
+          },
+          {
+            "actor": null,
+            "action": "The opposing winds carry the house miles away within the cyclone.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The house is at the top of the cyclone and is being transported far from its original site; it has not yet landed.",
+            "targets": [],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 66,
+                "lineEnd": 71
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Experiences the house's motion as a gentle rocking after the initial whirls and tipping.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is inside the airborne house and feels it rocking, though the wind remains loud and the house is still traveling.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 72,
+                "lineEnd": 75
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 63,
+            "lineEnd": 65
+          },
+          {
+            "lineStart": 63,
+            "lineEnd": 75
+          },
+          {
+            "lineStart": 66,
+            "lineEnd": 71
+          },
+          {
+            "lineStart": 72,
+            "lineEnd": 75
+          }
+        ]
+      },
+      {
+        "description": "Toto runs around the moving room while Dorothy remains seated and waits.",
+        "category": "other",
+        "beats": [
+          {
+            "actor": "Toto",
+            "action": "Runs back and forth around the room and barks loudly.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Toto is moving unpredictably around the room inside the swaying house and is no longer settled beside Dorothy.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 76,
+                "lineEnd": 76
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Sits still on the floor and waits to see what will happen.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy remains seated on the floor while the house continues its airborne journey; Toto is moving around the room.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 77,
+                "lineEnd": 78
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Toto",
+          "Dorothy"
+        ],
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 76,
+            "lineEnd": 76
+          },
+          {
+            "lineStart": 76,
+            "lineEnd": 78
+          },
+          {
+            "lineStart": 77,
+            "lineEnd": 78
+          }
+        ]
+      },
+      {
+        "description": "Toto falls through the open trapdoor, and Dorothy discovers and rescues him.",
+        "category": "discovery",
+        "beats": [
+          {
+            "actor": "Toto",
+            "action": "Falls through the open trapdoor when he gets too close to it.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Toto is below the room at the trapdoor opening and is being held up by the air pressure; Dorothy is not holding him.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 79,
+                "lineEnd": 79
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Sees one of Toto's ears sticking up through the trapdoor opening.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy sees one of Toto’s ears sticking up through the trapdoor opening. Toto remains below the floor, held up by the pressure of the air.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 79,
+                "lineEnd": 81
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Creeps to the opening, catches Toto by the ear, and drags him back into the room.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Toto is back inside the room with Dorothy, and she has regained physical control of him.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 82,
+                "lineEnd": 83
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Closes the trapdoor to prevent further accidents.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The trapdoor is closed, with Dorothy and Toto safely in the room above it.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 83,
+                "lineEnd": 84
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Toto",
+          "Dorothy"
+        ],
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 79,
+            "lineEnd": 79
+          },
+          {
+            "lineStart": 79,
+            "lineEnd": 81
+          },
+          {
+            "lineStart": 79,
+            "lineEnd": 84
+          },
+          {
+            "lineStart": 82,
+            "lineEnd": 83
+          },
+          {
+            "lineStart": 83,
+            "lineEnd": 84
+          }
+        ]
+      },
+      {
+        "description": "After enduring the journey for hours, Dorothy overcomes her fright and decides to wait calmly for what comes next.",
+        "category": "decision",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Gradually gets over her fright as the hours pass without anything terrible happening.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is still inside the swaying airborne house but is less frightened than before.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 85,
+                "lineEnd": 89
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Resolves to wait calmly and see what the future will bring.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has chosen to remain calm and wait for the journey's outcome.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 87,
+                "lineEnd": 89
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy"
+        ],
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 85,
+            "lineEnd": 89
+          },
+          {
+            "lineStart": 87,
+            "lineEnd": 89
+          }
+        ]
+      },
+      {
+        "description": "Dorothy goes to bed, Toto follows, and both fall asleep inside the swaying house.",
+        "category": "other",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Crawls across the swaying floor to her bed and lies down.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is lying on her bed inside the still-swaying house; Toto remains nearby in the room.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 90,
+                "lineEnd": 90
+              }
+            ]
+          },
+          {
+            "actor": "Toto",
+            "action": "Follows Dorothy to the bed and lies down beside her.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Toto is lying beside Dorothy on the bed, and both remain inside the moving house.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 90,
+                "lineEnd": 91
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Closes her eyes and falls fast asleep despite the swaying and wind.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy is asleep on the bed with Toto beside her while the house continues to sway and the wind wails outside.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 92,
+                "lineEnd": 93
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy",
+          "Toto"
+        ],
+        "targets": [
+          "Dorothy",
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 90,
+            "lineEnd": 90
+          },
+          {
+            "lineStart": 90,
+            "lineEnd": 91
+          },
+          {
+            "lineStart": 90,
+            "lineEnd": 93
+          },
+          {
+            "lineStart": 92,
+            "lineEnd": 93
+          }
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "name": "Dorothy",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          },
+          {
+            "lineStart": 17,
+            "lineEnd": 19
+          },
+          {
+            "lineStart": 28,
+            "lineEnd": 32
+          },
+          {
+            "lineStart": 36,
+            "lineEnd": 43
+          },
+          {
+            "lineStart": 57,
+            "lineEnd": 65
+          },
+          {
+            "lineStart": 72,
+            "lineEnd": 93
+          }
+        ]
+      },
+      {
+        "name": "Uncle Henry",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          },
+          {
+            "lineStart": 10,
+            "lineEnd": 10
+          },
+          {
+            "lineStart": 33,
+            "lineEnd": 35
+          },
+          {
+            "lineStart": 41,
+            "lineEnd": 53
+          }
+        ]
+      },
+      {
+        "name": "Aunt Em",
+        "aliases": [
+          "Em"
+        ],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 6
+          },
+          {
+            "lineStart": 10,
+            "lineEnd": 10
+          },
+          {
+            "lineStart": 25,
+            "lineEnd": 32
+          },
+          {
+            "lineStart": 43,
+            "lineEnd": 44
+          },
+          {
+            "lineStart": 51,
+            "lineEnd": 59
+          }
+        ]
+      },
+      {
+        "name": "Toto",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 36,
+            "lineEnd": 40
+          },
+          {
+            "lineStart": 43,
+            "lineEnd": 43
+          },
+          {
+            "lineStart": 57,
+            "lineEnd": 60
+          },
+          {
+            "lineStart": 72,
+            "lineEnd": 91
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "actor": "Uncle Henry",
+        "description": "Warns Aunt Em that a cyclone is coming.",
+        "targets": [
+          "Aunt Em"
+        ],
+        "references": [
+          {
+            "lineStart": 50,
+            "lineEnd": 51
+          }
+        ]
+      },
+      {
+        "actor": "Uncle Henry",
+        "description": "Runs toward the sheds to look after the cows and horses.",
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 51,
+            "lineEnd": 53
+          }
+        ]
+      },
+      {
+        "actor": "Aunt Em",
+        "description": "Orders Dorothy to run for the cellar.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 54,
+            "lineEnd": 56
+          }
+        ]
+      },
+      {
+        "actor": "Aunt Em",
+        "description": "Opens the trapdoor and climbs down into the cellar.",
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 58,
+            "lineEnd": 59
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Catches Toto and later rescues him from the trapdoor opening.",
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 60,
+            "lineEnd": 60
+          },
+          {
+            "lineStart": 82,
+            "lineEnd": 83
+          }
+        ]
+      },
+      {
+        "actor": "Toto",
+        "description": "Jumps from Dorothy's arms, hides under the bed, and later runs around the room.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 57,
+            "lineEnd": 57
+          },
+          {
+            "lineStart": 76,
+            "lineEnd": 76
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Closes the trapdoor after bringing Toto back into the room.",
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 82,
+            "lineEnd": 84
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Uncle Henry",
+        "description": "Dorothy lives with Uncle Henry, who is her uncle and guardian figure.",
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Aunt Em",
+        "description": "Dorothy lives with Aunt Em, who cares for her after Dorothy becomes an orphan.",
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          },
+          {
+            "lineStart": 28,
+            "lineEnd": 32
+          }
+        ]
+      },
+      {
+        "character": "Uncle Henry",
+        "relatedCharacter": "Aunt Em",
+        "description": "Uncle Henry and Aunt Em are married; he is the farmer and she is his wife.",
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 6
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Toto",
+        "description": "Toto is Dorothy's beloved dog and playmate.",
+        "references": [
+          {
+            "lineStart": 36,
+            "lineEnd": 40
+          }
+        ]
+      },
+      {
+        "character": "Toto",
+        "relatedCharacter": "Dorothy",
+        "description": "Toto is Dorothy's beloved dog and playmate.",
+        "references": [
+          {
+            "lineStart": 36,
+            "lineEnd": 40
+          }
+        ]
+      }
+    ]
+  },
+  "oldReviews": [
+    {
+      "valid": false,
+      "issues": [
+        {
+          "target": "source",
+          "reason": "The resultingState for event 6, beat 1 attributes an unsupported explicit knowledge state to Dorothy: seeing Toto's ear establishes that she sees him and can practically attempt to reach him, but the source does not state that she knows he is reachable or understands the basis of that reachability. This also invokes the physical air-pressure explanation as part of Dorothy's knowledge, although that explanation is narrator-supplied.",
+          "repairFields": [
+            "/significantEvents/6/beats/1/resultingState"
+          ],
+          "repairEventIndexes": []
+        }
+      ]
+    },
+    {
+      "valid": false,
+      "issues": [
+        {
+          "target": "source",
+          "reason": "The compiled timeline adds that Toto is lying on Dorothy's bed and that Dorothy settles with him on her bed. The source says only that Toto follows and lies down beside Dorothy; it does not establish that he is on the bed.",
+          "repairFields": [
+            "/summary",
+            "/significantEvents/8/beats/1/resultingState"
+          ],
+          "repairEventIndexes": []
+        },
+        {
+          "target": "source",
+          "reason": "Event 6 combines Toto's fall, Dorothy's discovery, her rescue of Toto, and her closing of the trapdoor. No single category adequately represents this compound event, so classifying it as discovery is unsupported under the compound-event rule.",
+          "repairFields": [
+            "/significantEvents/6/category"
+          ],
+          "repairEventIndexes": []
+        },
+        {
+          "target": "source",
+          "reason": "The resulting state says Toto is no longer settled beside Dorothy, but the preceding source state has Dorothy holding Toto, not Toto settled beside her. The source supports that Toto is no longer in her arms and is running around the room.",
+          "repairFields": [
+            "/significantEvents/5/beats/0/resultingState"
+          ],
+          "repairEventIndexes": []
+        },
+        {
+          "target": "source",
+          "reason": "Routine movements are classified as meaningful intentional actions in the bedtime event: Dorothy crawling to bed and Toto following and lying down are ordinary movements, not consequential meaningful actions under the stated intentionalRole rule.",
+          "repairFields": [
+            "/significantEvents/8/beats/0/sourceSemantics/intentionalRole",
+            "/significantEvents/8/beats/1/sourceSemantics/intentionalRole"
+          ],
+          "repairEventIndexes": []
+        },
+        {
+          "target": "source",
+          "reason": "The relationship descriptions add unsupported guardian/care claims. The source establishes that Dorothy lives with Uncle Henry and Aunt Em and that Dorothy is an orphan, but does not explicitly characterize Uncle Henry as a guardian or state that Aunt Em cares for Dorothy.",
+          "repairFields": [
+            "/relationships/0/description",
+            "/relationships/1/description"
+          ],
+          "repairEventIndexes": []
+        }
+      ]
+    }
+  ]
+}

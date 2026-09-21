@@ -1,3 +1,4 @@
+import { CONVERSATIONAL_REACH_POLICY } from "../../shared/conversational-reach-policy.js";
 export const VIVID_SCENE_STYLE_RULES = [
   "Use vivid concrete detail and strong verbs. Cut exposition, filler, repeated information, and slow transitions.",
   "State major source-backed events plainly once they have happened. Do not replace a killing, death, attack, betrayal, disaster, or similarly decisive act with euphemisms such as 'a life-altering moment', 'what happened', or 'a deliberate consequence'.",
@@ -10,7 +11,14 @@ export const COMPACT_SCENE_STYLE_RULES = [
   "Open with the immediate consequence, danger, discovery, or emotional turn; do not recap the previous scene.",
   ...VIVID_SCENE_STYLE_RULES,
   "End on a sharp decision point rather than explaining what the player should feel.",
-  "Keep scene text between 65 and 120 words.",
+  "Keep scene text between 65 and 150 words. The former 65 and 120 words target is obsolete.",
+] as const;
+
+export const ORDERED_WINDOW_SCENE_STYLE_RULES = [
+  "Open with the immediate action or consequence; do not recap the previous scene.",
+  ...VIVID_SCENE_STYLE_RULES,
+  "For this multi-beat turn, target 250–450 words and use up to 600 when needed to depict the authorized window clearly. Spend the space on concrete actions and their physical consequences, not repeated atmosphere. Do not omit required actions to meet a compact single-beat length target.",
+  "End at the script's decision boundary. Keep all selectable choices in the menu; do not append a decision question, hypothetical options or a summary of possible futures to the prose.",
 ] as const;
 
 export const OBSERVED_SCENE_PROGRESSION_STYLE_RULES = [
@@ -117,9 +125,10 @@ export const TURN_SCOPE_RULES = [
 ] as const;
 
 export const SCENE_SCOPE_RULES = [
+  CONVERSATIONAL_REACH_POLICY,
   "Return sceneScope as authoritative hidden state for the decision point at the end of this turn.",
   "sceneScope.currentLocation is the player's concrete current location; keep it unchanged unless this turn visibly moves the player.",
-  "Never transplant a source-backed event, character, or prop into sceneScope.currentLocation merely because that event is next in upcoming source material. Source order does not override physical continuity.",
+  "Never transplant a source-backed event, character, or prop into sceneScope.currentLocation merely because that event is next in upcoming_source_material. Source order does not override physical continuity.",
   "When an explicitly selected source continuation requires the player to reach a different location, narrate a visible, causally plausible transition before depicting location-specific source events. If latest_input and the current turn scope do not authorize that movement, leave the source event in the future instead of relocating it into the current scene.",
   "When sceneScope.currentLocation changes, rebuild presence for the destination. Do not carry prior peoplePresent or peopleWithinSpeakingDistance forward unless the narration establishes that those characters moved with the player or independently arrived there.",
   "Always include player_identity exactly once in both peoplePresent and peopleWithinSpeakingDistance. These are character lists, including nonhuman players such as Toto; player membership does not make them an NPC, allow self-targeted choices, or grant human speech.",
@@ -131,19 +140,26 @@ export const SCENE_SCOPE_RULES = [
   "For every action choice that directly interacts with a named non-player character, that character must already be in sceneScope.peoplePresent. If they are absent, offer only actions executable before their arrival or another visible prerequisite.",
 ] as const;
 
-export const RUNTIME_PARAMETER_RULES = [
-  "runtime_parameters are persistent, user-authored overrides for this interactive timeline.",
-  "Apply them in listed order. When parameters conflict, the newest (last) parameter wins.",
+export const WORLD_RULE_POLICY = [
+  "The supplied active world rules are persistent, user-authored overrides for this interactive timeline.",
+  "Apply them in listed order. When active world rules conflict, the newest (last) world rule wins.",
   "Treat them as authoritative over character_profiles, source characterizations, canonical motives, habits, preferences, goals, and other conflicting background details.",
-  "Let affected characters consistently act, speak, choose, and react according to these parameters in every future scene and dialogue.",
-  "When a parameter explicitly describes continuous, constant, always-on, frequent, repeated, recurring, or per-scene observable behavior, treat that recurrence as mandatory rather than optional flavor. In every generated scene where the affected character is present and the behavior is physically possible, include at least one concrete observable sign of it.",
+  "Do not require an ordinary persistent fact to be restated in every scene when the candidate neither contradicts it nor makes it currently observable.",
+  "Let affected characters consistently act, speak, choose, and react according to these world rules in every future scene and dialogue.",
+  "When a world rule explicitly describes continuous, constant, always-on, frequent, repeated, recurring, or per-scene observable behavior, treat that recurrence as mandatory rather than optional flavor. In every generated scene where the affected character is present and the behavior is physically possible, include at least one concrete observable sign of it.",
   "Do not omit an applicable recurring behavior merely because the main plot beat is unrelated. Keep its manifestation brief and natural so it does not replace the turn's selected action, required source beat, or decision point.",
   "For dialogue turns involving an affected character, reflect applicable recurring behavior in characterResponse or narration when it can occur during the exchange.",
-  "A parameter changes the game world's governing facts; it is not itself a player action or a completed scene event. Introduce its visible consequences naturally when relevant.",
-  "Preserve source events where compatible, but adapt or replace conflicting characterization and causal details rather than ignoring a runtime parameter.",
+  "A world rule changes the game world's governing facts; it is not itself a player action or a completed scene event. Introduce its visible consequences naturally when relevant.",
+  "Preserve source events where compatible, but adapt or replace conflicting characterization and causal details rather than ignoring an active world rule.",
+  "A rule overridden by a newer conflicting rule is not a compliance requirement. Assess the effective rules in listed order, not each historical rule in isolation.",
+] as const;
+
+export const DIALOGUE_SUGGESTION_TIMELINE_RULES = [
   "When generating suggested player dialogue, treat next_significant_event_progress.next_required_beat as the furthest source-backed development the suggestions may intentionally steer toward. Do not mention, propose, assume, or reveal any later beat or significant event whose prerequisite beats are still incomplete.",
   "A dialogue suggestion may vary tone or strategy, but it must remain executable from the current player-facing scene and may not presuppose knowledge, plans, relationships, destinations, goals, or agreements that exist only in later upcoming_source_material.",
 ] as const;
+
+export const RUNTIME_PARAMETER_RULES = WORLD_RULE_POLICY;
 
 export const STORY_MEMORY_RULES = [
   "Return storyMemory as compact persistent memory after this turn.",
@@ -154,3 +170,4 @@ export const STORY_MEMORY_RULES = [
   "storyMemory.canonFacts must contain at most 12 durable, established facts that future turns must not contradict, such as deaths, injuries, revealed identities, irreversible relationship changes, acquired objects, and binding world rules.",
   "Never add a canon fact from character_profiles, story_so_far, or upcoming_source_material until player-facing narration has established it.",
 ] as const;
+

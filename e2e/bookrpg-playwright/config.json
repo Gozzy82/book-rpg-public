@@ -1,7 +1,7 @@
 {
   "url": "http://127.0.0.1:8787/",
   "bookTitle": "The Wonderful Wizard of Oz",
-  "clicksPerCharacter": 20,
+  "clicksPerCharacter": 10,
   "characters": [],
   "turnTimeoutMs": 300000,
   "headless": false,

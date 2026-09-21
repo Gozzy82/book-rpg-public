@@ -1,0 +1,547 @@
+{
+  "kind": "replace_event_beats",
+  "eventId": "event_66f4807e4ea612d15b5e",
+  "source": {
+    "chapterIndex": 9,
+    "lineStart": 86,
+    "text": "The Lion was about to reply when suddenly they came to another gulf across the\nroad. But this one was so broad and deep that the Lion knew at once he could\nnot leap across it.\nSo they sat down to consider what they should do, and after serious thought the\nScarecrow said:\n\u201cHere is a great tree, standing close to the ditch. If the Tin Woodman\ncan chop it down, so that it will fall to the other side, we can walk across it\neasily.\u201d\n\u201cThat is a first-rate idea,\u201d said the Lion. \u201cOne would almost\nsuspect you had brains in your head, instead of straw.\u201d\nThe Woodman set to work at once, and so sharp was his axe that the tree was\nsoon chopped nearly through. Then the Lion put his strong front legs against\nthe tree and pushed with all his might, and slowly the big tree tipped and fell\nwith a crash across the ditch, with its top branches on the other side.\nThey had just started to cross this queer bridge when a sharp growl made them\nall look up, and to their horror they saw running toward them two great beasts\nwith bodies like bears and heads like tigers.\n\u201cThey are the Kalidahs!\u201d said the Cowardly Lion, beginning to\ntremble.\n\u201cQuick!\u201d cried the Scarecrow. \u201cLet us cross over.\u201d\nSo Dorothy went first, holding Toto in her arms, the Tin Woodman followed, and\nthe Scarecrow came next. The Lion, although he was certainly afraid, turned to\nface the Kalidahs, and then he gave so loud and terrible a roar that Dorothy\nscreamed and the Scarecrow fell over backward, while even the fierce beasts\nstopped short and looked at him in surprise.\nBut, seeing they were bigger than the Lion, and remembering that there were two\nof them and only one of him, the Kalidahs again rushed forward, and the Lion\ncrossed over the tree and turned to see what they would do next. Without\nstopping an instant the fierce beasts also began to cross the tree. And the\nLion said to Dorothy:\n\u201cWe are lost, for they will surely tear us to pieces with their sharp\nclaws. But stand close behind me, and I will fight them as long as I am\nalive.\u201d\n\u201cWait a minute!\u201d called the Scarecrow. He had been thinking what\nwas best to be done, and now he asked the Woodman to chop away the end of the\ntree that rested on their side of the ditch. The Tin Woodman began to use his\naxe at once, and, just as the two Kalidahs were nearly across, the tree fell\nwith a crash into the gulf, carrying the ugly, snarling brutes with it, and\nboth were dashed to pieces on the sharp rocks at the bottom."
+  },
+  "expectedBeats": [
+    {
+      "actor": "The Tin Woodman",
+      "action": "Chops nearly through a tree so it can become a bridge.",
+      "decisionBoundaryBefore": "The Tin Woodman accepts the plan to make a bridge.",
+      "resultingState": "The tree is nearly cut through but is still standing.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 0,
+        "boundaryReason": "The tree is prepared for the Lion to push over.",
+        "choiceText": "Chop down the tree to make a bridge across the gulf.",
+        "completion": "The tree is nearly severed.",
+        "playerBeatIndexes": [
+          0
+        ],
+        "preconditions": [
+          "A suitable tree stands beside the gulf.",
+          "The axe is available."
+        ],
+        "interruptWhen": [
+          "The tree cannot be felled."
+        ]
+      },
+      "targets": [],
+      "agency": "intentional",
+      "stakes": "significant",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 91,
+          "lineEnd": 97
+        }
+      ]
+    },
+    {
+      "actor": "The Cowardly Lion",
+      "action": "Pushes the tree down across the gulf.",
+      "decisionBoundaryBefore": "The Lion chooses to finish the bridge by pushing the cut tree.",
+      "resultingState": "The tree lies across the gulf as a bridge.",
+      "targets": [],
+      "agency": "intentional",
+      "stakes": "significant",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 97,
+          "lineEnd": 99
+        }
+      ]
+    },
+    {
+      "actor": "Dorothy",
+      "action": "Crosses the tree bridge first while carrying Toto.",
+      "decisionBoundaryBefore": "Dorothy chooses to cross before the others.",
+      "resultingState": "Dorothy and Toto are across the gulf; the Tin Woodman and Scarecrow are still crossing or preparing to cross.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 2,
+        "boundaryReason": "Dorothy reaches the far side of the bridge.",
+        "choiceText": "Cross the tree bridge with Toto before the Kalidahs arrive.",
+        "completion": "Dorothy and Toto are across.",
+        "playerBeatIndexes": [
+          2
+        ],
+        "preconditions": [
+          "The tree bridge is in place.",
+          "The far side is reachable."
+        ],
+        "interruptWhen": [
+          "The bridge falls or a Kalidah reaches her."
+        ]
+      },
+      "targets": [
+        "Toto"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 100,
+          "lineEnd": 107
+        }
+      ]
+    },
+    {
+      "actor": "The Cowardly Lion",
+      "action": "Roars at the approaching Kalidahs, then crosses the bridge.",
+      "decisionBoundaryBefore": "The Lion chooses to confront the Kalidahs long enough to delay them.",
+      "resultingState": "The Kalidahs are startled but continue advancing; the Lion is on the far side with the others.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 3,
+        "boundaryReason": "The Lion reaches the far side and the threat continues onto the bridge.",
+        "choiceText": "Face the Kalidahs long enough for the others to cross.",
+        "completion": "The Lion has crossed after confronting the beasts.",
+        "playerBeatIndexes": [
+          3
+        ],
+        "preconditions": [
+          "The Kalidahs are approaching.",
+          "The bridge remains standing."
+        ],
+        "interruptWhen": [
+          "The Kalidahs attack before the group crosses."
+        ]
+      },
+      "targets": [
+        "The Kalidahs"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 107,
+          "lineEnd": 118
+        }
+      ]
+    },
+    {
+      "actor": "The Scarecrow",
+      "action": "Orders the Tin Woodman to chop away the bridge's near end.",
+      "decisionBoundaryBefore": "The Scarecrow chooses to destroy the bridge to stop the Kalidahs.",
+      "resultingState": "The Tin Woodman is chopping the bridge's near end while the Kalidahs approach across it.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 4,
+        "boundaryReason": "The Scarecrow's order ends when the Tin Woodman starts carrying it out.",
+        "choiceText": "Cut away the bridge before the Kalidahs reach us.",
+        "completion": "The Scarecrow's destruction plan is communicated and the Tin Woodman begins chopping the bridge's near end.",
+        "playerBeatIndexes": [
+          4
+        ],
+        "preconditions": [
+          "The Kalidahs are approaching across the bridge.",
+          "The Tin Woodman can cut its near end."
+        ],
+        "interruptWhen": [
+          "The Kalidahs reach the far side before the bridge is cut."
+        ]
+      },
+      "targets": [
+        "The Tin Woodman",
+        "The Cowardly Lion"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 119,
+          "lineEnd": 121
+        }
+      ]
+    },
+    {
+      "actor": "The Tin Woodman",
+      "action": "Cuts the tree free, causing the Kalidahs to fall into the gulf and be dashed to pieces.",
+      "resultingState": "The bridge has fallen into the gulf; both Kalidahs are dead on the rocks; the travelers are safe on the far side.",
+      "targets": [
+        "The Kalidahs"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 121,
+          "lineEnd": 124
+        }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "actor": "The Tin Woodman",
+      "action": "Chops nearly through the tree to prepare a bridge.",
+      "resultingState": "The tree is nearly cut through but still standing; all travelers remain on the departure bank.",
+      "targets": [],
+      "agency": "intentional",
+      "stakes": "significant",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 91,
+          "lineEnd": 97
+        }
+      ],
+      "sourceActionStart": {
+        "chapterPosition": 9,
+        "chapterIndex": 9,
+        "line": 96,
+        "column": 0,
+        "quote": "The Woodman set to work"
+      },
+      "decisionBoundaryBefore": "Chop the tree to prepare a bridge.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 0,
+        "playerBeatIndexes": [
+          0
+        ],
+        "choiceText": "Chop the tree to prepare a bridge.",
+        "completion": "The tree is nearly cut through but still standing; all travelers remain on the departure bank.",
+        "boundaryReason": "This selected act ends here; the next actor or decision remains unperformed.",
+        "preconditions": [
+          "The group has chosen the tree as a bridge and the axe is available."
+        ],
+        "interruptWhen": [
+          "An established obstacle prevents this action."
+        ]
+      }
+    },
+    {
+      "actor": "The Cowardly Lion",
+      "action": "Pushes the weakened tree across the gulf.",
+      "resultingState": "The tree forms a bridge; the travelers have not yet completed their crossings.",
+      "targets": [],
+      "agency": "intentional",
+      "stakes": "significant",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 97,
+          "lineEnd": 99
+        }
+      ],
+      "sourceActionStart": {
+        "chapterPosition": 9,
+        "chapterIndex": 9,
+        "line": 97,
+        "column": 29,
+        "quote": "Then the Lion put"
+      },
+      "decisionBoundaryBefore": "Push the weakened tree across the gulf.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 1,
+        "playerBeatIndexes": [
+          1
+        ],
+        "choiceText": "Push the weakened tree across the gulf.",
+        "completion": "The tree forms a bridge; the travelers have not yet completed their crossings.",
+        "boundaryReason": "This selected act ends here; the next actor or decision remains unperformed.",
+        "preconditions": [
+          "The tree is nearly cut through and the Lion can reach it."
+        ],
+        "interruptWhen": [
+          "An established obstacle prevents this action."
+        ]
+      }
+    },
+    {
+      "actor": null,
+      "action": "As the travelers begin crossing the tree bridge, a sharp growl makes them look up and they see two Kalidahs running toward them.",
+      "resultingState": "Crossing has begun, but the party is not yet safely across. The travelers have seen the two approaching Kalidahs; the bridge is intact and the crossings must continue.",
+      "targets": [],
+      "agency": "external",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 100,
+          "lineEnd": 102
+        }
+      ],
+      "sourceActionStart": {
+        "chapterPosition": 9,
+        "chapterIndex": 9,
+        "line": 100,
+        "column": 0,
+        "quote": "They had just started"
+      }
+    },
+    {
+      "actor": "Dorothy",
+      "action": "Crosses the tree bridge first carrying Toto.",
+      "resultingState": "Dorothy and Toto are on the destination bank; the Tin Woodman and Scarecrow still have to finish crossing, and the Lion remains on the departure side.",
+      "targets": [
+        "Toto"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 106,
+          "lineEnd": 107
+        }
+      ],
+      "sourceActionStart": {
+        "chapterPosition": 9,
+        "chapterIndex": 9,
+        "line": 106,
+        "column": 0,
+        "quote": "So Dorothy went first"
+      },
+      "decisionBoundaryBefore": "Cross the bridge with Toto.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 3,
+        "playerBeatIndexes": [
+          3
+        ],
+        "choiceText": "Cross the bridge with Toto.",
+        "completion": "Dorothy and Toto are on the destination bank; the Tin Woodman and Scarecrow still have to finish crossing, and the Lion remains on the departure side.",
+        "boundaryReason": "This selected act ends here; the next actor or decision remains unperformed.",
+        "preconditions": [
+          "The tree bridge is ready; the Kalidahs are approaching."
+        ],
+        "interruptWhen": [
+          "An established obstacle prevents this action."
+        ]
+      }
+    },
+    {
+      "actor": "The Tin Woodman",
+      "action": "Follows Dorothy across the tree bridge.",
+      "resultingState": "The Tin Woodman joins Dorothy and Toto on the destination bank; the Scarecrow and Lion have not yet completed their crossings.",
+      "targets": [],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 106,
+          "lineEnd": 107
+        }
+      ],
+      "sourceActionStart": {
+        "chapterPosition": 9,
+        "chapterIndex": 9,
+        "line": 106,
+        "column": 49,
+        "quote": "the Tin Woodman followed"
+      },
+      "decisionBoundaryBefore": "Follow Dorothy across the bridge.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 4,
+        "playerBeatIndexes": [
+          4
+        ],
+        "choiceText": "Follow Dorothy across the bridge.",
+        "completion": "The Tin Woodman joins Dorothy and Toto on the destination bank; the Scarecrow and Lion have not yet completed their crossings.",
+        "boundaryReason": "This selected act ends here; the next actor or decision remains unperformed.",
+        "preconditions": [
+          "Dorothy has crossed and the tree bridge is still intact."
+        ],
+        "interruptWhen": [
+          "An established obstacle prevents this action."
+        ]
+      }
+    },
+    {
+      "actor": "The Scarecrow",
+      "action": "Crosses the tree bridge after the Tin Woodman.",
+      "resultingState": "Dorothy, Toto, the Tin Woodman and Scarecrow are on the destination bank; the Lion remains behind facing the approaching Kalidahs.",
+      "targets": [],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 107,
+          "lineEnd": 107
+        }
+      ],
+      "sourceActionStart": {
+        "chapterPosition": 9,
+        "chapterIndex": 9,
+        "line": 107,
+        "column": 0,
+        "quote": "the Scarecrow came next."
+      },
+      "decisionBoundaryBefore": "Cross the bridge after the Tin Woodman.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 5,
+        "playerBeatIndexes": [
+          5
+        ],
+        "choiceText": "Cross the bridge after the Tin Woodman.",
+        "completion": "Dorothy, Toto, the Tin Woodman and Scarecrow are on the destination bank; the Lion remains behind facing the approaching Kalidahs.",
+        "boundaryReason": "This selected act ends here; the next actor or decision remains unperformed.",
+        "preconditions": [
+          "The Tin Woodman has crossed; the bridge remains intact."
+        ],
+        "interruptWhen": [
+          "An established obstacle prevents this action."
+        ]
+      }
+    },
+    {
+      "actor": "The Cowardly Lion",
+      "action": "Faces and roars at the Kalidahs, then crosses the tree after they resume their charge.",
+      "resultingState": "All travelers are on the destination bank. The Kalidahs, briefly startled by the roar, follow onto the bridge; the Lion stands ready to defend the others.",
+      "targets": [
+        "The Kalidahs"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 107,
+          "lineEnd": 118
+        }
+      ],
+      "sourceActionStart": {
+        "chapterPosition": 9,
+        "chapterIndex": 9,
+        "line": 107,
+        "column": 25,
+        "quote": "The Lion, although"
+      },
+      "decisionBoundaryBefore": "Roar at the Kalidahs and retreat across the bridge.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 6,
+        "playerBeatIndexes": [
+          6
+        ],
+        "choiceText": "Roar at the Kalidahs and retreat across the bridge.",
+        "completion": "All travelers are on the destination bank. The Kalidahs, briefly startled by the roar, follow onto the bridge; the Lion stands ready to defend the others.",
+        "boundaryReason": "This selected act ends here; the next actor or decision remains unperformed.",
+        "preconditions": [
+          "The Kalidahs are visibly approaching.",
+          "Dorothy, Toto, the Tin Woodman and Scarecrow have crossed.",
+          "The tree bridge is intact."
+        ],
+        "interruptWhen": [
+          "An established obstacle prevents this action."
+        ]
+      }
+    },
+    {
+      "actor": "The Scarecrow",
+      "action": "Asks the Tin Woodman to chop away the end of the tree resting on their destination bank.",
+      "resultingState": "The Tin Woodman has heard the plan to cut the bridge from the group's bank. All travelers are on that bank while the Kalidahs advance over the tree; the cut is not yet completed.",
+      "targets": [
+        "The Tin Woodman"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 119,
+          "lineEnd": 121
+        }
+      ],
+      "sourceActionStart": {
+        "chapterPosition": 9,
+        "chapterIndex": 9,
+        "line": 119,
+        "column": 0,
+        "quote": "\u201cWait a minute!\u201d"
+      },
+      "decisionBoundaryBefore": "Ask the Tin Woodman to cut away our end of the bridge.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 7,
+        "playerBeatIndexes": [
+          7
+        ],
+        "choiceText": "Ask the Tin Woodman to cut away our end of the bridge.",
+        "completion": "The Tin Woodman has heard the plan to cut the bridge from the group's bank. All travelers are on that bank while the Kalidahs advance over the tree; the cut is not yet completed.",
+        "boundaryReason": "This selected act ends here; the next actor or decision remains unperformed.",
+        "preconditions": [
+          "The Kalidahs are crossing toward the group.",
+          "The Tin Woodman is beside the group with his axe."
+        ],
+        "interruptWhen": [
+          "An established obstacle prevents this action."
+        ]
+      }
+    },
+    {
+      "actor": "The Tin Woodman",
+      "action": "Cuts away the end of the tree on the travelers' destination bank, dropping the bridge and both Kalidahs into the gulf.",
+      "resultingState": "The bridge and Kalidahs have fallen into the gulf; both Kalidahs are dead on the rocks. Dorothy, Toto, the Tin Woodman, Scarecrow and Lion are safe together on the destination bank.",
+      "targets": [
+        "The Kalidahs"
+      ],
+      "agency": "intentional",
+      "stakes": "critical",
+      "sourceReferences": [
+        {
+          "chapterPosition": 9,
+          "chapterIndex": 9,
+          "lineStart": 121,
+          "lineEnd": 124
+        }
+      ],
+      "sourceActionStart": {
+        "chapterPosition": 9,
+        "chapterIndex": 9,
+        "line": 121,
+        "column": 45,
+        "quote": "The Tin Woodman began"
+      },
+      "decisionBoundaryBefore": "Cut away our end of the bridge.",
+      "playerAction": {
+        "kind": "player_action",
+        "endBeatIndex": 8,
+        "playerBeatIndexes": [
+          8
+        ],
+        "choiceText": "Cut away our end of the bridge.",
+        "completion": "The bridge and Kalidahs have fallen into the gulf; both Kalidahs are dead on the rocks. Dorothy, Toto, the Tin Woodman, Scarecrow and Lion are safe together on the destination bank.",
+        "boundaryReason": "This selected act ends here; the next actor or decision remains unperformed.",
+        "preconditions": [
+          "The Scarecrow has proposed the cut.",
+          "All travelers are on the destination bank.",
+          "The Kalidahs are on the bridge and the axe is available."
+        ],
+        "interruptWhen": [
+          "An established obstacle prevents this action."
+        ]
+      }
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import type { TurnContract } from "./engine/turn-contract.js";
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -22,6 +23,8 @@ export interface AiJsonSchemaFormat {
 }
 
 export interface AiResponseRequest {
+  /** Internal control data; removed before sending to a provider. */
+  turnContract?: TurnContract;
   model: string;
   reasoning?: { effort: AiReasoningEffort };
   instructions?: string;
@@ -35,6 +38,7 @@ export interface AiResponse {
   output_text: string;
   status?: string;
   incomplete_details?: unknown;
+  usage?: {input_tokens: number; output_tokens: number; total_tokens: number; output_tokens_details?: {reasoning_tokens: number}};
 }
 
 export class AiRefusalError extends Error {
@@ -424,9 +428,9 @@ class OpenAiClient implements AiClient {
   readonly model: string;
   private readonly client: OpenAI;
 
-  constructor(model: string, apiKey: string) {
+  constructor(model: string, apiKey: string, private readonly options: {timeoutMs?: number; maxRetries?: number} = {}) {
     this.model = model;
-    this.client = new OpenAI({ apiKey });
+    this.client = new OpenAI({ apiKey, ...(options.timeoutMs ? {timeout: options.timeoutMs} : {}), ...(options.maxRetries !== undefined ? {maxRetries: options.maxRetries} : {}) });
   }
 
   async createResponse(request: AiResponseRequest): Promise<AiResponse> {
@@ -447,6 +451,7 @@ class OpenAiClient implements AiClient {
           async () => await this.client.responses.create(openAiRequest),
         );
       },
+      this.options.maxRetries !== undefined ? {maxRetries: this.options.maxRetries} : {},
     );
     const refusal = extractOpenAiRefusal(response);
     if (refusal) throw logAiRefusal(this.provider, this.model, refusal);
@@ -454,6 +459,7 @@ class OpenAiClient implements AiClient {
       output_text: response.output_text,
       status: response.status,
       incomplete_details: response.incomplete_details,
+      ...(response.usage ? {usage: response.usage} : {}),
     };
   }
 }
@@ -500,10 +506,12 @@ class XaiClient implements AiClient {
   constructor(
     readonly model: string,
     apiKey: string,
+    options: {timeoutMs?: number; maxRetries?: number} = {},
   ) {
     this.client = new OpenAI({
       apiKey,
       baseURL: "https://api.x.ai/v1",
+      ...(options.timeoutMs ? {timeout: options.timeoutMs} : {}),
       maxRetries: 0,
     });
   }
@@ -528,14 +536,16 @@ class XaiClient implements AiClient {
       output_text: outputText,
       status: response.status,
       incomplete_details: response.incomplete_details,
+      ...(response.usage ? {usage: response.usage} : {}),
     };
   }
 }
 
-export function createAiClient(provider = configuredAiProvider()): AiClient {
+export function createAiClient(provider = configuredAiProvider(), options: {timeoutMs?: number; maxRetries?: number} = {}): AiClient {
   const model = configuredAiModel(provider);
   const apiKey = requiredApiKey(provider);
   return provider === "xai"
-    ? new XaiClient(model, apiKey)
-    : new OpenAiClient(model, apiKey);
+    ? new XaiClient(model, apiKey, options)
+    : new OpenAiClient(model, apiKey, options);
 }
+

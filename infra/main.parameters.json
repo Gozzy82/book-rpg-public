@@ -26,6 +26,9 @@
     "entraClientId": {
       "value": "${BOOKRPG_ENTRA_CLIENT_ID=}"
     },
+    "entraIssuerUrl": {
+      "value": "${BOOKRPG_ENTRA_ISSUER_URL=}"
+    },
     "entraClientSecret": {
       "value": "${BOOKRPG_ENTRA_CLIENT_SECRET=}"
     },

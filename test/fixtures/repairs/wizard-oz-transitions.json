@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "sourceSha256": "200775eb4001a6c4365ee8f48878bf76d0d3eb0cf76bda70e1cb923015cc5781",
+  "evidence": [
+    {
+      "chapterPosition": 3,
+      "lineStart": 5,
+      "lineEnd": 16,
+      "text": "Dorothy lived in the midst of the great Kansas prairies, with Uncle Henry, who\nwas a farmer, and Aunt Em, who was the farmer’s wife. Their house was\nsmall, for the lumber to build it had to be carried by wagon many miles. There\nwere four walls, a floor and a roof, which made one room; and this room\ncontained a rusty looking cookstove, a cupboard for the dishes, a table, three\nor four chairs, and the beds. Uncle Henry and Aunt Em had a big bed in one\ncorner, and Dorothy a little bed in another corner. There was no garret at all,\nand no cellar—except a small hole dug in the ground, called a cyclone\ncellar, where the family could go in case one of those great whirlwinds arose,\nmighty enough to crush any building in its path. It was reached by a trap door\nin the middle of the floor, from which a ladder led down into the small, dark\nhole."
+    },
+    {
+      "chapterPosition": 3,
+      "lineStart": 58,
+      "lineEnd": 71,
+      "text": "started to get him. Aunt Em, badly frightened, threw open the trap door in the\nfloor and climbed down the ladder into the small, dark hole. Dorothy caught\nToto at last and started to follow her aunt. When she was halfway across the\nroom there came a great shriek from the wind, and the house shook so hard that\nshe lost her footing and sat down suddenly upon the floor.\nThen a strange thing happened.\nThe house whirled around two or three times and rose slowly through the air.\nDorothy felt as if she were going up in a balloon.\nThe north and south winds met where the house stood, and made it the exact\ncenter of the cyclone. In the middle of a cyclone the air is generally still,\nbut the great pressure of the wind on every side of the house raised it up\nhigher and higher, until it was at the very top of the cyclone; and there it\nremained and was carried miles and miles away as easily as you could carry a\nfeather."
+    },
+    {
+      "chapterPosition": 4,
+      "lineStart": 5,
+      "lineEnd": 20,
+      "text": "She was awakened by a shock, so sudden and severe that if Dorothy had not been\nlying on the soft bed she might have been hurt. As it was, the jar made her\ncatch her breath and wonder what had happened; and Toto put his cold little\nnose into her face and whined dismally. Dorothy sat up and noticed that the\nhouse was not moving; nor was it dark, for the bright sunshine came in at the\nwindow, flooding the little room. She sprang from her bed and with Toto at her\nheels ran and opened the door.\nThe little girl gave a cry of amazement and looked about her, her eyes growing\nbigger and bigger at the wonderful sights she saw.\nThe cyclone had set the house down very gently—for a cyclone—in the\nmidst of a country of marvelous beauty. There were lovely patches of greensward\nall about, with stately trees bearing rich and luscious fruits. Banks of\ngorgeous flowers were on every hand, and birds with rare and brilliant plumage\nsang and fluttered in the trees and bushes. A little way off was a small brook,\nrushing and sparkling along between green banks, and murmuring in a voice very\ngrateful to a little girl who had lived so long on the dry, gray prairies."
+    }
+  ],
+  "events": [
+    {
+      "eventId": "event_6518879e27a7d45555e2",
+      "expectedActions": [
+        "The house whirls, rises into the air, and is carried far away by the cyclone.",
+        "Remains seated and rides out the house's movement while waiting to see what happens."
+      ],
+      "resultingStates": [
+        {
+          "beatIndex": 0,
+          "resultingState": "The house is airborne and being carried away from Kansas; Dorothy and Toto are inside it. Aunt Em remains in the fixed cyclone cellar dug into the ground in Kansas. The house has lifted away from that cellar; Aunt Em is not aboard or below the airborne house."
+        }
+      ]
+    },
+    {
+      "eventId": "event_def33d98a9b703069e84",
+      "expectedActions": [
+        "The cyclone sets Dorothy's house down gently in a beautiful country.",
+        "Wakes, sees that the house has stopped, and opens the door to inspect the surroundings."
+      ],
+      "replacementBeats": [
+        {
+          "actor": null,
+          "action": "The house comes to rest on the ground with a sudden jolt.",
+          "resultingState": "The house has stopped moving; Dorothy lies on the bed with Toto beside her. Aunt Em remains in the cyclone cellar in Kansas, far from the house.",
+          "agency": "external",
+          "stakes": "critical",
+          "sourceReferences": [
+            {
+              "chapterPosition": 4,
+              "chapterIndex": 4,
+              "lineStart": 5,
+              "lineEnd": 7
+            },
+            {
+              "chapterPosition": 4,
+              "chapterIndex": 4,
+              "lineStart": 14,
+              "lineEnd": 15
+            }
+          ],
+          "targets": []
+        },
+        {
+          "actor": "Dorothy",
+          "action": "Wakes with a start at the sudden jolt and catches her breath.",
+          "resultingState": "Dorothy is awake on the bed inside the stationary house; the door is still closed and she has not seen the surroundings.",
+          "agency": "involuntary",
+          "stakes": "significant",
+          "sourceReferences": [
+            {
+              "chapterPosition": 4,
+              "chapterIndex": 4,
+              "lineStart": 5,
+              "lineEnd": 7
+            }
+          ],
+          "targets": []
+        },
+        {
+          "actor": "Toto",
+          "action": "Puts his cold nose into Dorothy's face and whines.",
+          "resultingState": "Toto is beside the awake Dorothy on the bed inside the stationary house.",
+          "agency": "intentional",
+          "stakes": "routine",
+          "sourceReferences": [
+            {
+              "chapterPosition": 4,
+              "chapterIndex": 4,
+              "lineStart": 7,
+              "lineEnd": 8
+            }
+          ],
+          "targets": [
+            "Dorothy"
+          ]
+        },
+        {
+          "actor": "Dorothy",
+          "action": "Sits up and notices that the house is no longer moving and sunlight fills the room.",
+          "resultingState": "Dorothy is awake and sitting up on the bed in the sunlit, stationary house. Toto is beside her; the door is closed, and the outside landscape has not been observed.",
+          "agency": "intentional",
+          "stakes": "routine",
+          "sourceReferences": [
+            {
+              "chapterPosition": 4,
+              "chapterIndex": 4,
+              "lineStart": 8,
+              "lineEnd": 10
+            }
+          ],
+          "targets": []
+        },
+        {
+          "actor": "Dorothy",
+          "action": "Gets out of bed, runs to the door with Toto following, and opens it.",
+          "resultingState": "Dorothy stands at the open doorway with Toto; she can now see the land outside the stationary house.",
+          "agency": "intentional",
+          "stakes": "significant",
+          "sourceReferences": [
+            {
+              "chapterPosition": 4,
+              "chapterIndex": 4,
+              "lineStart": 10,
+              "lineEnd": 11
+            }
+          ],
+          "targets": [
+            "Toto"
+          ],
+          "playerAction": {
+            "kind": "player_action",
+            "endBeatIndex": 5,
+            "playerBeatIndexes": [
+              4
+            ],
+            "choiceText": "Open the door and look outside.",
+            "completion": "Dorothy has opened the door and seen the surrounding landscape from the doorway.",
+            "boundaryReason": "The investigation reaches its endpoint at the view from the doorway, before approaching people create a new interaction.",
+            "preconditions": [
+              "Dorothy is awake in the stationary house.",
+              "The door is accessible."
+            ],
+            "interruptWhen": [
+              "An established obstacle prevents reaching or opening the door."
+            ]
+          },
+          "decisionBoundaryBefore": "Dorothy chooses to open the door and investigate the unfamiliar surroundings."
+        },
+        {
+          "actor": "Dorothy",
+          "action": "Looks out in amazement at the green land, fruit trees, flowers, colorful birds and nearby brook.",
+          "resultingState": "Dorothy has seen the unfamiliar landscape from the open doorway; Toto is with her. Aunt Em remains in Kansas.",
+          "agency": "involuntary",
+          "stakes": "significant",
+          "sourceReferences": [
+            {
+              "chapterPosition": 4,
+              "chapterIndex": 4,
+              "lineStart": 12,
+              "lineEnd": 20
+            }
+          ],
+          "targets": []
+        }
+      ]
+    }
+  ]
+}

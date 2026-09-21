@@ -1,0 +1,80 @@
+{
+  "proposal": {
+    "starts": [
+      {
+        "beatIndex": 0,
+        "chapterPosition": 0,
+        "line": 48,
+        "quote": "pick"
+      },
+      {
+        "beatIndex": 1,
+        "chapterPosition": 0,
+        "line": 69,
+        "quote": "“It’s a mystery,”"
+      },
+      {
+        "beatIndex": 2,
+        "chapterPosition": 0,
+        "line": 92,
+        "quote": "“I am going to the Great Oz to ask him to give me some,”"
+      },
+      {
+        "beatIndex": 3,
+        "chapterPosition": 0,
+        "line": 94,
+        "quote": "“And I am going to ask him to give me a heart,”"
+      },
+      {
+        "beatIndex": 4,
+        "chapterPosition": 0,
+        "line": 95,
+        "quote": "“And I am going to ask him to send Toto and me back to Kansas,”"
+      },
+      {
+        "beatIndex": 5,
+        "chapterPosition": 0,
+        "line": 101,
+        "quote": "“Then, if you don’t mind, I’ll go with you,”"
+      }
+    ],
+    "issues": [],
+    "preconditionIssues": []
+  },
+  "review": {
+    "preconditionIssues": [],
+    "valid": false,
+    "issues": [
+      {
+        "beatIndex": 1,
+        "kind": "prelude_contains_action",
+        "reason": "The prelude includes Dorothy's restoration of the Scarecrow and Tin Woodman before the Lion's explanation begins.",
+        "preludeQuote": "watched her pick\nup the Scarecrow and set him upon his feet, while she patted him into shape\nagain."
+      },
+      {
+        "beatIndex": 2,
+        "kind": "prelude_contains_action",
+        "reason": "The prelude includes the Lion's explanation of his fear, which is the action of beat 1, before the Scarecrow states his request.",
+        "preludeQuote": "“It’s a mystery,” replied the Lion. “I suppose I was\nborn that way."
+      },
+      {
+        "beatIndex": 3,
+        "kind": "prelude_contains_action",
+        "reason": "The prelude includes the Scarecrow's statement that he will ask Oz for brains before the Tin Woodman states his request.",
+        "preludeQuote": "“I am going to the Great Oz to ask him to give me some,” remarked\nthe Scarecrow"
+      },
+      {
+        "beatIndex": 4,
+        "kind": "prelude_contains_action",
+        "reason": "The prelude includes the Tin Woodman's statement that he will ask Oz for a heart before Dorothy states her request.",
+        "preludeQuote": "“And I am going to ask him to give me a heart,” said the Woodman."
+      },
+      {
+        "beatIndex": 5,
+        "kind": "prelude_contains_action",
+        "reason": "The prelude includes Dorothy's statement that she will ask Oz to send her and Toto back to Kansas before the Lion asks to join.",
+        "preludeQuote": "“And I am going to ask him to send Toto and me back to Kansas,”\nadded Dorothy."
+      }
+    ]
+  }
+}

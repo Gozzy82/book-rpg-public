@@ -58,6 +58,8 @@ export function parseAiJson<T>(output: string, label: string): T {
 }
 
 export interface GameEngine {
+  assessEstablishedDeaths(state: GameState): Promise<string[]>;
+  reviewResumeAnchor(state: GameState, anchor: import('../../shared/contracts.js').GameChoice): Promise<import('../../shared/contracts.js').SceneScope>;
   classifyBook(book: ImportedBook): Promise<BookGameProfile>;
   validatePlayer(state: GameState, book: ImportedBook): Promise<PlayerAvailability>;
   identifyEstablishedEvent(
@@ -126,6 +128,7 @@ export interface GeneratedScene extends Scene {
 }
 
 export interface ContinuationOptions {
+  sourceBeatSelection?: import("../../shared/contracts.js").SourceBeatSelection;
   anchorDirected?: boolean;
   choiceStakes?: ChoiceStakes;
   sourceEventId?: string;
@@ -151,6 +154,8 @@ export interface SourceContinuationCandidate {
   requiredEventBeats?: StoryEventBeat[];
   /** Exact source text keyed by chapter/index/line range for beat grounding. */
   sourceReferenceExcerpts?: Readonly<Record<string, string>>;
+  /** Source-only gaps between adjacent indexed events; never evidence of beat completion. */
+  sourceEventEntries?: Readonly<Record<string, {fromEventId: string; excerpt: string; entryExcerpt: string}>>;
   storyEvents?: Array<
     Pick<BookStoryEvent, "eventId" | "sequence" | "description" | "chapterPosition">
     & Partial<Pick<BookStoryEvent, "category" | "actors" | "targets" | "beats">>
@@ -185,3 +190,4 @@ export interface SourceEventSelection {
 export const SOURCE_EVENT_BLOCK_CHARS = 1_500;
 export const SOURCE_EVENT_BLOCK_OVERLAP_CHARS = 200;
 export const SOURCE_EVENT_MAX_LOOKAHEAD_BLOCKS = 5;
+

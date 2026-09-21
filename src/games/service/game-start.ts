@@ -1,6 +1,10 @@
+import { assertCharacterAnchorsReady } from "../../books/analyze/character-anchor-import.js";
 import type {
   SourceContinuationCandidate,
 } from "../../ai/engine.js";
+import {
+  sourceReferenceKey,
+} from "../../books/source-index/chapter-index.js";
 import {
   MIN_VERIFIED_IDENTITY_CONFIDENCE,
 } from "../../shared/contracts.js";
@@ -327,6 +331,10 @@ export function isIndividualStartingCharacter(
 }
 
 export function startingCharacterOptions(book: ImportedBook): string[] {
+  if (book.anchorImport || book.characterAnchors || book.chapters.some(c => c.sourceIndex?.extractionMode === "shared_events_v1")) {
+    try { assertCharacterAnchorsReady(book); } catch { return []; }
+    return [...book.characterAnchors!.playableCharacters];
+  }
   return canonicalStartCharacters(book)
     .filter((character) => isIndividualStartingCharacter(book, character))
     .slice(0, MAX_STARTING_CHARACTER_OPTIONS);
@@ -394,13 +402,65 @@ export function openingStorySoFar(
     .slice(-OPENING_STORY_SO_FAR_CHAPTERS);
 }
 
+function openingSourceReferenceExcerpts(
+  book: Pick<ImportedBook, "chapters">,
+  events: readonly BookStoryEvent[],
+): Readonly<Record<string, string>> | undefined {
+  const excerpts: Record<string, string> = {};
+  for (const event of events) {
+    for (const beat of event.beats ?? []) {
+      for (const reference of beat.sourceReferences) {
+        const chapter = book.chapters[reference.chapterPosition];
+        const lines = chapter?.text.trim().split(/\r?\n/);
+        if (
+          !chapter
+          || chapter.index !== reference.chapterIndex
+          || !Number.isInteger(reference.lineStart)
+          || !Number.isInteger(reference.lineEnd)
+          || reference.lineStart < 1
+          || reference.lineStart > reference.lineEnd
+          || !lines
+          || reference.lineEnd > lines.length
+        ) {
+          throw new Error(
+            `Cannot extract invalid opening beat source reference: ${JSON.stringify(reference)}`,
+          );
+        }
+        const key = sourceReferenceKey(reference);
+        excerpts[key] ??= lines
+          .slice(reference.lineStart - 1, reference.lineEnd)
+          .join("\n");
+      }
+    }
+  }
+  return Object.keys(excerpts).length > 0 ? excerpts : undefined;
+}
+
+/** Choose a source-backed participation boundary within the first event, not a played prefix. */
+export function openingPlayerBeatIndex(book: ImportedBook, event: BookStoryEvent | undefined, playerName?: string): number {
+  if (!event?.beats?.length || !playerName) return 0;
+  const references = playerSourceReferences(book, playerName);
+  if (!references.length) return 0; // Sparse indexes cannot justify omitting an opening prefix.
+  const identities = canonicalPlayerIdentities(book, playerName);
+  const firstLine = Math.min(...event.sourceReferences.filter(r => r.chapterPosition === event.chapterPosition).map(r => r.lineStart));
+  if (references.some(r => r.chapterPosition < event.chapterPosition || (r.chapterPosition === event.chapterPosition && r.lineStart <= firstLine))) return 0;
+  const index = event.beats.findIndex(beat => [beat.actor ?? '', ...(beat.targets ?? [])].some(name => identities.has(normalizedCharacterIdentity(name)))
+    && beat.sourceReferences.some(r => references.some(p => p.chapterPosition === r.chapterPosition && p.lineStart <= r.lineEnd && p.lineEnd >= r.lineStart)));
+  // Never skip an earlier indexed participation, even if its source references are incomplete.
+  if (index <= 0 || event.beats.slice(0,index).some(beat => [beat.actor ?? '', ...(beat.targets ?? [])].some(name => identities.has(normalizedCharacterIdentity(name))))) return 0;
+  return index;
+}
+
 export function canonicalGameStartContext(book: ImportedBook, playerName?: string): {
   selectedText: string;
   position: NonNullable<GameState["position"]>;
   sourceCursor: SourceCursor;
+  sourceEventProgress?: GameState["sourceEventProgress"];
   candidate: SourceContinuationCandidate;
 } {
+  assertCharacterAnchorsReady(book, playerName);
   const firstEvent = firstNarrativeStoryEventForPlayer(book, playerName);
+  const startBeatIndex = openingPlayerBeatIndex(book, firstEvent, playerName);
   const playerReference = firstEvent
     ? undefined
     : earliestPlayerSourceReference(book, playerName);
@@ -414,8 +474,8 @@ export function canonicalGameStartContext(book: ImportedBook, playerName?: strin
   }
 
   const chapter = book.chapters[chapterPosition]!;
-  const references = firstEvent?.sourceReferences
-    .filter((reference) => reference.chapterPosition === chapterPosition)
+  const references = (startBeatIndex > 0 ? firstEvent?.beats?.slice(startBeatIndex).flatMap(beat => beat.sourceReferences) : firstEvent?.sourceReferences)
+    ?.filter((reference) => reference.chapterPosition === chapterPosition)
     ?? (playerReference ? [playerReference] : []);
   const lineStart = references.length > 0
     ? Math.min(...references.map((reference) => reference.lineStart))
@@ -464,6 +524,7 @@ export function canonicalGameStartContext(book: ImportedBook, playerName?: strin
   );
   const sourceCursor: SourceCursor = { chapterPosition, textOffset };
   const storySoFar = openingStorySoFar(book, chapterPosition, firstEvent);
+  const sourceReferenceExcerpts = openingSourceReferenceExcerpts(book, openingEvents);
   const orderedEvents: NonNullable<SourceContinuationCandidate["storyEvents"]> =
     openingEvents.map((event) => ({
       eventId: event.eventId,
@@ -501,6 +562,7 @@ export function canonicalGameStartContext(book: ImportedBook, playerName?: strin
       progress: 0,
     },
     sourceCursor,
+    ...(startBeatIndex > 0 && firstEvent ? {sourceEventProgress: {eventId: firstEvent.eventId, startBeatIndex, completedBeatIndexes: []}} : {}),
     candidate: {
       chapterPosition,
       chapterTitle: chapter.title,
@@ -511,7 +573,9 @@ export function canonicalGameStartContext(book: ImportedBook, playerName?: strin
       nextTextOffset,
       ...(orderedEvents.length > 0 ? { storyEvents: orderedEvents } : {}),
       ...(orderedEvents[0] ? { currentStoryEvent: orderedEvents[0] } : {}),
+      ...(sourceReferenceExcerpts ? { sourceReferenceExcerpts } : {}),
       ...(unavailableCharacters.length > 0 ? { unavailableCharacters } : {}),
     },
   };
 }
+

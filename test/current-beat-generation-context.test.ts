@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  withoutOpeningPreludeInstructions,
   withCurrentBeatOnlyGenerationContext,
 } from "../src/ai/engine/provider-bookrpg-engine.js";
 
@@ -32,6 +33,7 @@ const gameContext = {
     next_required_beat: {
       actor: "Scarecrow",
       action: "Asks Dorothy to remove the pole from his back.",
+      automaticPreludeSourceExcerpt: "CURRENT BEAT PRELUDE ONLY",
       sourceReferencesExcerpt: "CURRENT BEAT SOURCE ONLY",
     },
     remaining_beats: [
@@ -92,10 +94,83 @@ function request() {
   };
 }
 
-test("generation context exposes only the current beat source material", () => {
+function openingRequest() {
+  const openingContext = structuredClone(gameContext) as typeof gameContext & {
+    source_guidance_mode?: string;
+  };
+  openingContext.source_guidance_mode = "optional_opening_reference";
+  openingContext.next_significant_event_progress.completed_beat_indexes = [];
+  openingContext.next_significant_event_progress.completed_beats = [];
+  openingContext.next_significant_event_progress.next_required_beat = {
+    actor: "Uncle Henry",
+    action: "Recognizes that a cyclone is coming.",
+    automaticPreludeSourceExcerpt: "SAFE PRE-PLAYER SOURCE CONTEXT",
+    sourceReferencesExcerpt:
+      "CURRENT BEAT SOURCE ... Dorothy caught Toto and started toward the cellar.",
+  } as unknown as typeof openingContext.next_significant_event_progress.next_required_beat;
+  openingContext.next_significant_event_progress.remaining_beats = [
+    {
+      actor: "Uncle Henry",
+      action: "Recognizes that a cyclone is coming.",
+      sourceReferencesExcerpt: "PRELUDE SOURCE 0",
+    },
+    {
+      actor: "Uncle Henry",
+      action: "Runs to the sheds.",
+      sourceReferencesExcerpt: "PRELUDE SOURCE 1",
+    },
+    {
+      actor: "Aunt Em",
+      action: "Comes to the door.",
+      sourceReferencesExcerpt: "PRELUDE SOURCE 2",
+    },
+    {
+      actor: "Aunt Em",
+      action: "Orders Dorothy to the cellar.",
+      sourceReferencesExcerpt: "PRELUDE SOURCE 3",
+    },
+    {
+      actor: "Toto",
+      action: "Hides under the bed.",
+      sourceReferencesExcerpt: "PRELUDE SOURCE 4",
+    },
+    {
+      actor: "Dorothy",
+      action: "Starts after Toto.",
+      sourceReferencesExcerpt: "PLAYER BOUNDARY SOURCE MUST STAY HIDDEN",
+    },
+    {
+      actor: "Aunt Em",
+      action: "Climbs into the cellar.",
+      sourceReferencesExcerpt: "POST BOUNDARY SOURCE MUST STAY HIDDEN",
+    },
+  ] as typeof openingContext.next_significant_event_progress.remaining_beats;
+  openingContext.opening_player_future_actions = [
+    {
+      action: "Starts after Toto.",
+      source_excerpt: "PLAYER BOUNDARY SOURCE MUST STAY HIDDEN",
+      beat_index: 5,
+    },
+  ] as unknown as typeof openingContext.opening_player_future_actions;
+
+  return {
+    ...request(),
+    input: [
+      "Start the opening.",
+      "",
+      "GAME CONTEXT:",
+      JSON.stringify(openingContext, null, 2),
+      "",
+      "AFTER CONTEXT: keep this suffix",
+    ].join("\n"),
+  };
+}
+
+test("scene generation hides broad current-beat source prose but keeps automatic prelude context", () => {
   const restricted = withCurrentBeatOnlyGenerationContext("scene", request());
 
-  assert.match(restricted.input, /CURRENT BEAT SOURCE ONLY/);
+  assert.doesNotMatch(restricted.input, /CURRENT BEAT SOURCE ONLY/);
+  assert.match(restricted.input, /CURRENT BEAT PRELUDE ONLY/);
   assert.match(restricted.input, /The door \{is still open\} behind me\./);
   assert.match(restricted.input, /AFTER CONTEXT: keep this suffix/);
 
@@ -115,6 +190,43 @@ test("generation context exposes only the current beat source material", () => {
   assert.doesNotMatch(restricted.instructions ?? "", /next_player_future_actions/);
   assert.match(restricted.instructions ?? "", /next_significant_event_progress\.next_required_beat/);
   assert.match(restricted.instructions ?? "", /Keep history authoritative/);
+});
+
+test("opening generation keeps every prelude beat source excerpt and hides the player boundary", () => {
+  const restricted = withCurrentBeatOnlyGenerationContext("scene", openingRequest());
+
+  assert.doesNotMatch(restricted.input, /Dorothy caught Toto and started toward the cellar/);
+  for (const index of [0, 1, 2, 3, 4]) {
+    assert.match(restricted.input, new RegExp(`PRELUDE SOURCE ${index}`));
+  }
+  assert.doesNotMatch(restricted.input, /PLAYER BOUNDARY SOURCE MUST STAY HIDDEN/);
+  assert.doesNotMatch(restricted.input, /POST BOUNDARY SOURCE MUST STAY HIDDEN/);
+  assert.doesNotMatch(restricted.input, /upcoming_source_material/);
+  assert.match(restricted.input, /SAFE PRE-PLAYER SOURCE CONTEXT/);
+  assert.match(restricted.input, /The storm winds rise across the prairie|Recognizes that a cyclone is coming/);
+});
+
+test("opening boundary input drops phase-1 prelude instructions but keeps the structured player boundary", () => {
+  const input = [
+    "Start opening.",
+    "OPENING PRELUDE: visibly narrate all 5 ordered beats below.",
+    "PRELUDE BEAT 0 — Uncle Henry: warns Aunt Em.",
+    "PRELUDE BEAT 1 — Uncle Henry: runs to the sheds.",
+    "PRELUDE TARGET: keep phase-1 prose short.",
+    "The opening has a structured player-decision boundary.",
+    '{"kind":"first_unselected_player_beat","action":"Starts after Toto","mustRemainUnperformed":true}',
+    "Stop before the player action.",
+  ].join("\n");
+
+  const boundaryInput = withoutOpeningPreludeInstructions(input);
+
+  assert.doesNotMatch(boundaryInput, /OPENING PRELUDE:/);
+  assert.doesNotMatch(boundaryInput, /PRELUDE BEAT/);
+  assert.doesNotMatch(boundaryInput, /PRELUDE TARGET/);
+  assert.match(boundaryInput, /structured player-decision boundary/);
+  assert.match(boundaryInput, /first_unselected_player_beat/);
+  assert.match(boundaryInput, /Starts after Toto/);
+  assert.match(boundaryInput, /Stop before the player action/);
 });
 
 test("current-beat restriction applies to player-facing generation calls", () => {
@@ -138,4 +250,11 @@ test("review and source-selection requests retain their original context", () =>
 
   assert.equal(untouched, original);
   assert.match(untouched.input, /UPCOMING SOURCE MATERIAL/);
+});
+
+test("planned generation removes the legacy single-beat progress projection", () => {
+  const prepared = withCurrentBeatOnlyGenerationContext("scene", request(), true);
+  assert.doesNotMatch(prepared.input, /"next_significant_event_progress"/);
+  const legacy = withCurrentBeatOnlyGenerationContext("scene", request());
+  assert.match(legacy.input, /"next_significant_event_progress"/);
 });

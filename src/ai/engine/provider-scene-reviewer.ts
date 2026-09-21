@@ -1,3 +1,7 @@
+import {SCENE_DEATH_POLICY} from '../../shared/scene-deaths.js';
+import { SOURCE_CONTINUATION_CHOICE_ID } from "../../shared/contracts.js";
+import { spokenDialogueCapabilityFailure } from "../../shared/character-dynamics.js";
+import { currentTurnExecution, planTurn } from "./turn-contract.js";
 import { flowDiagnostic } from "../../util/flow-trace.js";
 import type {
   GameState,
@@ -43,6 +47,7 @@ import {
 } from "./scene-context.js";
 import type {
   CompletedSceneAction,
+  ChoiceRejectionFeedback,
   DialogueSceneReviewContext,
   SceneChoiceReview,
   SceneRepetitionReview,
@@ -68,7 +73,7 @@ import {
   sourceEventCanOccurWithoutPlayerChoice,
   sourceEventPlayerChoiceBeats,
   sourceEventNextPlayerChoiceBeats,
-  sourceEventRequiresExplicitPlayerChoice,
+  sourceEventHasReadyPlayerChoice,
   buildRequiredPlayerChoiceFallback,
   buildSourceChoiceNavigationContext,
   buildSourceEventBeatProgressContext,
@@ -87,15 +92,17 @@ export function contiguousReportedSourceBeatIndexes(
   previousIndexes: readonly number[],
   reportedIndexes: readonly number[],
   beatCount: number,
+  startBeatIndex = 0,
 ): number[] {
   const explicitlyCompleted = new Set(
     [...previousIndexes, ...reportedIndexes].filter(
-      (index) => Number.isInteger(index) && index >= 0 && index < beatCount,
+      (index) => Number.isInteger(index) && index >= startBeatIndex && index < beatCount,
     ),
   );
   const normalized = normalizeCompletedSourceEventBeatIndexes(
     [...explicitlyCompleted],
     beatCount,
+    startBeatIndex,
   );
   const firstImplicitIndex = normalized.findIndex(
     (index) => !explicitlyCompleted.has(index),
@@ -198,8 +205,6 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
         "Decide whether candidate_scene substantially repeats any recent_prior_scene instead of advancing beyond it.",
         "Set repeatsPriorScene true when the candidate reenacts or restates the same arrival, setup, actions, conversation beat, revealed information, character positions, decision point, or distinctive imagery, even if it uses synonyms, reordered prose, or added atmosphere.",
         "A vague hint, intention, mood shift, or promise of later action is not meaningful advancement when the same interaction and world state remain in place.",
-        "Do not mark repetition merely because the same characters, room, ongoing conflict, or necessary continuity details remain. Set repeatsPriorScene false when the latest input receives a concrete new response, fact, consequence, obstacle, opportunity, or other observable state change.",
-        "A new substantive NPC response directly caused by latest_input is meaningful advancement, including an answer, refusal, disclosure, commitment, threat, emotional reversal, relationship shift, physical reaction, or concrete conversational consequence.",
         "When latest_input asks, commands, requests, challenges, threatens, or otherwise addresses an NPC, judge the immediate substantive response as a new beat even when the same conflict, topic, or relationship interaction continues.",
         "Never use failure to reach REQUIRED NEXT EVENT, or mere distance from that event, as evidence that a directly caused NPC response repeats prior narrative state. On an ordinary turn, the next source event may remain future.",
         ...(dialogueTurn
@@ -214,8 +219,6 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
           : []),
         "The latest_input has already been selected, spoken, initiated, or requested. The candidate may show its execution once, but it must not replay the previous scene before resolving it.",
         "Also decide whether candidate_scene faithfully resolves immediate_transition.latest_input while keeping player_identity as the player and preserving who does what to whom.",
-        "Treat player_identity and every name in player_identity_aliases as the same player-controlled person, never as a separate non-player character.",
-        "Player-facing narration in candidate_scene.text must use first-person singular for player_identity: I, me, and my. Non-player dialogue may address the player as you, but narration must not use you for the player or describe the player by name or third-person pronouns.",
         "Assess that rule independently in preservesPlayerPerspective. Resolve who the first-person narrator actually is from dialogue attribution, actions, possessions, relationships, and pronoun referents; the mere presence of I, me, or my is not enough.",
         "Set preservesPlayerPerspective false when an NPC is the apparent first-person narrator, or when the narrator observes, names, or refers to player_identity or one of their aliases as he, she, they, him, her, them, his, or their. For example, if player_identity entrusts something to an NPC, narration from the player cannot call it 'his trust' or say that the player 'nods back'.",
         "Use playerPerspectiveFailureReason only to identify the concrete phrase or referent that switches viewpoint. Set it to an empty string when preservesPlayerPerspective is true.",
@@ -240,7 +243,7 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
         "For a selected option to stay, wait, watch, rehearse, prepare, or ready for an explicitly imminent event, require the bounded behavior to complete and one concrete next observable beat to occur. An independently occurring arrival, NPC action, or world event does not violate player agency or turn scope.",
         "If such a low-motion option ends in the same waiting or preparation state with no observable change, mark repetition true, but do not mark the other continuity fields false unless separate specific evidence supports each failure.",
         "For scene_continuation, also do not count the unchanged mechanical continuation of player activity already visibly in progress in previous_scene as a new decision. Any escalation, redirection, new speech, or other added intent is a new unselected player action.",
-        "Assess turn pacing independently. Set staysWithinTurnScope false when the candidate resolves latest_input and then also completes another menu-worthy player action, a second major plot beat, or a substantial time/location transition that should have been the next decision.",
+        "Assess turn pacing independently. Set staysWithinTurnScope false when the candidate resolves latest_input and then also completes another unselected menu-worthy player action, an unrelated major plot beat outside a supplied automatic window, or an unauthorized substantial time/location transition that should have been the next decision.",
         "Judge perspective, continuity, agency, and turn-scope independently. Repetition or lack of advancement alone does not prove that perspective switched, the latest input was changed, an unselected player action occurred, or the turn advanced too far; set each field false only when candidate_scene contains specific evidence for that separate failure.",
         "Use latestInputFailureReason only for a concrete omission, contradiction, identity change, or actor/target reversal. Use playerAgencyFailureReason only to name the specific consequential voluntary player action candidate_scene performs without selection. Use turnScopeFailureReason only to name the specific second player action, later major plot beat, substantial transition, or skipped causal prerequisite that makes candidate_scene advance beyond the established timeline.",
         "Set each dedicated failure reason to an empty string when its corresponding boolean is true. Repetition, merely leaving a source event in the future, or an NPC beat awaiting player response must never be copied into these dedicated failure reasons.",
@@ -386,11 +389,12 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
             && typeof review.requiredEventOccurred === "boolean"
             && typeof review.reason === "string"
           ) {
-            const normalizedReview = normalizeIndependentReviewFailures({
+            const assessedReview = {
               ...review,
               reason: review.reason.trim() || "No additional semantic review rationale was provided.",
-            });
-            return requiredSourceEvent && normalizedReview.requiredEventOccurred
+            };
+            const normalizedReview = this.centralReviewValidation ? assessedReview : normalizeIndependentReviewFailures(assessedReview);
+            return !this.centralReviewValidation && requiredSourceEvent && normalizedReview.requiredEventOccurred
               ? {
                   ...normalizedReview,
                   repeatsPriorScene: false,
@@ -438,6 +442,23 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
     completedSourceEventId?: string,
     completedAction?: CompletedSceneAction,
   ): Promise<SceneChoiceReview> {
+    // Source continuation is an engine control, not a voluntary player action.
+    // Review only player choices and translate the assessment back to menu indexes.
+    const playerChoices = candidate.choices.flatMap((choice, index) =>
+      choice.id === SOURCE_CONTINUATION_CHOICE_ID ? [] : [{ choice, index }],
+    );
+    if (playerChoices.length === 0) {
+      return {
+        anchorChoiceIndex: null,
+        unusableChoiceIndexes: [],
+        unusableChoicesReason: "",
+        reason: "No voluntary player choices to review.",
+      };
+    }
+    const reviewCandidate = {
+      ...candidate,
+      choices: playerChoices.map(({ choice }) => choice),
+    };
     const choiceNavigationEvent = buildSourceChoiceNavigationContext(
       sourceCandidate,
       state.playerName,
@@ -492,20 +513,20 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
         "Treat a choice that violates the choice-timeline rules or phrases the player's action as a third-person finite verb rather than a direct selectable action as unusable.",
         "player_identity is the actor of every choice regardless of the character metadata field. That field can name a required non-player participant, but never transfers the choice's action to that participant.",
         "player_identity is physically present at candidate_scene.sceneScope.currentLocation by definition and belongs in both peoplePresent and peopleWithinSpeakingDistance. Never classify the player as absent for that reason.",
-        "UPCOMING SOURCE ANCHOR MATERIAL's excerpt is authoritative when compact event metadata obscures who speaks to whom. Reject a choice that turns an indirect question about an absent character into direct speech to that character.",
         "Also return every choice index that reenacts, restates, reconfirms, rehearses, or merely continues an action, movement, decision, disclosure, arrival, departure, or relationship change already completed in candidate_scene. A paraphrase remains unusable even when it calls the replay 'affirming', 'solidifying', or 'finishing' the completed result.",
         "candidate_scene.playerAction and candidate_scene.actionResult are hidden completed-turn metadata when present. Use them together with candidate_scene.text, development, and outcomeReason to reject replay choices; never expose the metadata field names in the rationale.",
-        "Calling out for an absent character or listening, watching, or searching for possible signs of them does not treat them as interactive when the choice does not assume they hear, answer, arrive, or otherwise participate.",
+        "Apply the shared choice execution policy to usability too: report semantic duplicates and choices requiring unsupported verbal capabilities in unusableChoiceIndexes. For duplicates retain the earliest otherwise usable choice and flag later equivalents.",
+        "Assess physical feasibility from the scene's final state and established capabilities. Report choices requiring currently impossible movement in unusableChoiceIndexes. Distinguish actual paralysis, restraint, rust or injury from memories, fears, negation and limitations already resolved in this scene. An attempt to move may remain executable without guaranteeing success; asking for help need not require walking. Do not infer ability or inability from a keyword alone.",
         "Judge the choice wording itself rather than trusting its requiredPresentCharacters or requiredAbsentCharacters classification. Leave unusableChoiceIndexes empty when every choice is immediately executable from candidate_scene.sceneScope and prose.",
         "Explain the concrete choice/state contradiction briefly in unusableChoicesReason, or use an empty string when no choice is unusable.",
         "Give a concise reason of no more than 40 words for the selected anchor route, or explain why no choice qualifies.",
       ].join("\n"),
       input: [
-        buildSceneChoiceReviewContext(state, candidate, completedAction),
+        buildSceneChoiceReviewContext(state, reviewCandidate, completedAction),
         "CHOICE NAVIGATION EVENT:",
         JSON.stringify(remainingChoiceNavigationEvent ? {
           ...remainingChoiceNavigationEvent,
-          requiresExplicitPlayerChoice: sourceEventRequiresExplicitPlayerChoice(
+          requiresExplicitPlayerChoice: sourceEventHasReadyPlayerChoice(
             remainingChoiceNavigationEvent,
             state.playerName,
             state.characterProfiles,
@@ -567,13 +588,13 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
             || (
               Number.isInteger(review.anchorChoiceIndex)
               && review.anchorChoiceIndex >= 0
-              && review.anchorChoiceIndex < candidate.choices.length
+              && review.anchorChoiceIndex < playerChoices.length
             );
           const validUnusableIndexes = Array.isArray(review.unusableChoiceIndexes)
             && review.unusableChoiceIndexes.every((index) =>
               Number.isInteger(index)
               && index >= 0
-              && index < candidate.choices.length
+              && index < playerChoices.length
             );
           if (
             validAnchor
@@ -583,10 +604,11 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
           ) {
             return {
               ...review,
-              anchorChoiceIndex: automaticOrderedSourceBoundary
+              anchorChoiceIndex: automaticOrderedSourceBoundary || review.anchorChoiceIndex === null
                 ? null
-                : review.anchorChoiceIndex,
-              unusableChoiceIndexes: [...new Set(review.unusableChoiceIndexes)],
+                : playerChoices[review.anchorChoiceIndex]!.index,
+              unusableChoiceIndexes: [...new Set(review.unusableChoiceIndexes)]
+                .map((index) => playerChoices[index]!.index),
               unusableChoicesReason: review.unusableChoicesReason.trim(),
               reason: review.reason.trim() || "No semantic choice-review rationale was provided.",
             };
@@ -630,13 +652,14 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
           candidateEvent.eventId === event.eventId
         ) === index,
     );
-    const eventReviewTarget = eventReviewTargetId
-      ? orderedSourceEvents.find((event) => event.eventId === eventReviewTargetId)
+    const reviewTargetId = eventReviewTargetId ?? (this.centralReviewValidation ? currentTurnExecution()?.contract.eventId ?? undefined : undefined);
+    const eventReviewTarget = reviewTargetId
+      ? orderedSourceEvents.find((event) => event.eventId === reviewTargetId)
         ?? (
-          sourceCandidates[0]?.requiredEventId === eventReviewTargetId
+          sourceCandidates[0]?.requiredEventId === reviewTargetId
           && sourceCandidates[0]?.requiredEvent
             ? {
-                eventId: eventReviewTargetId,
+                eventId: reviewTargetId,
                 description: sourceCandidates[0].requiredEvent,
                 chapterPosition: sourceCandidates[0].chapterPosition,
                 category: sourceCandidates[0].requiredEventCategory,
@@ -674,7 +697,7 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
       eventId: futureActionEvent?.eventId ?? null,
       beatIndex: Math.max(
         0,
-        (futureActionProgress?.completedBeatIndexes.length ?? 0)
+        ((futureActionProgress?.startBeatIndex ?? 0) + (futureActionProgress?.completedBeatIndexes.length ?? 0))
           + (futureActionProgress?.remainingBeats.indexOf(beat) ?? 0),
       ),
       action: beat.action,
@@ -683,20 +706,24 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
       agency: beat.agency,
       stakes: beat.stakes,
     }));
+    const planned = currentTurnExecution()?.contract;
+    const contract = planned && planned.eventId === (eventReviewTarget?.eventId ?? null) ? planned : planTurn({
+      state, event: eventReviewTarget, mode: openingProgressionReview ? "opening" : "action",
+      selectedIntent: planned?.selectedIntent ?? undefined,
+      sourceProgression: planned?.sourceProgression,
+      sourceReferenceExcerpts: sourceCandidates[0]?.sourceReferenceExcerpts,
+    });
     const request: AiResponseRequest = {
+      ...(this.centralReviewValidation ? { turnContract: contract } : {}),
       model: this.model,
       reasoning: { effort: "low" },
       instructions: [
+        SCENE_DEATH_POLICY,
         "You are the authoritative physical-presence reviewer for an interactive story scene.",
-        "Return player_identity exactly once in both lists, plus living non-player characters whose physical presence at candidate_scene.sceneScope.currentLocation is confirmed at the end of candidate_scene.text.",
-        "A name mentioned in memory, anticipation, plans, narration about elsewhere, an uncertain sound, or a future/conditional arrival does not establish presence.",
-        "Do not treat question-marked or qualified identities such as 'Patrick?', 'maybe Patrick', or 'apparently Patrick' as confirmed.",
-        "A character is within speaking distance only when they are confirmed present and can immediately hear and answer the player without movement, opening a door, entering another room, arriving, or another transition.",
-        "Exclude corpses, dead NPCs, departed NPCs, and explicitly_unavailable NPCs.",
-        "Include player_identity using one canonical name in both returned lists, even for a nonhuman player. This records spatial presence, not human speech or NPC status. The player is physically present at candidate_scene.proposed_scene_scope.currentLocation; omission from peoplePresent never means the player is absent or unable to act. Assess the player's posture, location, and physical prerequisites from candidate_scene.text.",
+        "Determine peoplePresent and peopleWithinSpeakingDistance from the actual end state of the visible scene and established continuity. Mere mention, memory, wishes, hypothetical/future arrivals, and plans to return home do not change presence. A character standing here discussing returning home remains here.",
+        "Preserve established nearby participants unless the scene establishes departure, separation, or another real change. Ordinary nearby conversation establishes speaking distance without a literal distance statement. Presence alone does not imply reach through a barrier or between separate rooms.",
+        "A previously absent living person may become present through a supported arrival in this scene. Judge that transition semantically; do not require a named arrival verb or a literal quotation. Future source events do not establish a current arrival.",
         "CURRENT SIGNIFICANT EVENT is structured authoritative state and overrides ambiguous prose.",
-        "Use exact unqualified names from character_profiles when a matching profile exists.",
-        "Do not infer presence merely because proposed_scene_scope lists a character; review that proposal against the prose and prior state.",
         "When event_review_target_mode is 'scene_completion', review only that exact event. Return its eventId only when previous completed beats plus candidate_scene.text and any explicitly selected matching candidate_scene.player_action complete its description and every listed beat; otherwise return null. Previously completed beats need not be repeated. Never return another event as a substitute.",
         "When event_review_target_mode is 'opening_progression', the target event and its beats are future narrative structure, not pre-completed state. Count only beats visibly completed in candidate_scene and return its eventId only when every beat is complete.",
         "In opening_progression mode, the scene may legitimately stop before the first meaningful player-controlled beat. Preserve that beat as a future choice; never mark it complete merely because the scene establishes its physical prerequisite.",
@@ -716,6 +743,11 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
         "Infer concrete prerequisite state from the future action, but do not confuse the action with its prerequisite. If a Scarecrow's future beat is to wink and nod at Dorothy from his pole, the scene must visibly place him on the pole with Dorothy able to notice him; it must not depict the wink or nod as already performed.",
         "When futureActionSetupRequired is false, set futureActionSetupSupported true. Explain the confirmed setup, incompatibility, already-authorized action, or missing prerequisite concisely in futureActionSetupReason.",
         "previous_completed_source_event_beat_indexes is authoritative completed state. Do not repeat those indexes in completedSourceEventBeatIndexes; report only additional beats completed by candidate_scene.",
+        ...(this.centralReviewValidation ? [
+          "Report a compound beat as partiallyPerformedSourceEventBeatIndexes when any constituent act is performed but others remain future. Catching Toto already partially performs 'catch Toto and follow Aunt Em', even if Dorothy has not followed her yet. Intention alone is not performance, but reaching to retrieve him or already holding him is observable action/state.",
+          "Check every claimed beat against candidate_scene.text independently. The event_review_target, source_excerpt, resultingState and hidden scene summaries are verification references, never proof that the candidate depicts them. Do not credit an entire event from its general title or threat.",
+          "In the reason, identify the concrete missing constituent action of each incomplete mandatory beat. Preserve both completed and partially performed observations, including forbidden player acts; do not omit evidence to protect the cursor.",
+        ] : []),
         "When next_required_source_event_beat is present, assess that exact beat explicitly before considering later beats or future-action setup. Include its index when candidate_scene.text visibly enacts its action, including clear continuous movement such as entering, continuing into, or moving deeper into a named location.",
         "Add a meaningful player-controlled beat when candidate_scene.player_action explicitly selects or performs that same source action; the scene text is expected to begin at its consequence and need not restate the selected action verbatim.",
         "Never mark a player-controlled beat complete merely because a later NPC, external, involuntary, or routine consequence appears. A player beat must already be in previous_completed_source_event_beat_indexes, be visibly completed in candidate_scene.text, or be explicitly authorized by matching candidate_scene.player_action.",
@@ -731,6 +763,7 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
       ].join("\n"),
       input: JSON.stringify({
         player_identity: state.playerName,
+        runtime_parameters: state.parameters ?? [],
         character_profiles: (state.characterProfiles ?? []).map((profile) => ({
           name: profile.name,
           aliases: profile.aliases,
@@ -752,6 +785,7 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
           nextRequiredSourceEventBeatReviewContext(
             eventReviewTarget,
             previousCompletedEventBeatIndexes,
+            state.sourceEventProgress?.eventId === eventReviewTarget?.eventId ? state.sourceEventProgress?.startBeatIndex ?? 0 : 0,
           ),
         future_player_actions: futurePlayerActions,
         source_excerpt: sourceCandidates[0]?.excerpt ?? "",
@@ -773,10 +807,19 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
           type: "json_schema",
           name: "bookrpg_scene_presence_review",
           strict: true,
-          schema: scenePresenceReviewJsonSchema,
+          schema: this.centralReviewValidation ? {
+            ...scenePresenceReviewJsonSchema,
+            properties: {...scenePresenceReviewJsonSchema.properties,
+              partiallyPerformedSourceEventBeatIndexes: {type: "array", items: {type: "integer", minimum: 0}, maxItems: 32,
+                description: "Beat indexes whose action is visibly begun or partly performed, but not fully completed. Include partial unselected player acts; never credit these as complete."},
+            },
+            required: [...scenePresenceReviewJsonSchema.required, "partiallyPerformedSourceEventBeatIndexes"],
+          } : scenePresenceReviewJsonSchema,
         },
       },
     };
+    let openingProgressRecheckInstruction = "";
+    let openingProgressRecheckUsed = false;
     for (
       let attempt = 0;
       attempt < SCENE_PRESENCE_REVIEW_OUTPUT_TOKENS.length;
@@ -784,6 +827,10 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
     ) {
       const response = await this.createResponse("scene presence review", state.book.bookId, {
         ...request,
+        instructions: [
+          request.instructions,
+          openingProgressRecheckInstruction,
+        ].filter(Boolean).join("\n"),
         max_output_tokens: SCENE_PRESENCE_REVIEW_OUTPUT_TOKENS[attempt],
       });
       let failure: Error | undefined;
@@ -807,11 +854,13 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
               ? review.completedSourceEventBeatIndexes
               : [];
           const beatCount = eventReviewTarget?.beats?.length ?? 0;
+          const startBeatIndex = state.sourceEventProgress?.eventId === eventReviewTarget?.eventId ? state.sourceEventProgress?.startBeatIndex ?? 0 : 0;
           review.completedSourceEventBeatIndexes =
             contiguousReportedSourceBeatIndexes(
               previousCompletedBeatIndexes,
               reportedCompletedBeatIndexes,
               beatCount,
+              startBeatIndex,
             );
           review.latestVisibleSourceEventId =
             reviewedSourceEventIdForBeatProgress(
@@ -819,21 +868,63 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
               review.latestVisibleSourceEventId,
               review.completedSourceEventBeatIndexes,
               beatCount,
+              startBeatIndex,
             );
           if (
             eventReviewTarget?.eventId
             && reportedCompletedBeatIndexes.length > 0
             && beatCount > 0
-            && review.completedSourceEventBeatIndexes.length === beatCount
+            && review.completedSourceEventBeatIndexes.length + startBeatIndex === beatCount
           ) {
             review.latestVisibleSourceEventId = eventReviewTarget.eventId;
           }
-          if (futurePlayerActions.length === 0 || futurePlayerActions.every(
+          if (!review.turnValidation && (futurePlayerActions.length === 0 || futurePlayerActions.every(
             (action) => review!.completedSourceEventBeatIndexes.includes(action.beatIndex),
-          )) {
+          ))) {
             review.futureActionSetupRequired = false;
             review.futureActionSetupSupported = true;
             review.futureActionSetupReason = "No uncompleted player action remains in the reviewed event.";
+          }
+
+          const firstOpeningPlayerBeatIndex = openingProgressionReview
+            ? futurePlayerActions
+                .map((action) => action.beatIndex)
+                .filter((index) => Number.isInteger(index) && index >= 0)
+                .sort((left, right) => left - right)[0]
+            : undefined;
+          const completedOpeningBeatIndexes = new Set([
+            ...previousCompletedEventBeatIndexes,
+            ...review.completedSourceEventBeatIndexes,
+          ]);
+          let completedOpeningPrefixLength = 0;
+          while (
+            completedOpeningPrefixLength < (firstOpeningPlayerBeatIndex ?? 0)
+            && completedOpeningBeatIndexes.has(completedOpeningPrefixLength)
+          ) {
+            completedOpeningPrefixLength += 1;
+          }
+          if (
+            firstOpeningPlayerBeatIndex !== undefined
+            && firstOpeningPlayerBeatIndex > 0
+            && completedOpeningPrefixLength < firstOpeningPlayerBeatIndex
+            && !openingProgressRecheckUsed
+            && (!review.turnValidation || review.turnValidation.findings.every(
+              finding => finding.code === "missing_required_progress" || finding.code === "out_of_order_progress",
+            ))
+          ) {
+            openingProgressRecheckUsed = true;
+            openingProgressRecheckInstruction = [
+              "OPENING PROGRESS RECHECK:",
+              `The previous parseable review omitted one or more ordered opening prelude beats before player beat ${firstOpeningPlayerBeatIndex}.`,
+              `Re-read candidate_scene.text and explicitly reassess prelude beats ${completedOpeningPrefixLength}-${firstOpeningPlayerBeatIndex - 1} one by one.`,
+              "Credit a beat when its action is visibly enacted with semantically equivalent wording; do not require a verbatim phrase match.",
+              "Do not require or complete the future player beat or any later beat. Return only the visibly completed contiguous opening prefix.",
+            ].join("\n");
+            flowDiagnostic(
+              `${this.client.provider} scene presence review omitted opening prelude progress; rechecking once before regenerating the scene.`,
+            );
+            attempt -= 1;
+            continue;
           }
         } catch (error) {
           if (!(error instanceof InvalidAiJsonError)) throw error;
@@ -875,14 +966,15 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
     consumedAction?: string,
     completedSourceEventId?: string,
     initialAcceptedChoices: Scene["choices"] = [],
-    initialRejectedChoices: string[] = [],
+    initialRejectedChoices: Array<string | ChoiceRejectionFeedback> = [],
     explicitlyUnavailableCharacters: readonly string[] = sourceCandidates.flatMap(
       (candidate) => candidate.unavailableCharacters ?? [],
     ),
     completedAction?: CompletedSceneAction,
+    alternativesOnly = false,
   ): Promise<Scene["choices"]> {
     const maxAttempts = 4;
-    const nextSignificantEvent = buildSourceChoiceNavigationContext(
+    const nextSignificantEvent = alternativesOnly ? null : buildSourceChoiceNavigationContext(
       sourceCandidates[0],
       state.playerName,
       state.characterProfiles,
@@ -907,7 +999,7 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
       state.playerName,
       state.characterProfiles,
     );
-    const requiresExplicitPlayerChoice = sourceEventRequiresExplicitPlayerChoice(
+    const requiresExplicitPlayerChoice = sourceEventHasReadyPlayerChoice(
       remainingNextSignificantEvent,
       state.playerName,
       state.characterProfiles,
@@ -917,7 +1009,8 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
       state.playerName,
       state.characterProfiles,
     );
-    let rejectedChoices = [...initialRejectedChoices];
+    let rejectedChoices: ChoiceRejectionFeedback[] = initialRejectedChoices.map(choice =>
+      typeof choice === "string" ? {text: choice, role: "unknown", reason: "Rejected by an earlier executability filter; reassess against the visible setting."} : choice);
     let acceptedChoices = [...initialAcceptedChoices];
     let filteredAnchorRetryConsumed = false;
     const requiredPlayerFallbackChoices = (
@@ -928,6 +1021,7 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
         state.playerName,
         state.characterProfiles,
         setting.sceneScope,
+        currentTurnExecution()?.contract.nextPlayerAction?.choiceText,
       );
       if (!fallback) return choices;
       const combined = removeDuplicateChoices({
@@ -940,7 +1034,8 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
           .map((name) => name.normalize("NFKC").trim().toLocaleLowerCase()),
       );
       const talkTarget = setting.sceneScope?.peopleWithinSpeakingDistance.find(
-        (name) => !playerIdentities.has(name.normalize("NFKC").trim().toLocaleLowerCase()),
+        (name) => !playerIdentities.has(name.normalize("NFKC").trim().toLocaleLowerCase())
+          && !spokenDialogueCapabilityFailure(state.playerName, name, state.characterProfiles),
       );
       return [
         ...combined,
@@ -974,18 +1069,22 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
           "setting.text, setting.development, setting.outcomeReason, and completed_action describe state already completed before the new decision point. Never offer a choice that reenacts, reconfirms, rehearses, or paraphrases that completed action or result.",
           "Return 2 to 4 distinct, immediately playable choices grounded in concrete facts visible in setting.",
           "Write every choice from player_identity's perspective, with player_identity as its implicit actor. Never describe player_identity or any player_identity_aliases as a separate named participant, target, or non-player character.",
-          "Start every action choice with a direct base-form selectable verb such as 'Ask', 'Lower', or 'Continue', never a third-person finite verb such as 'Asks', 'Lowers', or 'Continues'.",
           "player_identity is physically present at setting.sceneScope.currentLocation by definition and belongs in both peoplePresent and peopleWithinSpeakingDistance. Never treat the player as absent.",
-          "upcoming_source_excerpt is authoritative when compact event metadata obscures who speaks to whom. Preserve indirect questions about an absent character as questions to a present character; never rewrite them as direct speech to the absent character.",
           "current_significant_event is the latest source event already completed in the player-facing timeline. Every listed beat is complete and must not be offered, prepared for, or finished again.",
           "When setting.development conflicts with a later confirmed end state in setting.text or setting.outcomeReason, the confirmed end state wins and the stale development must not shape a choice.",
           ...CHOICE_TIMELINE_RULES,
           ...SOURCE_RECOUNTING_RULES,
-          "When next_significant_event.beats is present, use setting.text and their order to preserve decision boundaries. Skip beats already visibly completed in setting, then make choice 1 authorize only the earliest remaining contiguous player-controlled decision. A later player beat after an intervening NPC, external, involuntary, or routine beat must remain a future choice.",
+          alternativesOnly
+            ? "CANONICAL ALTERNATIVES ONLY: the server owns and injects choice 1. Generate only free-world alternatives; do not reproduce, paraphrase, route toward, or replace the canonical anchor."
+            : currentTurnExecution()?.contract.nextPlayerAction
+              ? "Choice 1 must offer the indexed player goal goal in required_anchor_decision. This single decision includes the indexed continuation across automatic beats, but never the next distinct goal."
+              : "When next_significant_event.beats is present, use setting.text and their order to preserve decision boundaries. Skip beats already visibly completed in setting, then make choice 1 authorize only the earliest remaining contiguous player-controlled decision. A later player beat after an intervening NPC, external, involuntary, or routine beat must remain a future choice.",
           ...(requiresExplicitPlayerChoice
             ? [
                 "next_significant_event requires an explicit player choice. Choice 1 (choices[0]) must directly propose the concrete player-controlled act described by that event when it is executable from the visible setting.",
-                "required_player_choice_beats lists only the immediately eligible player decision, excluding later decisions behind an unfinished NPC beat. Ignore those already visibly completed in setting, then make choice 1 clearly authorize the earliest remaining contiguous player decision without also authorizing a later decision beyond an intervening beat.",
+                currentTurnExecution()?.contract.nextPlayerAction
+                  ? "required_player_choice_beats describes the first atomic act of the indexed player goal. Use the full player goal for the menu text; the turn contract defines its endpoint."
+                  : "required_player_choice_beats lists only the immediately eligible player decision, excluding later decisions behind an unfinished NPC beat. Ignore those already visibly completed in setting, then make choice 1 clearly authorize the earliest remaining contiguous player decision without also authorizing a later decision beyond an intervening beat.",
                 "For ordered beats, use sourceAnchorRoute 'event' when choice 1 directly enables or selects source_event_beat_progress.nextRequiredBeat. Later uncompleted player decisions remain future and do not require route transition. Use transition only when the next beat itself still needs an unmet prerequisite.",
                 "If the earliest remaining player decision cannot begin from the visible setting, steer choice 1 toward the single closest concrete prerequisite and classify it as 'transition'.",
                 "Do not dilute that act into generic movement, continued travel, waiting, watching, scanning, preparation, safety-seeking, or another merely adjacent step. Those actions do not provide informed consent for the event.",
@@ -1012,7 +1111,9 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
             : [
                 "If the visible setting offers no honest causal route toward next_significant_event, make choice 1 the strongest local story-advancing action instead of inventing a clue, arrival, object, or relationship.",
               ]),
-          "Generate the remaining choices as meaningful local alternatives from the completed visible setting.",
+          alternativesOnly
+            ? "Return 2 to 3 distinct free-world alternatives. Every returned item is an alternative; the canonical anchor is deliberately absent from this request."
+            : "Generate choices[1+] as distinct free-world alternatives. They may radically change the story through an immediately executable player action; they need not help, preserve or return to the canonical route.",
           "Do not infer future revelations, decisions, plans, objects, crimes, arrivals, or other developments from book familiarity.",
           "Choices may explore plausible immediate alternatives without breaking established chronology.",
           "current_significant_event is authoritative completed state. Preserve all irreversible consequences it establishes, including deaths, injuries, departures, disclosures, consumed or destroyed objects, and changed relationships.",
@@ -1020,11 +1121,10 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
           "Check every choice against the complete setting text before returning it. The final menu must preserve who is already present, who has already arrived, current locations, object states, and completed events.",
           "Use setting.sceneScope as authoritative spatial scope. A talk choice may target only a character in peopleWithinSpeakingDistance. People absent from peoplePresent cannot be treated as if they are in the current location.",
           "For every action choice that directly interacts with a named non-player character — for example greeting, welcoming, handing something to, touching, kissing, questioning, or starting an exchange with them — that character must already be in setting.sceneScope.peoplePresent. If they are absent, do not generate the interaction; generate only actions executable before their arrival or another visible prerequisite.",
-          "Calling out for an absent character or listening, watching, or searching for possible footsteps, a voice, movement, or another sign is presently executable and is not direct interaction, provided the choice does not assume the character hears, answers, arrives, or otherwise participates.",
           "If a character is visibly present in setting, never offer waiting for that character to arrive or return, preparing for their arrival, observing for signs before they arrive, or imagining a conversation as a substitute for talking to the present character.",
           "Never mention or interact with a character unless that character appears in setting or source_introduced_characters.",
           "Do not offer an action that presupposes a future arrival, discovery, conversation, object state, or relationship change.",
-          "Generate options that complement accepted_choices; do not repeat accepted_choices, consumed_action, or rejected_choices.",
+          "Return the complete repaired menu, retaining usable accepted_choices without duplication. rejected_choices contains text, prior role and concrete reason: repair the stated defect, not just the wording. A routing defect applies only to the anchor slot and never bans that action as an executable alternative. Do not repeat consumed_action.",
           "A talk choice only starts a conversation: use type 'talk', text exactly 'Talk to <character>', and set character.",
           "For an action choice, set character to the exact known character name only when that person's physical participation is required to perform the action now. Set character to null when the action merely mentions, prepares for, waits for, calls out for, listens or watches for, thinks about, or changes an object intended for an absent person.",
           "For every choice, classify spatial prerequisites in requiredPresentCharacters and requiredAbsentCharacters using exact known non-player character names.",
@@ -1043,6 +1143,7 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
             sceneScope: setting.sceneScope ?? null,
           },
           player_identity: state.playerName,
+          runtime_parameters: state.parameters ?? [],
           player_identity_aliases: playerProfile
             ? [playerProfile.name, ...playerProfile.aliases]
             : [],
@@ -1052,10 +1153,11 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
             ...remainingNextSignificantEvent,
             requiresExplicitPlayerChoice,
           } : null,
-          upcoming_source_excerpt:
-            sourceCandidates[0]?.excerpt.slice(0, SOURCE_GROUNDING_EXCERPT_CHARS) ?? null,
-          source_event_beat_progress: sourceEventBeatProgress,
-          required_player_choice_beats: requiredPlayerChoiceBeats,
+          upcoming_source_excerpt: alternativesOnly
+            ? null
+            : sourceCandidates[0]?.excerpt.slice(0, SOURCE_GROUNDING_EXCERPT_CHARS) ?? null,
+          source_event_beat_progress: alternativesOnly ? null : sourceEventBeatProgress,
+          required_player_choice_beats: alternativesOnly ? [] : requiredPlayerChoiceBeats,
           unavailable_characters: explicitlyUnavailableCharacters,
           consumed_action: consumedAction ?? null,
           completed_action: completedAction ?? null,
@@ -1126,9 +1228,13 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
         visibleSourceEventNarrative(sourceCandidates),
         explicitlyUnavailableCharacters,
       );
-      const withoutDuplicates = removeDuplicateChoices(
-        withoutUnavailableCharacters,
-      );
+      const withoutImpossibleSpeech = {...withoutUnavailableCharacters, choices: withoutUnavailableCharacters.choices.filter(choice => {
+        if (choice.type !== "talk") return true;
+        const target = choice.character?.trim() || /^talk to\s+(.+?)\s*$/iu.exec(choice.text)?.[1]?.trim() || "";
+        const failure = spokenDialogueCapabilityFailure(state.playerName, target, state.characterProfiles);
+        return !failure;
+      })};
+      const withoutDuplicates = removeDuplicateChoices(withoutImpossibleSpeech);
       const filteredResult = removeRecentChoiceParaphrases(
         withoutDuplicates,
         state.history,
@@ -1143,31 +1249,33 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
         filtered.outcome,
       );
       const generatedAnchor = repairedChoices[0];
-      const generatedAnchorSurvives = (candidate: Scene): boolean => Boolean(
-        generatedAnchor
+      const choiceSurvives = (testedChoice: Scene["choices"][number], candidate: Scene): boolean => Boolean(
+        testedChoice
         && candidate.choices.some(
           (choice) =>
-            choice.id === generatedAnchor.id
-            && choice.text === generatedAnchor.text,
+            choice.id === testedChoice.id
+            && choice.text === testedChoice.text,
         ),
       );
-      const anchorFilterReason = generatedAnchor
-        ? !generatedAnchorSurvives(withoutConsumedAction)
+      const filterReason = (testedChoice: Scene["choices"][number]): string | undefined =>
+        !choiceSurvives(testedChoice, withoutConsumedAction)
           ? "it repeats the consumed player action"
-          : !generatedAnchorSurvives(withoutCompletedSourceEvent)
+          : !choiceSurvives(testedChoice, withoutCompletedSourceEvent)
             ? "it repeats a beat from the latest completed source event"
-          : !generatedAnchorSurvives(withoutInvalidPlayerPerspective)
+          : !choiceSurvives(testedChoice, withoutInvalidPlayerPerspective)
             ? "it names or targets the player identity as a separate character"
-            : !generatedAnchorSurvives(withoutUnavailableCharacters)
+            : !choiceSurvives(testedChoice, withoutUnavailableCharacters)
               ? "it targets a character who is absent, unavailable, or outside the confirmed SceneScope"
-              : !generatedAnchorSurvives(withoutDuplicates)
+              : !choiceSurvives(testedChoice, withoutImpossibleSpeech)
+                ? "spoken dialogue is impossible for the indexed player or target"
+              : !choiceSurvives(testedChoice, withoutDuplicates)
                 ? "it duplicates another generated or previously accepted choice"
-                : !generatedAnchorSurvives(filteredResult)
+                : !choiceSurvives(testedChoice, filteredResult)
                   ? "it paraphrases a recent player choice"
-                  : generatedAnchorSurvives(filtered)
+                  : choiceSurvives(testedChoice, filtered)
                     ? undefined
-                    : "it fell outside the four-choice menu limit"
-        : "the response did not contain a first choice";
+                    : "it fell outside the four-choice menu limit";
+      const anchorFilterReason = generatedAnchor ? filterReason(generatedAnchor) : "the response did not contain a first choice";
       const hasTooFewChoices = hasTooFewChoicesForActiveScene(filtered);
       const retryFilteredAnchor: boolean =
         Boolean(nextSignificantEvent)
@@ -1201,19 +1309,19 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
               sourceContinuationChoiceText(sourceCandidates[0]),
             ).choices;
       }
-      const rejectedOnThisAttempt = repairedChoices
+      const rejectedOnThisAttempt: ChoiceRejectionFeedback[] = repairedChoices
         .filter((choice) =>
           !filtered.choices.some(
             (survivor) =>
               survivor.id === choice.id && survivor.text === choice.text,
           )
         )
-        .map((choice) => choice.text);
+        .map((choice) => ({text: choice.text, role: choice === generatedAnchor ? "anchor" : "alternative",
+          reason: filterReason(choice) ?? "The choice did not survive executability filtering."}));
       acceptedChoices = filtered.choices;
       filteredAnchorRetryConsumed ||= retryFilteredAnchor;
-      rejectedChoices = [
-        ...new Set([...rejectedChoices, ...rejectedOnThisAttempt]),
-      ];
+      rejectedChoices = [...new Map([...rejectedChoices, ...rejectedOnThisAttempt]
+        .map(choice => [JSON.stringify([choice.text, choice.role, choice.reason]), choice])).values()];
       flowDiagnostic(
         `OpenAI scene choices draft ${attempt + 1}/${maxAttempts} rejected: `
         + (
@@ -1232,3 +1340,5 @@ export abstract class ProviderSceneReviewer extends ProviderEngineBase {
         ).choices;
   }
 }
+
+

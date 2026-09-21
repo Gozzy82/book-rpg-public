@@ -46,8 +46,9 @@ test("the mobile web app is served with safe headers and explicit asset routes",
   assert.match(script.headers.get("content-type") || "", /^text\/javascript/);
   const scriptText = await script.text();
   assert.match(scriptText, /FREE_ACTION_CHOICE_ID/);
-  assert.match(scriptText, /Continue with Microsoft/);
-  assert.match(scriptText, /Continue with GitHub/);
+  assert.match(scriptText, /Sign in or create account/);
+  assert.match(scriptText, /membershipLabel/);
+  assert.doesNotMatch(scriptText, /Continue with GitHub/);
   assert.match(scriptText, /const MAX_CHARACTER_CHOICES = 5;/);
   assert.match(scriptText, /\.slice\(0, MAX_CHARACTER_CHOICES\)/);
   assert.match(scriptText, /Turn history/);

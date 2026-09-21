@@ -1,5 +1,19 @@
+import {reviewResumeAnchor} from './resume-anchor-review.js';
+import {normalizeSceneDeaths, peopleKilledInSceneSchema, SCENE_DEATH_POLICY} from '../../shared/scene-deaths.js';
+import {withIndependentFinalState, reviewIndependentEndState} from "./independent-end-state-review.js";
+import { boundCharacterProfilePayload } from "./character-runtime.js";
+import { withTurnReview, decodeTurnReview } from "./turn-review.js";
+import { currentTurnBudget, currentTurnExecution, TurnExecutionError, turnContractInstructions } from "./turn-contract.js";
+import { reducePresenceReview } from "./turn-validator.js";
+import { withSharedStoryPolicy } from "./shared-policy.js";
 import crypto from "node:crypto";
 import { flowDiagnostic, traceEvent } from "../../util/flow-trace.js";
+import {
+  recordAiRetry,
+  recordAiStepFailure,
+  recordAiStepFinish,
+  recordAiStepStart,
+} from "../../util/live-log.js";
 import type {
   GameState,
   Scene,
@@ -51,7 +65,7 @@ const SCENE_PRESENCE_BEAT_PROGRESS_CORRECTION = [
   "In opening_progression mode there is no selected player menu action yet, so a meaningful player-controlled beat visibly enacted in candidate_scene.text still counts as completed. Do not keep such a beat future merely because candidate_scene.player_action is empty.",
   "In opening_progression mode, earlier ordered beats that are not visibly enacted must not be reported as completed, but their absence alone is not a reason to reject an otherwise source-grounded decision boundary. Judge whether the earliest future player action is immediately executable from the concrete opening end state and source excerpt.",
   "In opening_progression mode, future_player_actions are decision boundaries, not actions the opening must already perform. When the earliest future player beat is the current boundary, judge only whether its physical and social prerequisites are established; never require that player action itself to have been enacted, performed, or completed.",
-  "In scene_completion mode, report any later ordered beat that is visibly enacted even when earlier ordered beats were not separately visible to this review. The application may infer the missing ordered prefix as completed because the later beat could only be reached after it; this inference never applies in opening_progression mode.",
+  "In scene_completion mode, report any later ordered beat that is visibly enacted even when earlier ordered beats were not separately visible to this review. The application may infer the missing ordered prefix as completed only when one later reported beat makes that inference unambiguous; this inference never applies in opening_progression mode.",
   "Treat future_player_actions as provisional candidates derived from the pre-candidate progress state. After identifying beats completed in candidate_scene, ignore any matching completed action when deciding futureActionSetupRequired and evaluate setup only for the earliest meaningful player beat that remains incomplete.",
   "The end-state prerequisite check applies only to that earliest remaining future beat. Never reject a scene because the end state no longer preserves prerequisites for a beat that the same scene already visibly completed.",
   "If unfinished ordered beats still precede the earliest future player action, that player action is not the current decision boundary yet. Set futureActionSetupRequired false and let source-beat validation require the preceding beats first.",
@@ -363,7 +377,7 @@ export function correctScenePresenceBeatOrder(
         .filter((index) => Number.isInteger(index) && index >= 0 && index < beatCount),
     );
     const inferredReportedIndexes = new Set(reportedIndexes);
-    if (!openingProgression && inferredReportedIndexes.size > 0) {
+    if (!openingProgression && inferredReportedIndexes.size === 1) {
       const latestReportedIndex = Math.max(...inferredReportedIndexes);
       for (let index = 0; index <= latestReportedIndex; index += 1) {
         inferredReportedIndexes.add(index);
@@ -400,13 +414,20 @@ export function correctScenePresenceBeatOrder(
     const earliestFutureActionIndex = futureActionIndexes.find(
       (index) => index >= contiguousLength,
     );
+    const openingMissingOrderedBeatsBeforeFutureAction = Boolean(
+      openingProgression
+      && earliestFutureActionIndex !== undefined
+      && contiguousLength < earliestFutureActionIndex
+    );
     const futureActionBlockedByEarlierBeat = Boolean(
-      earliestFutureActionIndex !== undefined
+      !openingProgression
+      && earliestFutureActionIndex !== undefined
       && contiguousLength < earliestFutureActionIndex
       && review.futureActionSetupRequired === true,
     );
     const openingBoundaryMistakenForCompletion = Boolean(
       openingProgression
+      && !openingMissingOrderedBeatsBeforeFutureAction
       && earliestFutureActionIndex !== undefined
       && contiguousLength === earliestFutureActionIndex
       && review.futureActionSetupRequired === true
@@ -418,18 +439,30 @@ export function correctScenePresenceBeatOrder(
     if (
       !progressChanged
       && !claimedIncompleteTarget
+      && !openingMissingOrderedBeatsBeforeFutureAction
       && !futureActionBlockedByEarlierBeat
       && !openingBoundaryMistakenForCompletion
     ) {
       return response;
     }
 
+    const missingOpeningEnd = earliestFutureActionIndex === undefined
+      ? contiguousLength
+      : earliestFutureActionIndex - 1;
     return {
       ...response,
       output_text: JSON.stringify({
         ...review,
         completedSourceEventBeatIndexes: acceptedAdditionalIndexes,
         ...(claimedIncompleteTarget ? { latestVisibleSourceEventId: null } : {}),
+        ...(openingMissingOrderedBeatsBeforeFutureAction
+          ? {
+              futureActionSetupRequired: false,
+              futureActionSetupSupported: false,
+              futureActionSetupReason:
+                `The opening is still missing ordered source beats ${contiguousLength}-${missingOpeningEnd} before the future player decision can become the current boundary.`,
+            }
+          : {}),
         ...(futureActionBlockedByEarlierBeat
           ? {
               futureActionSetupRequired: false,
@@ -504,6 +537,29 @@ export function correctStaleScenePresenceSetup(
 }
 
 export abstract class ProviderEngineBase {
+  async reviewResumeAnchor(state: GameState, anchor: import('../../shared/contracts.js').GameChoice) {
+    return reviewResumeAnchor(state,anchor,this.model,
+      request=>this.createResponse('saved anchor review',state.book.bookId,request));
+  }
+
+  /** One-time migration for saves predating structured scene death metadata. */
+  async assessEstablishedDeaths(state: GameState): Promise<string[]> {
+    const response = await this.createResponse('saved game death assessment', state.book.bookId, {
+      model: this.model, reasoning: {effort:'low'}, max_output_tokens: 1600,
+      instructions: SCENE_DEATH_POLICY + '\nAssess actual deaths already established in this saved game. Use accepted history, scene and memory only; no future index or book knowledge. Here peopleKilledInScene contains all confirmed deaths in the supplied saved state, not only the last turn. Do not treat a quest demanding proof of death as evidence that the character has died. Return exact known profile names; omit uncertain cases.',
+      input: JSON.stringify({characters:state.characterProfiles?.map(p=>({name:p.name,aliases:p.aliases})),
+        scene:state.scene.text, memory:state.storyMemory, establishedEvent:state.establishedEvent,
+        history:state.history.filter(h=>h.kind==='scene').map(h=>h.text)}),
+      text:{format:{type:'json_schema',name:'bookrpg_saved_deaths',strict:true,schema:{
+        type:'object',additionalProperties:false,properties:{peopleKilledInScene:peopleKilledInSceneSchema},required:['peopleKilledInScene'],
+      }}},
+    });
+    if(response.status!=='completed') throw new Error('Incomplete saved game death assessment.');
+    const result=JSON.parse(response.output_text);
+    if(!Array.isArray(result.peopleKilledInScene)) throw new Error('Invalid saved game death assessment.');
+    return normalizeSceneDeaths(result.peopleKilledInScene,state.characterProfiles);
+  }
+
   abstract selectSourceCandidate(
     state: GameState,
     candidates: readonly SourceContinuationCandidate[],
@@ -515,6 +571,7 @@ export abstract class ProviderEngineBase {
   ): Promise<SourceContinuationCandidate | undefined>;
 
   protected readonly model: string;
+  protected readonly centralReviewValidation: boolean = false;
 
   protected readonly reasoningEffort: AiReasoningEffort;
 
@@ -559,14 +616,40 @@ export abstract class ProviderEngineBase {
     return [eventCandidate];
   }
 
+  /** Isolated staged generation: exact inputs, but shared budget and full request/response traces. */
+  protected async createCanonicalSceneResponse(label: string, bookId: string, request: AiResponseRequest): Promise<AiResponse> {
+    const traced = {...request, prompt_cache_key: `bookrpg:${bookId}`};
+    currentTurnBudget()?.reserve(traced.max_output_tokens ?? 2000);
+    const call = {callId: crypto.randomUUID(), label, bookId, provider: this.client.provider, model: traced.model};
+    const start = performance.now();
+    recordAiStepStart(label);
+    flowDiagnostic(`${this.client.provider} ${label}...`);
+    traceEvent('ai.request', {...call, request: traced});
+    let succeeded = false;
+    try {
+      const response = await this.client.createResponse(traced);
+      succeeded = true;
+      traceEvent('ai.response', {...call, response});
+      return response;
+    } catch (error) {
+      recordAiStepFailure(label);
+      traceEvent('ai.error', {...call, error});
+      throw error;
+    } finally {
+      if (succeeded) recordAiStepFinish(label, performance.now() - start);
+      flowDiagnostic(`${this.client.provider} ${label} finished in ${((performance.now()-start)/1000).toFixed(1)}s.`);
+    }
+  }
+
   protected async createResponse(
     label: string,
     bookId: string,
     request: AiResponseRequest,
   ) {
     const startedAt = performance.now();
+    recordAiStepStart(label);
     flowDiagnostic(`${this.client.provider} ${label}...`);
-    const effectiveRequest = label === "scene presence review"
+    const effectiveRequest = !this.centralReviewValidation && label === "scene presence review"
       ? {
           ...request,
           instructions: [
@@ -577,30 +660,93 @@ export abstract class ProviderEngineBase {
       : label === "scene choice review"
         ? correctPartialSceneChoiceReviewState(request)
         : request;
-    const tracedRequest = { ...effectiveRequest, prompt_cache_key: `bookrpg:${bookId}` };
+    const scope = this.centralReviewValidation ? currentTurnExecution() : undefined;
+    const contract = this.centralReviewValidation && label !== "turn intent review" ? request.turnContract ?? scope?.contract : undefined;
+    const reviewRequest = contract ? withTurnReview(label, effectiveRequest, contract) : effectiveRequest;
+    const { turnContract: _internalContract, ...providerRequest } = withSharedStoryPolicy(label, contract && label === "scene presence review" ? withIndependentFinalState(reviewRequest) : reviewRequest);
+    const characterRuntime = contract ? JSON.parse(contract.contextJson).character_runtime : undefined;
+    const tracedRequest = { ...providerRequest, ...(characterRuntime ? {input: boundCharacterProfilePayload(providerRequest.input, characterRuntime)} : {}), prompt_cache_key: `bookrpg:${bookId}`,
+      ...(contract ? { instructions: [providerRequest.instructions, turnContractInstructions(contract, label !== "scene presence review")].filter(Boolean).join("\n") } : {}),
+    };
+    if (this.centralReviewValidation) currentTurnBudget()?.reserve(tracedRequest.max_output_tokens ?? 2_000);
     const callId = crypto.randomUUID();
     const call = { callId, label, bookId, provider: this.client.provider, model: tracedRequest.model };
     traceEvent("ai.request", { ...call, request: tracedRequest });
+    let succeeded = false;
     try {
-      const response = await this.client.createResponse(tracedRequest);
+      let response = await this.client.createResponse(tracedRequest);
       traceEvent("ai.response", { ...call, response });
+      if (this.centralReviewValidation) {
+        let decoded;
+        try {
+          decoded = decodeTurnReview(label, tracedRequest, response);
+        } catch (error) {
+          if (!(error instanceof TurnExecutionError) || error.code !== "review_unavailable") throw error;
+          // Retry only the assessment, with the same candidate and authorization.
+          recordAiRetry(label);
+          const retryRequest = {...tracedRequest, instructions: `${tracedRequest.instructions}\nEvidence correction: ${error.message} ${label === "scene presence review" ? "Select evidence_sentence_ids only from candidate_sentences; do not return source quotations." : "Copy supporting quotes exactly from candidate_scene.text."} Return the full assessment.`};
+          currentTurnBudget()?.reserve(retryRequest.max_output_tokens ?? 2_000);
+          const retryCall = {...call, callId: crypto.randomUUID(), retryOf: callId};
+          traceEvent("ai.request", {...retryCall, request: retryRequest});
+          response = await this.client.createResponse(retryRequest);
+          traceEvent("ai.response", {...retryCall, response});
+          decoded = decodeTurnReview(label, retryRequest, response);
+        }
+        if (label === "scene presence review" && contract) {
+          const candidateText = JSON.parse(tracedRequest.input).candidate_scene?.text ?? "";
+          decoded = await reviewIndependentEndState(contract, decoded, candidateText, tracedRequest.model, async (stage, stageRequest) => {
+            // Deliberately bypass story-policy/contract transforms: the observer must
+            // never receive the expected state or book knowledge from the engine.
+            currentTurnBudget()?.reserve(stageRequest.max_output_tokens ?? 2_000);
+            const stageCall = {...call, callId: crypto.randomUUID(), label: stage};
+            recordAiStepStart(stage);
+            flowDiagnostic(`${this.client.provider} ${stage}...`);
+            const stageStarted = performance.now();
+            traceEvent("ai.request", {...stageCall, request: stageRequest});
+            let stageSucceeded = false;
+            try {
+              const result = await this.client.createResponse(stageRequest);
+              stageSucceeded = true;
+              traceEvent("ai.response", {...stageCall, response: result});
+              return result;
+            } catch (error) {
+              recordAiStepFailure(stage);
+              traceEvent("ai.error", {...stageCall, error});
+              throw error;
+            } finally {
+              if (stageSucceeded) recordAiStepFinish(stage, performance.now() - stageStarted);
+              flowDiagnostic(`${this.client.provider} ${stage} finished in ${((performance.now()-stageStarted)/1000).toFixed(1)}s.`);
+            }
+          });
+        }
+        const reviewed = label === "scene presence review" && contract
+          ? reducePresenceReview(contract, decoded) : decoded;
+        succeeded = true;
+        traceEvent("ai.effective_response", { ...call, contract, response: reviewed });
+        return reviewed;
+      }
       if (label === "scene presence review") {
         const beatOrdered = correctScenePresenceBeatOrder(effectiveRequest, response);
         const corrected = correctStaleScenePresenceSetup(effectiveRequest, beatOrdered);
+        succeeded = true;
         traceEvent("ai.effective_response", { ...call, response: corrected });
         return corrected;
       }
       if (label === "scene choice review") {
         const beatOrdered = correctSceneChoiceReviewBeatOrder(effectiveRequest, response);
         const corrected = correctSceneChoiceReviewAlternatives(effectiveRequest, beatOrdered);
+        succeeded = true;
         traceEvent("ai.effective_response", { ...call, response: corrected });
         return corrected;
       }
+      succeeded = true;
       return response;
     } catch (error) {
+      recordAiStepFailure(label);
       traceEvent("ai.error", { ...call, error });
       throw error;
     } finally {
+      if (succeeded) recordAiStepFinish(label, performance.now() - startedAt);
       const durationSeconds = ((performance.now() - startedAt) / 1_000).toFixed(1);
       flowDiagnostic(`${this.client.provider} ${label} finished in ${durationSeconds}s.`);
     }
@@ -665,6 +811,7 @@ export abstract class ProviderEngineBase {
         ].join("\n"),
         input: JSON.stringify({
           player_identity: state.playerName,
+          runtime_parameters: state.parameters ?? [],
           objective: state.objective,
           victoryCondition: state.victoryCondition,
           immediate_transition: buildImmediateTurnTransition(state) ?? null,
@@ -721,3 +868,5 @@ export abstract class ProviderEngineBase {
     return normalizeSceneTalkChoices(continuation);
   }
 }
+
+

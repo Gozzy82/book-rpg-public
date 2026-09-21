@@ -32,7 +32,7 @@ test("Dorothy opening keeps six prelude beats visible before her first decision"
   );
 
   assert.equal(firstPlayerBeatIndex, 6);
-  assert.equal(openingSceneWordBudget(firstPlayerBeatIndex), 300);
+  assert.equal(openingSceneWordBudget(firstPlayerBeatIndex), 600);
   assert.deepEqual(
     cycloneEvent.beats.slice(0, firstPlayerBeatIndex).map((beat) => beat.action),
     [
@@ -69,14 +69,14 @@ test("Scarecrow opening still starts at his first player decision", () => {
   );
 
   assert.equal(firstPlayerBeatIndex, 0);
-  assert.equal(openingSceneWordBudget(firstPlayerBeatIndex), 300);
+  assert.equal(openingSceneWordBudget(firstPlayerBeatIndex), 600);
 });
 
-test("opening word budget is always capped at exactly 300 words", () => {
-  assert.equal(openingSceneWordBudget(0), 300);
-  assert.equal(openingSceneWordBudget(1), 300);
-  assert.equal(openingSceneWordBudget(3), 300);
-  assert.equal(openingSceneWordBudget(5), 300);
-  assert.equal(openingSceneWordBudget(6), 300);
-  assert.equal(openingSceneWordBudget(20), 300);
+test("opening word budget is always capped at exactly 600 words", () => {
+  assert.equal(openingSceneWordBudget(0), 600);
+  assert.equal(openingSceneWordBudget(1), 600);
+  assert.equal(openingSceneWordBudget(3), 600);
+  assert.equal(openingSceneWordBudget(5), 600);
+  assert.equal(openingSceneWordBudget(6), 600);
+  assert.equal(openingSceneWordBudget(20), 600);
 });

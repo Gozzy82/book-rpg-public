@@ -1,3 +1,4 @@
+import {cleanChoiceText} from '../../shared/choice-text.js';
 import {
   SOURCE_CONTINUATION_CHOICE_ID,
   SOURCE_CONTINUATION_CHOICE_TEXT,
@@ -25,7 +26,6 @@ import {
   normalizedScopeIdentity,
   extractLeakedExternalDevelopment,
   textMentionsCharacter,
-  textNarratesCharacterArrival,
 } from "./scene-text.js";
 import {
   visibleSourceEventNarrative,
@@ -113,6 +113,20 @@ const COMPLETED_EVENT_CHOICE_STOP_WORDS = new Set([
   "with",
 ]);
 
+const COMMUNICATIVE_COMPLETED_EVENT_LEADS = new Set([
+  "answer",
+  "ask",
+  "explain",
+  "question",
+  "reply",
+  "request",
+  "respond",
+  "say",
+  "speak",
+  "talk",
+  "tell",
+]);
+
 function completedEventChoiceToken(token: string): string {
   if (token.endsWith("ies") && token.length > 4) {
     return `${token.slice(0, -3)}y`;
@@ -156,26 +170,24 @@ function choiceRepeatsCompletedEventBeat(
   }
   const choiceTokens = completedEventChoiceTokens(choiceText);
   if (choiceTokens.size === 0) return false;
+  const choiceLead = completedEventLeadToken(choiceText);
   return (event.beats ?? []).some((beat) => {
     const beatTokens = completedEventChoiceTokens(beat.action);
     if (beatTokens.size === 0) return false;
-    // Shared participants and objects do not establish a repeated action.
-    // Also allow requests to perform the completed action ("Ask ... to oil").
     const beatAction = completedEventLeadToken(beat.action);
     if (!choiceTokens.has(beatAction)) return false;
     const shared = [...choiceTokens].filter((token) => beatTokens.has(token)).length;
+    const sameLead = choiceLead === beatAction;
+    const sameLeadMinimumShared = COMMUNICATIVE_COMPLETED_EVENT_LEADS.has(beatAction)
+      ? 3
+      : 2;
     return (
       (choiceTokens.has("again") && shared >= 1)
       || (
         shared >= 2
-        && (
-          shared / Math.min(choiceTokens.size, beatTokens.size) >= 0.5
-          || (
-            shared >= 3
-            && completedEventLeadToken(choiceText) === completedEventLeadToken(beat.action)
-          )
-        )
+        && shared / Math.min(choiceTokens.size, beatTokens.size) >= 0.5
       )
+      || (sameLead && shared >= sameLeadMinimumShared)
     );
   });
 }
@@ -349,8 +361,6 @@ export function filterSceneScope(
         canonicalScopeIdentity(identity, context.knownCharacterProfiles)
       ),
   );
-  // The player is an explicit member of both lists, including in older saves.
-  // Presence does not make the player an NPC or grant human speech to animals.
   const playerName = context.playerName?.trim();
   const player = playerName
     ? canonicalScopeName(playerName, context.knownCharacterProfiles) ?? playerName
@@ -370,11 +380,7 @@ export function filterSceneScope(
     .map(canonicalName)
     .filter((person) => {
       const identity = normalizedScopeIdentity(person ?? "");
-      if (
-        !identity
-        || excludedIdentities.has(identity)
-        || seenPresent.has(identity)
-      ) {
+      if (!identity || excludedIdentities.has(identity) || seenPresent.has(identity)) {
         return false;
       }
       seenPresent.add(identity);
@@ -523,10 +529,7 @@ export function promoteAnchorChoice(
           ...localChoice
         } = choice;
         return choice.id === SOURCE_ANCHOR_CHOICE_ID
-          ? {
-              ...localChoice,
-              id: `${SOURCE_ANCHOR_CHOICE_ID}_generated`,
-            }
+          ? { ...localChoice, id: `${SOURCE_ANCHOR_CHOICE_ID}_generated` }
           : localChoice;
       }),
     ],
@@ -541,8 +544,6 @@ export function filteredAnchorChoiceFailures(
   attempt: number,
   maxAttempts: number,
 ): string[] {
-  // On the final attempt, preserve an otherwise valid advancing scene and promote
-  // its first remaining usable choice instead of rolling the whole turn back.
   return anchorChoiceWasFiltered && attempt < maxAttempts - 1
     ? [FILTERED_ANCHOR_CHOICE_FAILURE]
     : [];
@@ -563,18 +564,13 @@ export function shouldHandleMissingAnchorChoice(input: {
 }
 
 export function applyEstablishedEvent(
-  state: Pick<
-    GameState,
-    "establishedEvent" | "scene" | "history"
-  >,
+  state: Pick<GameState, "establishedEvent" | "scene" | "history">,
   sceneText: string,
 ): string {
   const initialScene = !state.scene.text.trim()
     && state.history.every((item) => item.kind === "start");
   const event = state.establishedEvent?.narrative.trim();
-  if (!initialScene || !event) {
-    return sceneText;
-  }
+  if (!initialScene || !event) return sceneText;
   if (sceneText.trimStart().startsWith(event)) return sceneText;
   return `${event}\n\n${sceneText}`.trim();
 }
@@ -603,23 +599,17 @@ export function removeChoicesWithPlayerIdentityReferences(
   const profiles = characterProfiles ?? [];
   const playerProfile = findPlayerCharacterProfile(playerName, profiles);
   const playerIdentities = new Set(
-    [
-      playerName,
-      playerProfile?.name,
-      ...(playerProfile?.aliases ?? []),
-    ]
+    [playerName, playerProfile?.name, ...(playerProfile?.aliases ?? [])]
       .filter((identity): identity is string => Boolean(identity?.trim()))
       .map(normalizeComparableChoiceText),
   );
   const isPlayerIdentity = (identity: string | undefined): boolean => Boolean(
-    identity
-    && playerIdentities.has(normalizeComparableChoiceText(identity)),
+    identity && playerIdentities.has(normalizeComparableChoiceText(identity)),
   );
   return {
     ...scene,
     choices: scene.choices.flatMap((choice) => {
       if (textMentionsCharacter(choice.text, playerName, profiles)) return [];
-
       const targetsPlayer = isPlayerIdentity(choice.character);
       const repairedChoice = { ...choice };
       if (targetsPlayer) delete repairedChoice.character;
@@ -627,18 +617,16 @@ export function removeChoicesWithPlayerIdentityReferences(
         ...repairedChoice,
         ...(choice.requiredPresentCharacters
           ? {
-              requiredPresentCharacters:
-                choice.requiredPresentCharacters.filter(
-                  (identity) => !isPlayerIdentity(identity),
-                ),
+              requiredPresentCharacters: choice.requiredPresentCharacters.filter(
+                (identity) => !isPlayerIdentity(identity),
+              ),
             }
           : {}),
         ...(choice.requiredAbsentCharacters
           ? {
-              requiredAbsentCharacters:
-                choice.requiredAbsentCharacters.filter(
-                  (identity) => !isPlayerIdentity(identity),
-                ),
+              requiredAbsentCharacters: choice.requiredAbsentCharacters.filter(
+                (identity) => !isPlayerIdentity(identity),
+              ),
             }
           : {}),
       }];
@@ -647,38 +635,19 @@ export function removeChoicesWithPlayerIdentityReferences(
 }
 
 export const GENERIC_CHARACTER_ROLE_WORDS = new Set([
-  "central",
-  "character",
-  "figure",
-  "key",
-  "main",
-  "major",
-  "minor",
-  "narrative",
-  "primary",
-  "protagonist",
-  "recurring",
-  "secondary",
-  "supporting",
-  "titular",
-  "unknown",
-  "unnamed",
+  "central", "character", "figure", "key", "main", "major", "minor", "narrative",
+  "primary", "protagonist", "recurring", "secondary", "supporting", "titular",
+  "unknown", "unnamed",
 ]);
 
 export function roleWordForms(word: string): string[] {
   const forms = new Set([word]);
   if (word === "police") return [...forms];
-  if (word.endsWith("ies") && word.length > 3) {
-    forms.add(`${word.slice(0, -3)}y`);
-  } else if (word.endsWith("s") && !word.endsWith("ss") && word.length > 3) {
-    forms.add(word.slice(0, -1));
-  } else if (/[^aeiou]y$/u.test(word)) {
-    forms.add(`${word.slice(0, -1)}ies`);
-  } else if (/(?:ch|sh|x|z)$/u.test(word)) {
-    forms.add(`${word}es`);
-  } else {
-    forms.add(`${word}s`);
-  }
+  if (word.endsWith("ies") && word.length > 3) forms.add(`${word.slice(0, -3)}y`);
+  else if (word.endsWith("s") && !word.endsWith("ss") && word.length > 3) forms.add(word.slice(0, -1));
+  else if (/[^aeiou]y$/u.test(word)) forms.add(`${word.slice(0, -1)}ies`);
+  else if (/(?:ch|sh|x|z)$/u.test(word)) forms.add(`${word}es`);
+  else forms.add(`${word}s`);
   return [...forms];
 }
 
@@ -689,12 +658,9 @@ export function characterRoleReferences(profile: CharacterProfile): string[] {
     .map(normalizeComparableChoiceText)
     .filter(Boolean);
   for (const segment of roleSegments) {
-    const words = segment
-      .split(" ")
-      .filter((word) =>
-        word.length >= 4
-        && !GENERIC_CHARACTER_ROLE_WORDS.has(word)
-      );
+    const words = segment.split(" ").filter((word) =>
+      word.length >= 4 && !GENERIC_CHARACTER_ROLE_WORDS.has(word)
+    );
     if (words.length === 0) continue;
     references.add(segment);
     for (const word of words) {
@@ -710,120 +676,32 @@ export function textMentionsNormalizedReference(text: string, reference: string)
   return new RegExp(`(?:^| )${escaped}(?=$| )`, "u").test(normalizedText);
 }
 
-export function textEstablishesCharacterAbsent(
-  text: string,
-  character: string,
-  characterProfiles: readonly CharacterProfile[] = [],
-): boolean {
-  const normalizedText = normalizeComparableChoiceText(text);
-  const normalizedCharacter = normalizeComparableChoiceText(character);
-  const profile = characterProfiles.find((candidate) =>
-    [candidate.name, ...candidate.aliases].some(
-      (identity) => normalizeComparableChoiceText(identity) === normalizedCharacter,
-    )
-  );
-  const identities = [character, profile?.name, ...(profile?.aliases ?? [])]
-    .filter((identity): identity is string => Boolean(identity?.trim()))
-    .map(normalizeComparableChoiceText);
-
-  return identities.some((identity) => {
-    const escaped = identity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return [
-      new RegExp(
-        `\\b(?:wait(?:ing|s)?|await(?:ing|s)?|listen(?:ing|s)?|watch(?:ing|es)?)\\b(?: \\p{L}+){0,8} \\bfor\\b(?: \\p{L}+){0,5} ${escaped}(?: s)? \\b(?:return|arrival)\\b`,
-        "iu",
-      ),
-      new RegExp(`\\b(?:before|until) ${escaped} \\b(?:returns|arrives)\\b`, "iu"),
-      new RegExp(
-        `\\b${escaped} \\b(?:has not|had not|hasnt|hadnt) arrived\\b`,
-        "iu",
-      ),
-      new RegExp(
-        `\\b${escaped} \\b(?:is|was) (?:not here|not present|absent|away|gone)\\b`,
-        "iu",
-      ),
-      new RegExp(`\\b${escaped} \\b(?:has|had) left\\b`, "iu"),
-      new RegExp(
-        `\\bwhen\\b(?: \\p{L}+){0,12} ${escaped}(?: s)?\\b(?: \\p{L}+){0,6} \\b(?:arrives|returns|enters|comes|crosses|cross)\\b`,
-        "iu",
-      ),
-      new RegExp(
-        `\\b${escaped}(?: s)?\\b(?: \\p{L}+){0,5} \\b(?:coming home|returning|will arrive|will return|will enter)\\b`,
-        "iu",
-      ),
-    ].some((pattern) => pattern.test(normalizedText));
-  });
-}
-
+// Presence is determined by the AI-authored/reviewed SceneScope. Never infer
+// absence or arrival again from prose, including prior scenes or future plans.
 export function sceneNonInteractableCharacters(
-  state: Pick<
-    GameState,
-    "characterProfiles" | "establishedEvent" | "scene" | "history" | "storyMemory"
-  >,
+  state: Pick<GameState, "characterProfiles" | "establishedEvent" | "scene" | "history" | "storyMemory" | "confirmedDeadCharacters">,
   scene: Pick<Scene, "title" | "text">,
   explicitlyUnavailable: readonly string[] = [],
   aiReportedNonInteractable: readonly string[] = [],
 ): string[] {
-  const profiles = state.characterProfiles ?? [];
-  const currentNarrative = `${scene.title}\n${scene.text}`;
-  const priorNarrative = `${state.scene.title}\n${state.scene.text}`;
-  const deadIdentities = new Set(
-    [
-      ...(state.establishedEvent?.category === "death"
-        ? [state.establishedEvent.target]
-        : []),
-      ...aiReportedNonInteractable,
-    ].map(normalizedScopeIdentity),
-  );
-  const unavailableIdentities = new Set(
-    explicitlyUnavailable.map(normalizedScopeIdentity),
-  );
-  const unavailableProfiles = profiles.filter((profile) => {
-    const identities = [profile.name, ...profile.aliases];
-    const isDead = identities.some((identity) =>
-      deadIdentities.has(normalizedScopeIdentity(identity))
-    );
-    if (isDead) return true;
-    const explicitlyUnavailableProfile = identities.some((identity) =>
-      unavailableIdentities.has(normalizedScopeIdentity(identity))
-    );
-    const wasAbsent = textEstablishesCharacterAbsent(
-      priorNarrative,
-      profile.name,
-      profiles,
-    );
-    const isAbsent = textEstablishesCharacterAbsent(
-      currentNarrative,
-      profile.name,
-      profiles,
-    );
-    const arrivesNow = textNarratesCharacterArrival(
-      currentNarrative,
-      profile.name,
-      profiles,
-    );
-    if (isAbsent) return true;
-    return !arrivesNow && (explicitlyUnavailableProfile || wasAbsent);
-  });
-  const unavailable = unavailableProfiles
-    .flatMap((profile) => [profile.name, ...profile.aliases]);
-  const unmatchedExplicitlyUnavailable = explicitlyUnavailable.filter((identity) =>
-    !textNarratesCharacterArrival(currentNarrative, identity, profiles)
-  );
-  return [...unavailable, ...unmatchedExplicitlyUnavailable];
+  const unavailable = [
+    ...(state.confirmedDeadCharacters ?? []),
+    ...(state.establishedEvent?.category === "death" ? [state.establishedEvent.target] : []),
+    ...explicitlyUnavailable,
+    ...aiReportedNonInteractable,
+  ];
+  const identities = new Set(unavailable.map(normalizedScopeIdentity));
+  return [...new Set([
+    ...unavailable,
+    ...(state.characterProfiles ?? []).flatMap(profile =>
+      [profile.name, ...profile.aliases].some(identity => identities.has(normalizedScopeIdentity(identity)))
+        ? [profile.name, ...profile.aliases] : []),
+  ])];
 }
 
 export function filterSceneScopeForState(
   sceneScope: SceneScope,
-  state: Pick<
-    GameState,
-    | "playerName"
-    | "characterProfiles"
-    | "establishedEvent"
-    | "scene"
-    | "history"
-    | "storyMemory"
-  >,
+  state: Pick<GameState, "playerName" | "characterProfiles" | "establishedEvent" | "scene" | "history" | "storyMemory" | "confirmedDeadCharacters">,
   scene: Pick<Scene, "title" | "text"> = state.scene,
   explicitlyUnavailable: readonly string[] = [],
   aiReportedNonInteractable: readonly string[] = [],
@@ -841,108 +719,20 @@ export function filterSceneScopeForState(
   });
 }
 
-export function requiredSourceEventConcreteFailures(
-  sceneText: string,
-  candidate: SourceContinuationCandidate | undefined,
-  characterProfiles: readonly CharacterProfile[] = [],
-): string[] {
-  if (candidate?.requiredEventCategory !== "arrival") return [];
-  const participants = [
-    ...(candidate.requiredEventActors ?? []),
-    ...(candidate.requiredEventTargets ?? []),
-  ].filter((identity, index, all) =>
-    identity.trim() && all.indexOf(identity) === index
-  );
-  const arrivingParticipants = participants.filter((character) => {
-    const normalizedCharacter = normalizedScopeIdentity(character);
-    const profile = characterProfiles.find((knownProfile) =>
-      [knownProfile.name, ...knownProfile.aliases].some(
-        (identity) => normalizedScopeIdentity(identity) === normalizedCharacter,
-      )
-    );
-    const fallbackFirstName = !profile && character.trim().includes(" ")
-      ? character.trim().split(/\s+/u)[0]
-      : undefined;
-    return [character, profile?.name, ...(profile?.aliases ?? []), fallbackFirstName]
-      .filter((identity): identity is string => Boolean(identity?.trim()))
-      .some((identity) => {
-        const escaped = identity.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        return new RegExp(
-          `(?:^|[.!?;,]\\s+|\\b(?:and|then)\\s+)${escaped}`
-            + `(?:\\s+\\p{L}+){0,3}\\s+`
-            + `(?:arrives|returns|enters|appears|comes (?:in|inside|home)|steps (?:in|inside|through)|is (?:here|back|home|present))\\b`,
-          "iu",
-        ).test(candidate.requiredEvent ?? "");
-      });
-  });
-  if (arrivingParticipants.length === 0) return [];
-  const depictsCompletedArrival = arrivingParticipants.some((character) =>
-    textNarratesCharacterArrival(sceneText, character, characterProfiles)
-    && !textEstablishesCharacterAbsent(sceneText, character, characterProfiles)
-  );
-  return depictsCompletedArrival
-    ? []
-    : [
-        "The required arrival event is not visibly completed. Narrate a named participant "
-        + "actually arriving or entering now; waiting, listening, anticipation, and conditional "
-        + "or future arrival language do not complete the event.",
-      ];
-}
-
-export function absentCharacterContinuityFailures(
-  state: Pick<GameState, "scene" | "characterProfiles">,
-  sceneText: string,
-  actionResult: string,
-  externalDevelopment: string,
-): string[] {
-  const profiles = state.characterProfiles ?? [];
-  return profiles.flatMap((profile) => {
-    if (!textEstablishesCharacterAbsent(state.scene.text, profile.name, profiles)) {
-      return [];
-    }
-    if (
-      textNarratesCharacterArrival(
-        `${externalDevelopment}\n${sceneText}`,
-        profile.name,
-        profiles,
-      )
-    ) {
-      return [];
-    }
-
-    const normalizedResult = normalizeComparableChoiceText(actionResult);
-    const responseByAbsentCharacter = [profile.name, ...profile.aliases].some(
-      (identity) => {
-        const escaped = normalizeComparableChoiceText(identity)
-          .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        return new RegExp(
-          `\\b${escaped}\\b(?: \\p{L}+){0,8} \\b(?:answers|responds|replies|says|tells|nods|accepts|refuses|explains|outlines|asks|speaks)\\b`,
-          "iu",
-        ).test(normalizedResult);
-      },
-    );
-    return responseByAbsentCharacter
-      ? [`${profile.name} interacted while still established as absent; narrate their arrival before they can respond.`]
-      : [];
-  });
-}
-
 export function repairGeneratedChoices(
   choices: Scene["choices"],
 ): Scene["choices"] {
   return choices.flatMap((choice) => {
-    const text = choice.text.trim();
+    const text = cleanChoiceText(choice.text);
     const firstActionWord = choice.type === "action"
       ? normalizeComparableChoiceText(text).split(" ")[0] ?? ""
       : "";
-    const startsWithThirdPersonVerb = (
-      ["does", "goes", "has", "is"].includes(firstActionWord)
+    const startsWithThirdPersonVerb = ["does", "goes", "has", "is"].includes(firstActionWord)
       || (
         firstActionWord.endsWith("s")
         && !firstActionWord.endsWith("ss")
         && !["bias", "focus", "gas"].includes(firstActionWord)
-      )
-    );
+      );
     if (
       !text
       || (
@@ -952,59 +742,22 @@ export function repairGeneratedChoices(
           || /^(?:ask|bring|call|choose|confront|follow|give|guide|hand|help|invite|join|lower|offer|open|raise|request|show|take|tell|touch|turn|welcome)$/iu.test(text)
         )
       )
-    ) {
-      return [];
-    }
-    const {
-      sourceAnchorRoute: rawSourceAnchorRoute,
-      ...choiceWithoutNullableRoute
-    } = choice;
-    const choiceWithRoute = rawSourceAnchorRoute === "event"
-      || rawSourceAnchorRoute === "transition"
+    ) return [];
+    const { sourceAnchorRoute: rawSourceAnchorRoute, ...choiceWithoutNullableRoute } = choice;
+    const choiceWithRoute = rawSourceAnchorRoute === "event" || rawSourceAnchorRoute === "transition"
       ? { ...choiceWithoutNullableRoute, sourceAnchorRoute: rawSourceAnchorRoute }
       : choiceWithoutNullableRoute;
     const structuredCharacter = choice.character?.trim();
-    const character = structuredCharacter?.toLocaleLowerCase() === "null"
-      ? undefined
-      : structuredCharacter;
+    const character = structuredCharacter?.toLocaleLowerCase() === "null" ? undefined : structuredCharacter;
     if (choice.type !== "talk") {
       const { character: _character, ...choiceWithoutCharacter } = choiceWithRoute;
-      return [{
-        ...choiceWithoutCharacter,
-        text,
-        ...(character ? { character } : {}),
-      }];
+      return [{ ...choiceWithoutCharacter, text, ...(character ? { character } : {}) }];
     }
-    const talkCharacter = character
-      || /^talk to\s+(.+?)\s*$/iu.exec(choice.text)?.[1]?.trim();
+    const talkCharacter = character || /^talk to\s+(.+?)\s*$/iu.exec(choice.text)?.[1]?.trim();
     return talkCharacter
-      ? [{
-          ...choiceWithRoute,
-          text: `Talk to ${talkCharacter}`,
-          character: talkCharacter,
-        }]
+      ? [{ ...choiceWithRoute, text: `Talk to ${talkCharacter}`, character: talkCharacter }]
       : [];
   });
-}
-
-function sceneEstablishesPlayerCannotMove(scene: Pick<Scene, "title" | "text">): boolean {
-  const narrative = normalizeComparableChoiceText(`${scene.title} ${scene.text}`);
-  return [
-    /\bi (?:am|remain|stay) (?:completely |still )?(?:motionless|immobile|immobilized|paralyzed|pinned|stuck)\b/u,
-    /\bi (?:cannot|cant|can not) (?:move|walk|stand|turn|lift|lower|reach)\b/u,
-    /\bmy (?:body|limbs|joints|legs) (?:are|remain) (?:completely |still )?(?:motionless|immobile|immobilized|paralyzed|pinned|stuck)\b/u,
-    /\b(?:frozen|rusted|pinned|trapped|stuck) in place\b/u,
-  ].some((pattern) => pattern.test(narrative));
-}
-
-function choiceAssumesPlayerCanMove(text: string): boolean {
-  const choice = normalizeComparableChoiceText(text);
-  if (/^(?:attempt|try|struggle|ask|call|signal|request|groan|speak|talk|wait|listen)\b/u.test(choice)) {
-    return false;
-  }
-  return /^(?:(?:carefully|slowly|quietly|calmly|deliberately|cautiously|gently)\s+){0,2}(?:move|walk|step|run|approach|follow|go|leave|stand|turn|lower|raise|lift|reach|climb|carry|shoulder|set out)\b/u.test(
-    choice,
-  );
 }
 
 export function scopePeopleIncludeCharacter(
@@ -1014,9 +767,7 @@ export function scopePeopleIncludeCharacter(
 ): boolean {
   const target = normalizedScopeIdentity(character);
   const profile = profiles.find((candidate) =>
-    [candidate.name, ...candidate.aliases].some(
-      (identity) => normalizedScopeIdentity(identity) === target,
-    )
+    [candidate.name, ...candidate.aliases].some((identity) => normalizedScopeIdentity(identity) === target)
   );
   const accepted = new Set(
     [character, profile?.name, ...(profile?.aliases ?? [])]
@@ -1026,119 +777,9 @@ export function scopePeopleIncludeCharacter(
   return people.some((person) => accepted.has(normalizedScopeIdentity(person)));
 }
 
-function choiceDirectlyInteractsWithCharacter(
-  text: string,
-  character: string,
-  profiles: readonly CharacterProfile[],
-): boolean {
-  if (!textMentionsCharacter(text, character, profiles)) return false;
-  const normalizedText = normalizeComparableChoiceText(text);
-  const profile = profiles.find((candidate) =>
-    [candidate.name, ...candidate.aliases].some(
-      (identity) =>
-        normalizedScopeIdentity(identity) === normalizedScopeIdentity(character),
-    )
-  );
-  return [character, profile?.name, ...(profile?.aliases ?? [])]
-    .filter((identity): identity is string => Boolean(identity?.trim()))
-    .map(normalizeComparableChoiceText)
-    .some((identity) => {
-      const escaped = identity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      return [
-        new RegExp(
-          `\\b(?:approach|ask|confront|follow|greet|help|hug|invite|join|kiss|meet|question|tell|touch|welcome)\\b`
-            + ` (?:the )?${escaped}(?= |$)`,
-          "iu",
-        ),
-        new RegExp(
-          `\\b(?:speak|talk)\\b(?: directly)? (?:to|with) (?:the )?${escaped}(?= |$)`,
-          "iu",
-        ),
-        new RegExp(
-          `\\b(?:give|hand|offer|send|show)\\b(?: \\p{L}+){0,5} \\bto\\b`
-            + ` (?:the )?${escaped}(?= |$)`,
-          "iu",
-        ),
-        new RegExp(
-          `\\b(?:ask|request)\\b(?: \\p{L}+){0,5} \\bfrom\\b`
-            + ` (?:the )?${escaped}(?= |$)`,
-          "iu",
-        ),
-      ].some((pattern) => pattern.test(normalizedText));
-    });
-}
-
-function choiceSeeksCharacterWithoutRequiringPresence(
-  text: string,
-  character: string,
-  profiles: readonly CharacterProfile[],
-): boolean {
-  if (!textMentionsCharacter(text, character, profiles)) return false;
-  const normalizedText = normalizeComparableChoiceText(text);
-  const profile = profiles.find((candidate) =>
-    [candidate.name, ...candidate.aliases].some(
-      (identity) =>
-        normalizedScopeIdentity(identity) === normalizedScopeIdentity(character),
-    )
-  );
-  const identities = [character, profile?.name, ...(profile?.aliases ?? [])]
-    .filter((identity): identity is string => Boolean(identity?.trim()))
-    .map(normalizeComparableChoiceText);
-  const directVerb =
-    "(?:ask|question|tell|explain|speak|talk|greet|welcome|hand|give|show|touch|kiss|hug|join|confront|help|lead|guide|invite|follow)";
-
-  return identities.some((identity) => {
-    const escaped = identity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const seeksPossibleSignal = [
-      new RegExp(
-        `\\b(?:listen|listening|watch|watching|look|looking|search|searching|scan|scanning|wait|waiting)\\b`
-          + `(?: \\p{L}+){0,6} \\bfor\\b(?: \\p{L}+){0,6} ${escaped}(?: s)?(?= |$)`,
-        "iu",
-      ),
-      new RegExp(
-        `\\b(?:call|calling|shout|shouting|cry|crying)\\b`
-          + `(?: \\p{L}+){0,4} \\b(?:for|to)\\b(?: \\p{L}+){0,3} ${escaped}(?= |$)`,
-        "iu",
-      ),
-      new RegExp(
-        `\\b(?:call|calling|shout|shouting|cry|crying)\\b`
-          + `(?: \\p{L}+){0,5} ${escaped} s \\bname\\b`,
-        "iu",
-      ),
-      new RegExp(
-        `${escaped} s \\b(?:footsteps|steps|voice|movement|reply|answer|signal|signs)\\b`
-          + `(?: \\p{L}+){0,6} \\b(?:might|may|could)\\b`
-          + `(?: \\p{L}+){0,3} \\b(?:be heard|be seen|be noticed|be detected|appear)\\b`,
-        "iu",
-      ),
-    ].some((pattern) => pattern.test(normalizedText));
-    if (!seeksPossibleSignal) return false;
-
-    return ![
-      new RegExp(
-        `\\b${directVerb}\\b(?: \\p{L}+){0,5} ${escaped}(?: s)?(?= |$)`,
-        "iu",
-      ),
-      new RegExp(
-        `${escaped}(?: s)?(?: \\p{L}+){0,6} \\b(?:and|then)\\b`
-          + `(?: \\p{L}+){0,2} \\b${directVerb}\\b`,
-        "iu",
-      ),
-      new RegExp(
-        `${escaped}(?: s)?(?: \\p{L}+){0,8}`
-          + " \\b(?:answers|replies|responds|reacts|agrees|refuses|arrives|returns|enters|joins|follows)\\b",
-        "iu",
-      ),
-    ].some((pattern) => pattern.test(normalizedText));
-  });
-}
-
 export function removeChoicesWithUnintroducedCharacters(
   scene: Scene,
-  state: Pick<
-    GameState,
-    "scene" | "history" | "characterProfiles" | "playerName" | "sourceIntroducedCharacters"
-  >,
+  state: Pick<GameState, "scene" | "history" | "characterProfiles" | "playerName" | "sourceIntroducedCharacters">,
   visibleSourceEventNarrative = "",
   unavailableCharacters: readonly string[] = [],
 ): Scene {
@@ -1154,10 +795,7 @@ export function removeChoicesWithUnintroducedCharacters(
       .filter((item) => item.kind === "scene")
       .flatMap((item) => [item.text, ...(item.sceneScope?.peoplePresent ?? [])]),
   ].join("\n");
-  const playerProfile = findPlayerCharacterProfile(
-    state.playerName,
-    state.characterProfiles,
-  );
+  const playerProfile = findPlayerCharacterProfile(state.playerName, state.characterProfiles);
   const playerIdentities = new Set(
     [state.playerName, playerProfile?.name, ...(playerProfile?.aliases ?? [])]
       .filter((identity): identity is string => Boolean(identity?.trim()))
@@ -1167,185 +805,64 @@ export function removeChoicesWithUnintroducedCharacters(
     (state.sourceIntroducedCharacters ?? []).map(normalizeComparableChoiceText),
   );
   const profiles = state.characterProfiles ?? [];
-  const explicitlyUnavailableCharacters = new Set(
-    unavailableCharacters.map(normalizeComparableChoiceText),
-  );
-  const roleReferences = new Map(
-    profiles.map((profile) => [profile, characterRoleReferences(profile)]),
-  );
+  const explicitlyUnavailableCharacters = new Set(unavailableCharacters.map(normalizeComparableChoiceText));
+  const roleReferences = new Map(profiles.map((profile) => [profile, characterRoleReferences(profile)]));
   const choices = scene.choices.map((choice): Scene["choices"][number] => {
-    const requiredPresentCharacters = (choice.requiredPresentCharacters ?? [])
-      .filter(
-        (character) =>
-          !playerIdentities.has(normalizeComparableChoiceText(character)),
-      );
-    const requiredAbsentCharacters = (choice.requiredAbsentCharacters ?? [])
-      .filter(
-        (character) =>
-          !playerIdentities.has(normalizeComparableChoiceText(character)),
-      );
-    const signalSearchProfiles = choice.type === "action"
-      ? profiles.filter((profile) => {
-          const isPlayer = [profile.name, ...profile.aliases].some((identity) =>
-            playerIdentities.has(normalizeComparableChoiceText(identity))
-          );
-          return !isPlayer
-            && choiceSeeksCharacterWithoutRequiringPresence(
-              choice.text,
-              profile.name,
-              profiles,
-            );
-        })
-      : [];
-    const matchesSignalSearchProfile = (character: string): boolean =>
-      signalSearchProfiles.some(
-        (profile) => canonicalScopeName(character, profiles) === profile.name,
-      );
-    const repairedRequiredPresent = requiredPresentCharacters.filter(
-      (character) => !matchesSignalSearchProfile(character),
+    const requiredPresentCharacters = (choice.requiredPresentCharacters ?? []).filter(
+      (character) => !playerIdentities.has(normalizeComparableChoiceText(character)),
     );
-    const repairedRequiredAbsent = [...requiredAbsentCharacters];
-    for (const profile of signalSearchProfiles) {
-      if (!repairedRequiredAbsent.some(
-        (character) =>
-          canonicalScopeName(character, profiles) === profile.name,
-      )) {
-        repairedRequiredAbsent.push(profile.name);
-      }
-    }
-    const clearCharacter = choice.character
-      && matchesSignalSearchProfile(choice.character);
-    const { character: _character, ...choiceWithoutCharacter } = choice;
-
+    const requiredAbsentCharacters = (choice.requiredAbsentCharacters ?? []).filter(
+      (character) => !playerIdentities.has(normalizeComparableChoiceText(character)),
+    );
     return {
-      ...(clearCharacter ? choiceWithoutCharacter : choice),
-      ...(choice.requiredPresentCharacters || signalSearchProfiles.length > 0
-        ? { requiredPresentCharacters: repairedRequiredPresent }
-        : {}),
-      ...(choice.requiredAbsentCharacters || signalSearchProfiles.length > 0
-        ? { requiredAbsentCharacters: repairedRequiredAbsent }
-        : {}),
+      ...choice,
+      ...(choice.requiredPresentCharacters ? { requiredPresentCharacters } : {}),
+      ...(choice.requiredAbsentCharacters ? { requiredAbsentCharacters } : {}),
     };
   });
 
   return {
     ...scene,
     choices: choices.filter((choice) => {
-      if (
-        choice.type === "action"
-        && sceneEstablishesPlayerCannotMove(scene)
-        && choiceAssumesPlayerCanMove(choice.text)
-      ) {
-        return false;
-      }
-      if (
-        scene.sceneScope
-        && scene.sceneScope.currentLocation !== "Unspecified location"
-      ) {
-        const missingRequiredCharacter = (
-          choice.requiredPresentCharacters ?? []
-        ).some((character) =>
-          !scopePeopleIncludeCharacter(
-            scene.sceneScope!.peoplePresent,
-            character,
-            profiles,
-          )
+      if (scene.sceneScope && scene.sceneScope.currentLocation !== "Unspecified location") {
+        const missingRequiredCharacter = (choice.requiredPresentCharacters ?? []).some((character) =>
+          !scopePeopleIncludeCharacter(scene.sceneScope!.peoplePresent, character, profiles)
         );
-        const unexpectedlyPresentCharacter = (
-          choice.requiredAbsentCharacters ?? []
-        ).some((character) =>
-          scopePeopleIncludeCharacter(
-            scene.sceneScope!.peoplePresent,
-            character,
-            profiles,
-          )
+        const unexpectedlyPresentCharacter = (choice.requiredAbsentCharacters ?? []).some((character) =>
+          scopePeopleIncludeCharacter(scene.sceneScope!.peoplePresent, character, profiles)
         );
-        if (missingRequiredCharacter || unexpectedlyPresentCharacter) {
-          return false;
-        }
-        const directlyInteractsWithAbsentCharacter = choice.type === "action"
-          && profiles.some((profile) => {
-            const isPlayer = [profile.name, ...profile.aliases].some((identity) =>
-              playerIdentities.has(normalizeComparableChoiceText(identity))
-            );
-            return !isPlayer
-              && !scopePeopleIncludeCharacter(
-                scene.sceneScope!.peoplePresent,
-                profile.name,
-                profiles,
-              )
-              && choiceDirectlyInteractsWithCharacter(
-                choice.text,
-                profile.name,
-                profiles,
-              );
-          });
-        if (directlyInteractsWithAbsentCharacter) {
-          return false;
-        }
+        if (missingRequiredCharacter || unexpectedlyPresentCharacter) return false;
+
       }
       if (
         choice.type === "talk"
         && scene.sceneScope
         && scene.sceneScope.currentLocation !== "Unspecified location"
         && choice.character
-        && !scopePeopleIncludeCharacter(
-          scene.sceneScope.peopleWithinSpeakingDistance,
-          choice.character,
-          profiles,
-        )
-      ) {
-        return false;
-      }
+        && !scopePeopleIncludeCharacter(scene.sceneScope.peopleWithinSpeakingDistance, choice.character, profiles)
+      ) return false;
       if (
         choice.type === "action"
         && choice.character
         && scene.sceneScope
         && scene.sceneScope.currentLocation !== "Unspecified location"
         && !playerIdentities.has(normalizeComparableChoiceText(choice.character))
-        && !scopePeopleIncludeCharacter(
-          scene.sceneScope.peoplePresent,
-          choice.character,
-          profiles,
-        )
-      ) {
-        return false;
-      }
+        && !scopePeopleIncludeCharacter(scene.sceneScope.peoplePresent, choice.character, profiles)
+      ) return false;
       const explicitlyUnavailableProfile = profiles.find((profile) =>
         [profile.name, ...profile.aliases].some((identity) =>
           explicitlyUnavailableCharacters.has(normalizeComparableChoiceText(identity))
         )
         && choice.character
         && canonicalScopeName(choice.character, profiles) === profile.name
-        && !textNarratesCharacterArrival(scene.text, profile.name, profiles)
       );
-      if (explicitlyUnavailableProfile) {
-        return false;
-      }
+      if (explicitlyUnavailableProfile) return false;
       const choiceText = `${choice.text}\n${choice.character ?? ""}`;
       const namesExplicitlyUnavailableCharacter = unavailableCharacters.some((identity) =>
         choice.character
-        && canonicalScopeName(choice.character, profiles)
-          === canonicalScopeName(identity, profiles)
-        && !textNarratesCharacterArrival(scene.text, identity, profiles)
+        && canonicalScopeName(choice.character, profiles) === canonicalScopeName(identity, profiles)
       );
-      if (namesExplicitlyUnavailableCharacter) {
-        return false;
-      }
-      const absentProfiles = profiles.filter((profile) =>
-        textEstablishesCharacterAbsent(
-          `${scene.title}\n${scene.text}`,
-          profile.name,
-          profiles,
-        )
-      );
-      const namesAbsentCharacter = absentProfiles.some((profile) =>
-        choice.character
-        && canonicalScopeName(choice.character, profiles) === profile.name
-      );
-      if (namesAbsentCharacter) {
-        return false;
-      }
+      if (namesExplicitlyUnavailableCharacter) return false;
       const namesUnintroducedProfile = profiles.some((profile) => {
         const identities = [profile.name, ...profile.aliases];
         const mentionsProfile = identities.some((identity) =>
@@ -1360,21 +877,13 @@ export function removeChoicesWithUnintroducedCharacters(
         return mentionsProfile
           && !isPlayer
           && !appearedEarlierInSource
-          && !textMentionsCharacter(
-            establishedNarrative,
-            profile.name,
-            state.characterProfiles,
-          );
+          && !textMentionsCharacter(establishedNarrative, profile.name, state.characterProfiles);
       });
       if (namesUnintroducedProfile) return false;
-
       const referencedByRole = profiles.filter((profile) =>
-        roleReferences.get(profile)?.some((reference) =>
-          textMentionsNormalizedReference(choiceText, reference)
-        )
+        roleReferences.get(profile)?.some((reference) => textMentionsNormalizedReference(choiceText, reference))
       );
       if (referencedByRole.length === 0) return true;
-
       return referencedByRole.some((profile) => {
         const identities = [profile.name, ...profile.aliases];
         const isPlayer = identities.some((identity) =>
@@ -1383,11 +892,7 @@ export function removeChoicesWithUnintroducedCharacters(
         const appearedEarlierInSource = identities.some((identity) =>
           sourceIntroducedCharacters.has(normalizeComparableChoiceText(identity))
         );
-        const appearedByIdentity = textMentionsCharacter(
-          establishedNarrative,
-          profile.name,
-          state.characterProfiles,
-        );
+        const appearedByIdentity = textMentionsCharacter(establishedNarrative, profile.name, state.characterProfiles);
         const appearedByRole = roleReferences.get(profile)?.some((reference) =>
           textMentionsNormalizedReference(establishedNarrative, reference)
         ) ?? false;
@@ -1396,3 +901,4 @@ export function removeChoicesWithUnintroducedCharacters(
     }),
   };
 }
+

@@ -1,0 +1,2080 @@
+{
+  "source": {
+    "index": 21,
+    "title": "Chapter XIX",
+    "text": "Chapter XIX\nAttacked by the Fighting Trees \nChapter XIX\nAttacked by the Fighting Trees\nThe next morning Dorothy kissed the pretty green girl good-bye, and they all\nshook hands with the soldier with the green whiskers, who had walked with them\nas far as the gate. When the Guardian of the Gate saw them again he wondered\ngreatly that they could leave the beautiful City to get into new trouble. But\nhe at once unlocked their spectacles, which he put back into the green box, and\ngave them many good wishes to carry with them.\n\u201cYou are now our ruler,\u201d he said to the Scarecrow; \u201cso you\nmust come back to us as soon as possible.\u201d\n\u201cI certainly shall if I am able,\u201d the Scarecrow replied; \u201cbut\nI must help Dorothy to get home, first.\u201d\nAs Dorothy bade the good-natured Guardian a last farewell she said:\n\u201cI have been very kindly treated in your lovely City, and everyone has\nbeen good to me. I cannot tell you how grateful I am.\u201d\n\u201cDon\u2019t try, my dear,\u201d he answered. \u201cWe should like to\nkeep you with us, but if it is your wish to return to Kansas, I hope you will\nfind a way.\u201d He then opened the gate of the outer wall, and they walked\nforth and started upon their journey.\nThe sun shone brightly as our friends turned their faces toward the Land of the\nSouth. They were all in the best of spirits, and laughed and chatted together.\nDorothy was once more filled with the hope of getting home, and the Scarecrow\nand the Tin Woodman were glad to be of use to her. As for the Lion, he sniffed\nthe fresh air with delight and whisked his tail from side to side in pure joy\nat being in the country again, while Toto ran around them and chased the moths\nand butterflies, barking merrily all the time.\n\u201cCity life does not agree with me at all,\u201d remarked the Lion, as\nthey walked along at a brisk pace. \u201cI have lost much flesh since I lived\nthere, and now I am anxious for a chance to show the other beasts how\ncourageous I have grown.\u201d\nThey now turned and took a last look at the Emerald City. All they could see\nwas a mass of towers and steeples behind the green walls, and high up above\neverything the spires and dome of the Palace of Oz.\n\u201cOz was not such a bad Wizard, after all,\u201d said the Tin Woodman, as\nhe felt his heart rattling around in his breast.\n\u201cHe knew how to give me brains, and very good brains, too,\u201d said\nthe Scarecrow.\n\u201cIf Oz had taken a dose of the same courage he gave me,\u201d added the\nLion, \u201che would have been a brave man.\u201d\nDorothy said nothing. Oz had not kept the promise he made her, but he had done\nhis best, so she forgave him. As he said, he was a good man, even if he was a\nbad Wizard.\nThe first day\u2019s journey was through the green fields and bright flowers\nthat stretched about the Emerald City on every side. They slept that night on\nthe grass, with nothing but the stars over them; and they rested very well\nindeed.\nIn the morning they traveled on until they came to a thick wood. There was no\nway of going around it, for it seemed to extend to the right and left as far as\nthey could see; and, besides, they did not dare change the direction of their\njourney for fear of getting lost. So they looked for the place where it would\nbe easiest to get into the forest.\nThe Scarecrow, who was in the lead, finally discovered a big tree with such\nwide-spreading branches that there was room for the party to pass underneath.\nSo he walked forward to the tree, but just as he came under the first branches\nthey bent down and twined around him, and the next minute he was raised from\nthe ground and flung headlong among his fellow travelers.\nThis did not hurt the Scarecrow, but it surprised him, and he looked rather\ndizzy when Dorothy picked him up.\n\u201cHere is another space between the trees,\u201d called the Lion.\n\u201cLet me try it first,\u201d said the Scarecrow, \u201cfor it\ndoesn\u2019t hurt me to get thrown about.\u201d He walked up to another tree,\nas he spoke, but its branches immediately seized him and tossed him back again.\n\u201cThis is strange,\u201d exclaimed Dorothy. \u201cWhat shall we\ndo?\u201d\n\u201cThe trees seem to have made up their minds to fight us, and stop our\njourney,\u201d remarked the Lion.\n\u201cI believe I will try it myself,\u201d said the Woodman, and shouldering\nhis axe, he marched up to the first tree that had handled the Scarecrow so\nroughly. When a big branch bent down to seize him the Woodman chopped at it so\nfiercely that he cut it in two. At once the tree began shaking all its branches\nas if in pain, and the Tin Woodman passed safely under it.\n\u201cCome on!\u201d he shouted to the others. \u201cBe quick!\u201d They\nall ran forward and passed under the tree without injury, except Toto, who was\ncaught by a small branch and shaken until he howled. But the Woodman promptly\nchopped off the branch and set the little dog free.\nThe other trees of the forest did nothing to keep them back, so they made up\ntheir minds that only the first row of trees could bend down their branches,\nand that probably these were the policemen of the forest, and given this\nwonderful power in order to keep strangers out of it.\nThe four travelers walked with ease through the trees until they came to the\nfarther edge of the wood. Then, to their surprise, they found before them a\nhigh wall which seemed to be made of white china. It was smooth, like the\nsurface of a dish, and higher than their heads.\n\u201cWhat shall we do now?\u201d asked Dorothy.\n\u201cI will make a ladder,\u201d said the Tin Woodman, \u201cfor we\ncertainly must climb over the wall.\u201d"
+  },
+  "timeline": {
+    "summary": "Dorothy and her companions leave the Emerald City, travel toward the Land of the South, and enter a forest whose first-row trees attack intruders. The Tin Woodman cuts a branch so the travelers can pass, but they then encounter a tall white-china wall and decide that a ladder is needed.",
+    "significantEvents": [
+      {
+        "description": "Dorothy and her companions say farewell to the people at the Emerald City, recover their spectacles, and leave through the opened gate to continue toward the Land of the South. As they travel, the Lion comments on city life and his courage; the travelers look back at the Emerald City, discuss Oz, and Dorothy forgives him for failing to keep his promise.",
+        "category": "departure",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Kisses the pretty green girl good-bye.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has said farewell to the pretty green girl.",
+            "targets": [
+              "pretty green girl"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 5,
+                "lineEnd": 5
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Shakes hands with the soldier with the green whiskers as part of the travelers' farewell.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has shaken hands with the soldier with the green whiskers.",
+            "targets": [
+              "soldier with the green whiskers"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 5,
+                "lineEnd": 7
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Shakes hands with the soldier with the green whiskers as part of the travelers' farewell.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow has shaken hands with the soldier with the green whiskers.",
+            "targets": [
+              "soldier with the green whiskers"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 5,
+                "lineEnd": 7
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Shakes hands with the soldier with the green whiskers as part of the travelers' farewell.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has shaken hands with the soldier with the green whiskers.",
+            "targets": [
+              "soldier with the green whiskers"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 5,
+                "lineEnd": 7
+              }
+            ]
+          },
+          {
+            "actor": "Lion",
+            "action": "Shakes hands with the soldier with the green whiskers as part of the travelers' farewell.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Lion has shaken hands with the soldier with the green whiskers.",
+            "targets": [
+              "soldier with the green whiskers"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 5,
+                "lineEnd": 7
+              }
+            ]
+          },
+          {
+            "actor": "Guardian of the Gate",
+            "action": "Unlocks the travelers' spectacles and puts them back into the green box.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The travelers' spectacles are unlocked and stored in the green box.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 7,
+                "lineEnd": 10
+              }
+            ]
+          },
+          {
+            "actor": "Guardian of the Gate",
+            "action": "Gives the travelers good wishes for their journey.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The Guardian of the Gate has given the travelers his good wishes.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 9,
+                "lineEnd": 10
+              }
+            ]
+          },
+          {
+            "actor": "Guardian of the Gate",
+            "action": "Tells Scarecrow that he is now the ruler and should return as soon as possible.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow has been addressed as the ruler of the Emerald City and is urged to return.",
+            "targets": [
+              "Scarecrow"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 11,
+                "lineEnd": 12
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Replies that he will return if able, but must first help Dorothy get home.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow has stated his intention to help Dorothy reach home before returning to the Emerald City.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 13,
+                "lineEnd": 14
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Bids the Guardian of the Gate a final farewell and expresses gratitude for her treatment in the city.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has completed her farewell and expressed gratitude to the Guardian of the Gate.",
+            "targets": [
+              "Guardian of the Gate"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 15,
+                "lineEnd": 17
+              }
+            ]
+          },
+          {
+            "actor": "Guardian of the Gate",
+            "action": "Tells Dorothy that the city would like to keep her but hopes she finds a way back to Kansas.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has been told that the Guardian accepts her wish to return to Kansas.",
+            "targets": [
+              "Dorothy"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 18,
+                "lineEnd": 20
+              }
+            ]
+          },
+          {
+            "actor": "Guardian of the Gate",
+            "action": "Opens the gate of the outer wall.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The gate of the outer wall is open, allowing the travelers to leave the city.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 20,
+                "lineEnd": 20
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Walks out through the opened gate with Scarecrow, Tin Woodman, and Lion, and starts the journey toward the Land of the South.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "leave-emerald-city",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow",
+                  "Tin Woodman",
+                  "Lion"
+                ],
+                "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have left the Emerald City and begun traveling toward the Land of the South."
+              }
+            },
+            "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have left the Emerald City and begun traveling toward the Land of the South.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 20,
+                "lineEnd": 22
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Walks out through the opened gate with Dorothy, Tin Woodman, and Lion, and starts the journey toward the Land of the South.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "leave-emerald-city",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow",
+                  "Tin Woodman",
+                  "Lion"
+                ],
+                "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have left the Emerald City and begun traveling toward the Land of the South."
+              }
+            },
+            "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have left the Emerald City and begun traveling toward the Land of the South.",
+            "targets": [
+              "Dorothy",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 20,
+                "lineEnd": 22
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Walks out through the opened gate with Dorothy, Scarecrow, and Lion, and starts the journey toward the Land of the South.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "leave-emerald-city",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow",
+                  "Tin Woodman",
+                  "Lion"
+                ],
+                "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have left the Emerald City and begun traveling toward the Land of the South."
+              }
+            },
+            "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have left the Emerald City and begun traveling toward the Land of the South.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 20,
+                "lineEnd": 22
+              }
+            ]
+          },
+          {
+            "actor": "Lion",
+            "action": "Walks out through the opened gate with Dorothy, Scarecrow, and Tin Woodman, and starts the journey toward the Land of the South.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "leave-emerald-city",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow",
+                  "Tin Woodman",
+                  "Lion"
+                ],
+                "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have left the Emerald City and begun traveling toward the Land of the South."
+              }
+            },
+            "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have left the Emerald City and begun traveling toward the Land of the South.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 20,
+                "lineEnd": 22
+              }
+            ]
+          },
+          {
+            "actor": "Lion",
+            "action": "Remarks that city life does not agree with him, that he has lost flesh there, and that he is eager to show the other beasts how courageous he has become.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Lion has expressed dissatisfaction with city life and confidence in his increased courage.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 29,
+                "lineEnd": 32
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Turns with Scarecrow, Tin Woodman, and Lion to take a last look at the Emerald City.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "last-look-emerald-city",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow",
+                  "Tin Woodman",
+                  "Lion"
+                ],
+                "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have turned and looked back at the Emerald City, seeing its towers, steeples, palace spires, and dome behind the green walls."
+              }
+            },
+            "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have turned and looked back at the Emerald City, seeing its towers, steeples, palace spires, and dome behind the green walls.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 33,
+                "lineEnd": 35
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Turns with Dorothy, Tin Woodman, and Lion to take a last look at the Emerald City.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "last-look-emerald-city",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow",
+                  "Tin Woodman",
+                  "Lion"
+                ],
+                "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have turned and looked back at the Emerald City, seeing its towers, steeples, palace spires, and dome behind the green walls."
+              }
+            },
+            "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have turned and looked back at the Emerald City, seeing its towers, steeples, palace spires, and dome behind the green walls.",
+            "targets": [
+              "Dorothy",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 33,
+                "lineEnd": 35
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Turns with Dorothy, Scarecrow, and Lion to take a last look at the Emerald City.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "last-look-emerald-city",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow",
+                  "Tin Woodman",
+                  "Lion"
+                ],
+                "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have turned and looked back at the Emerald City, seeing its towers, steeples, palace spires, and dome behind the green walls."
+              }
+            },
+            "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have turned and looked back at the Emerald City, seeing its towers, steeples, palace spires, and dome behind the green walls.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 33,
+                "lineEnd": 35
+              }
+            ]
+          },
+          {
+            "actor": "Lion",
+            "action": "Turns with Dorothy, Scarecrow, and Tin Woodman to take a last look at the Emerald City.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": {
+                "id": "last-look-emerald-city",
+                "participants": [
+                  "Dorothy",
+                  "Scarecrow",
+                  "Tin Woodman",
+                  "Lion"
+                ],
+                "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have turned and looked back at the Emerald City, seeing its towers, steeples, palace spires, and dome behind the green walls."
+              }
+            },
+            "resultingState": "Dorothy, Scarecrow, Tin Woodman, and Lion have turned and looked back at the Emerald City, seeing its towers, steeples, palace spires, and dome behind the green walls.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 33,
+                "lineEnd": 35
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Says that Oz was not such a bad Wizard after all, while feeling his heart rattling in his breast.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has expressed a favorable assessment of Oz as a Wizard.",
+            "targets": [
+              "Oz"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 36,
+                "lineEnd": 37
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Says that Oz knew how to give him very good brains.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow has credited Oz with giving him very good brains.",
+            "targets": [
+              "Oz"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 38,
+                "lineEnd": 39
+              }
+            ]
+          },
+          {
+            "actor": "Lion",
+            "action": "Says that Oz would have been a brave man if he had taken a dose of the courage he gave Lion.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Lion has commented that Oz lacked the courage he gave Lion.",
+            "targets": [
+              "Oz"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 40,
+                "lineEnd": 41
+              }
+            ]
+          },
+          {
+            "actor": "narrator",
+            "action": "Recounts: Dorothy said nothing. Oz had not kept the promise he made her, but he had done his best, so she forgave him. As he said, he was a good man, even if he was a bad Wizard.",
+            "sourceSemantics": {
+              "mode": "narration",
+              "narratedContent": "Dorothy said nothing. Oz had not kept the promise he made her, but he had done his best, so she forgave him. As he said, he was a good man, even if he was a bad Wizard.",
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "narrator has recounted: Dorothy said nothing. Oz had not kept the promise he made her, but he had done his best, so she forgave him. As he said, he was a good man, even if he was a bad Wizard.",
+            "targets": [
+              "Dorothy",
+              "Oz"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 42,
+                "lineEnd": 44
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy",
+          "Scarecrow",
+          "Tin Woodman",
+          "Lion",
+          "Guardian of the Gate",
+          "narrator"
+        ],
+        "targets": [
+          "pretty green girl",
+          "soldier with the green whiskers",
+          "Dorothy",
+          "Scarecrow",
+          "Tin Woodman",
+          "Lion",
+          "Guardian of the Gate",
+          "Oz"
+        ],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 5
+          },
+          {
+            "lineStart": 5,
+            "lineEnd": 7
+          },
+          {
+            "lineStart": 5,
+            "lineEnd": 22
+          },
+          {
+            "lineStart": 7,
+            "lineEnd": 10
+          },
+          {
+            "lineStart": 9,
+            "lineEnd": 10
+          },
+          {
+            "lineStart": 11,
+            "lineEnd": 12
+          },
+          {
+            "lineStart": 13,
+            "lineEnd": 14
+          },
+          {
+            "lineStart": 15,
+            "lineEnd": 17
+          },
+          {
+            "lineStart": 18,
+            "lineEnd": 20
+          },
+          {
+            "lineStart": 20,
+            "lineEnd": 20
+          },
+          {
+            "lineStart": 20,
+            "lineEnd": 22
+          },
+          {
+            "lineStart": 29,
+            "lineEnd": 32
+          },
+          {
+            "lineStart": 33,
+            "lineEnd": 35
+          },
+          {
+            "lineStart": 36,
+            "lineEnd": 37
+          },
+          {
+            "lineStart": 38,
+            "lineEnd": 39
+          },
+          {
+            "lineStart": 40,
+            "lineEnd": 41
+          },
+          {
+            "lineStart": 42,
+            "lineEnd": 44
+          }
+        ]
+      },
+      {
+        "description": "The travelers journey away from the Emerald City, rest overnight, and continue until they reach a thick forest blocking their route.",
+        "category": "arrival",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Travels with the others through the countryside toward the Land of the South.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy and her companions are traveling away from the Emerald City toward the Land of the South.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 22,
+                "lineEnd": 28
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Rests overnight with the others on the grass.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy and her companions have spent the night resting in the countryside.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 45,
+                "lineEnd": 48
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Continues traveling with the others until they reach a thick wood.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy and her companions have reached a thick forest that extends to both sides of their route.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 49,
+                "lineEnd": 53
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Helps look for the easiest place to enter the forest while leading the party.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The party is searching for an accessible forest entrance, with Scarecrow at the front.",
+            "targets": [
+              "Dorothy",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 49,
+                "lineEnd": 54
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Discovers a large tree whose wide branches leave room for the party to pass underneath.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow has found a possible passage beneath the large tree at the forest edge.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 54,
+                "lineEnd": 55
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy",
+          "Scarecrow"
+        ],
+        "targets": [
+          "Scarecrow",
+          "Tin Woodman",
+          "Lion",
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 22,
+            "lineEnd": 28
+          },
+          {
+            "lineStart": 22,
+            "lineEnd": 55
+          },
+          {
+            "lineStart": 45,
+            "lineEnd": 48
+          },
+          {
+            "lineStart": 49,
+            "lineEnd": 53
+          },
+          {
+            "lineStart": 49,
+            "lineEnd": 54
+          },
+          {
+            "lineStart": 54,
+            "lineEnd": 55
+          }
+        ]
+      },
+      {
+        "description": "The first tree attacks Scarecrow when he tries to pass, throwing him back among the travelers; Dorothy retrieves him.",
+        "category": "violence",
+        "beats": [
+          {
+            "actor": "Scarecrow",
+            "action": "Walks forward beneath the first branches of the large tree.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow is beneath the tree's first branches, before the attack interrupts his passage.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 54,
+                "lineEnd": 57
+              }
+            ]
+          },
+          {
+            "actor": null,
+            "action": "The tree's branches bend down, twine around Scarecrow, raise him from the ground, and fling him headlong among the other travelers.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow has been thrown among Dorothy and the others; the tree has stopped his passage.",
+            "targets": [
+              "Scarecrow"
+            ],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 56,
+                "lineEnd": 58
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Is surprised and becomes dizzy after being thrown, without being physically hurt.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow is unhurt but surprised and dizzy among the travelers.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 59,
+                "lineEnd": 60
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Picks Scarecrow up.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow is back in Dorothy's care after being thrown down.",
+            "targets": [
+              "Scarecrow"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 59,
+                "lineEnd": 60
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Scarecrow",
+          "Dorothy"
+        ],
+        "targets": [
+          "Scarecrow"
+        ],
+        "references": [
+          {
+            "lineStart": 54,
+            "lineEnd": 57
+          },
+          {
+            "lineStart": 54,
+            "lineEnd": 60
+          },
+          {
+            "lineStart": 56,
+            "lineEnd": 58
+          },
+          {
+            "lineStart": 59,
+            "lineEnd": 60
+          }
+        ]
+      },
+      {
+        "description": "Scarecrow deliberately tests a second opening, but another tree seizes and tosses him back, confirming that the trees are resisting the travelers.",
+        "category": "violence",
+        "beats": [
+          {
+            "actor": "Lion",
+            "action": "Calls attention to another space between the trees.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "A second possible passage has been identified for the travelers.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 61,
+                "lineEnd": 61
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Offers to try the second passage because being thrown does not hurt him.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow has decided to test the second passage himself.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 62,
+                "lineEnd": 63
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Walks up to the second tree.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow is at the second tree's branches, ready to pass beneath them.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 63,
+                "lineEnd": 64
+              }
+            ]
+          },
+          {
+            "actor": null,
+            "action": "The second tree's branches seize Scarecrow and toss him back.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow has been thrown back again, and the second passage is also blocked by the tree.",
+            "targets": [
+              "Scarecrow"
+            ],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 63,
+                "lineEnd": 64
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Asks what the travelers should do after seeing the trees resist them.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has openly recognized that the group needs another way forward.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 65,
+                "lineEnd": 66
+              }
+            ]
+          },
+          {
+            "actor": "Lion",
+            "action": "Concludes that the trees have decided to fight the travelers and stop their journey.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The travelers understand that the first-row trees are actively obstructing their route.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 67,
+                "lineEnd": 68
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Lion",
+          "Scarecrow",
+          "Dorothy"
+        ],
+        "targets": [
+          "Dorothy",
+          "Scarecrow",
+          "Tin Woodman",
+          "Lion"
+        ],
+        "references": [
+          {
+            "lineStart": 61,
+            "lineEnd": 61
+          },
+          {
+            "lineStart": 61,
+            "lineEnd": 68
+          },
+          {
+            "lineStart": 62,
+            "lineEnd": 63
+          },
+          {
+            "lineStart": 63,
+            "lineEnd": 64
+          },
+          {
+            "lineStart": 65,
+            "lineEnd": 66
+          },
+          {
+            "lineStart": 67,
+            "lineEnd": 68
+          }
+        ]
+      },
+      {
+        "description": "Tin Woodman attacks the first tree's branch with his axe, opening a safe passage; the travelers cross, but Toto is caught until Tin Woodman cuts him free.",
+        "category": "violence",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Decides to test the first tree himself and approaches it with his axe over his shoulder.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman is approaching the first attacking tree with his axe ready.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 69,
+                "lineEnd": 71
+              }
+            ]
+          },
+          {
+            "actor": null,
+            "action": "A large branch bends down toward Tin Woodman to seize him.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The tree's branch is bent down toward Tin Woodman, threatening to catch him.",
+            "targets": [
+              "Tin Woodman"
+            ],
+            "agency": "external",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 71,
+                "lineEnd": 71
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Chops fiercely at the bent branch and cuts it in two.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "The attacking branch has been severed, and Tin Woodman is no longer threatened by that branch.",
+            "targets": [],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 71,
+                "lineEnd": 72
+              }
+            ]
+          },
+          {
+            "actor": null,
+            "action": "The tree shakes all its branches as if in pain.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "The first tree is shaking after its branch was cut, while the passage beneath it remains available.",
+            "targets": [],
+            "agency": "external",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 72,
+                "lineEnd": 73
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Passes safely under the damaged tree and calls for the others to hurry.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has crossed beneath the first tree and is on the safe side, urging the others to follow.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Lion",
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 73,
+                "lineEnd": 74
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Runs forward and passes under the tree with the other travelers.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has crossed beneath the first tree without injury.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 74,
+                "lineEnd": 76
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Runs forward and passes under the tree with the other travelers.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow has crossed beneath the first tree without injury.",
+            "targets": [
+              "Dorothy",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 74,
+                "lineEnd": 76
+              }
+            ]
+          },
+          {
+            "actor": "Lion",
+            "action": "Runs forward and passes under the tree with the other travelers.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Lion has crossed beneath the first tree without injury.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Tin Woodman"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 74,
+                "lineEnd": 76
+              }
+            ]
+          },
+          {
+            "actor": "Toto",
+            "action": "Runs under the tree with the travelers but is caught by a small branch and shaken until he howls.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "other",
+              "jointAction": null
+            },
+            "resultingState": "Toto is caught and being shaken by a small branch beneath the tree.",
+            "targets": [],
+            "agency": "involuntary",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 75,
+                "lineEnd": 76
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Chops off the small branch holding Toto and sets the dog free.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Toto is free, and the small branch that held him has been cut away.",
+            "targets": [
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 76,
+                "lineEnd": 77
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman",
+          "Dorothy",
+          "Scarecrow",
+          "Lion",
+          "Toto"
+        ],
+        "targets": [
+          "Tin Woodman",
+          "Dorothy",
+          "Scarecrow",
+          "Lion",
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 69,
+            "lineEnd": 71
+          },
+          {
+            "lineStart": 69,
+            "lineEnd": 77
+          },
+          {
+            "lineStart": 71,
+            "lineEnd": 71
+          },
+          {
+            "lineStart": 71,
+            "lineEnd": 72
+          },
+          {
+            "lineStart": 72,
+            "lineEnd": 73
+          },
+          {
+            "lineStart": 73,
+            "lineEnd": 74
+          },
+          {
+            "lineStart": 74,
+            "lineEnd": 76
+          },
+          {
+            "lineStart": 75,
+            "lineEnd": 76
+          },
+          {
+            "lineStart": 76,
+            "lineEnd": 77
+          }
+        ]
+      },
+      {
+        "description": "The travelers pass through the rest of the forest and reach its far edge, where they discover a tall, smooth wall made of white china.",
+        "category": "discovery",
+        "beats": [
+          {
+            "actor": "Dorothy",
+            "action": "Walks with the others through the remaining trees after the first row stops obstructing them.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy and her companions are moving freely through the forest beyond the attacking first row.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion",
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 78,
+                "lineEnd": 82
+              }
+            ]
+          },
+          {
+            "actor": "Scarecrow",
+            "action": "Walks with the others through the remaining trees toward the far edge of the forest.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Scarecrow and the travelers are nearing the far edge of the forest.",
+            "targets": [
+              "Dorothy",
+              "Tin Woodman",
+              "Lion",
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 82,
+                "lineEnd": 82
+              }
+            ]
+          },
+          {
+            "actor": "Tin Woodman",
+            "action": "Walks with the others through the remaining trees toward the far edge of the forest.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman and the travelers are nearing the far edge of the forest.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Lion",
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 82,
+                "lineEnd": 82
+              }
+            ]
+          },
+          {
+            "actor": "Lion",
+            "action": "Walks with the others through the remaining trees toward the far edge of the forest.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Lion and the travelers are nearing the far edge of the forest.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Tin Woodman",
+              "Toto"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 82,
+                "lineEnd": 82
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Reaches the farther edge of the wood with the travelers.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy and her companions have left the wooded interior and are at the forest's farther edge.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 82,
+                "lineEnd": 83
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Discovers the high wall of smooth white china standing before the travelers.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "A wall higher than the travelers' heads blocks the route beyond the forest edge.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 83,
+                "lineEnd": 85
+              }
+            ]
+          },
+          {
+            "actor": "Dorothy",
+            "action": "Asks what the travelers should do about the wall.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Dorothy has asked the group to determine how to get past the wall.",
+            "targets": [
+              "Scarecrow",
+              "Tin Woodman",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "significant",
+            "references": [
+              {
+                "lineStart": 86,
+                "lineEnd": 86
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Dorothy",
+          "Scarecrow",
+          "Tin Woodman",
+          "Lion"
+        ],
+        "targets": [
+          "Scarecrow",
+          "Tin Woodman",
+          "Lion",
+          "Toto",
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 78,
+            "lineEnd": 82
+          },
+          {
+            "lineStart": 78,
+            "lineEnd": 86
+          },
+          {
+            "lineStart": 82,
+            "lineEnd": 82
+          },
+          {
+            "lineStart": 82,
+            "lineEnd": 83
+          },
+          {
+            "lineStart": 83,
+            "lineEnd": 85
+          },
+          {
+            "lineStart": 86,
+            "lineEnd": 86
+          }
+        ]
+      },
+      {
+        "description": "Tin Woodman decides that the travelers must climb over the white-china wall and proposes making a ladder.",
+        "category": "decision",
+        "beats": [
+          {
+            "actor": "Tin Woodman",
+            "action": "Decides to make a ladder because the travelers must climb over the wall.",
+            "sourceSemantics": {
+              "mode": "present",
+              "narratedContent": null,
+              "intentionalRole": "meaningful",
+              "jointAction": null
+            },
+            "resultingState": "Tin Woodman has committed to making a ladder; the wall still blocks the travelers' route.",
+            "targets": [
+              "Dorothy",
+              "Scarecrow",
+              "Lion"
+            ],
+            "agency": "intentional",
+            "stakes": "critical",
+            "references": [
+              {
+                "lineStart": 87,
+                "lineEnd": 88
+              }
+            ]
+          }
+        ],
+        "actors": [
+          "Tin Woodman"
+        ],
+        "targets": [
+          "Dorothy",
+          "Scarecrow",
+          "Lion"
+        ],
+        "references": [
+          {
+            "lineStart": 87,
+            "lineEnd": 88
+          }
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "name": "Dorothy",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 28
+          },
+          {
+            "lineStart": 33,
+            "lineEnd": 44
+          },
+          {
+            "lineStart": 49,
+            "lineEnd": 88
+          }
+        ]
+      },
+      {
+        "name": "pretty green girl",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 5
+          }
+        ]
+      },
+      {
+        "name": "soldier with the green whiskers",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 6,
+            "lineEnd": 7
+          }
+        ]
+      },
+      {
+        "name": "Guardian of the Gate",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 7,
+            "lineEnd": 20
+          }
+        ]
+      },
+      {
+        "name": "Scarecrow",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 11,
+            "lineEnd": 14
+          },
+          {
+            "lineStart": 22,
+            "lineEnd": 25
+          },
+          {
+            "lineStart": 36,
+            "lineEnd": 39
+          },
+          {
+            "lineStart": 49,
+            "lineEnd": 64
+          },
+          {
+            "lineStart": 74,
+            "lineEnd": 83
+          }
+        ]
+      },
+      {
+        "name": "Tin Woodman",
+        "aliases": [
+          "Woodman"
+        ],
+        "references": [
+          {
+            "lineStart": 22,
+            "lineEnd": 25
+          },
+          {
+            "lineStart": 36,
+            "lineEnd": 37
+          },
+          {
+            "lineStart": 69,
+            "lineEnd": 77
+          },
+          {
+            "lineStart": 82,
+            "lineEnd": 88
+          }
+        ]
+      },
+      {
+        "name": "Lion",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 22,
+            "lineEnd": 32
+          },
+          {
+            "lineStart": 61,
+            "lineEnd": 68
+          },
+          {
+            "lineStart": 74,
+            "lineEnd": 83
+          }
+        ]
+      },
+      {
+        "name": "Toto",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 25,
+            "lineEnd": 28
+          },
+          {
+            "lineStart": 74,
+            "lineEnd": 77
+          }
+        ]
+      },
+      {
+        "name": "Oz",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 33,
+            "lineEnd": 44
+          }
+        ]
+      },
+      {
+        "name": "narrator",
+        "aliases": [],
+        "references": [
+          {
+            "lineStart": 42,
+            "lineEnd": 44
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "actor": "Dorothy",
+        "description": "Bids farewell to the pretty green girl and the Guardian of the Gate, then leaves the Emerald City with her companions.",
+        "targets": [
+          "pretty green girl",
+          "Guardian of the Gate",
+          "Scarecrow",
+          "Tin Woodman",
+          "Lion"
+        ],
+        "references": [
+          {
+            "lineStart": 5,
+            "lineEnd": 22
+          }
+        ]
+      },
+      {
+        "actor": "Guardian of the Gate",
+        "description": "Unlocks and stores the travelers' spectacles, gives them good wishes, addresses Scarecrow as ruler, and opens the outer gate.",
+        "targets": [
+          "Scarecrow"
+        ],
+        "references": [
+          {
+            "lineStart": 7,
+            "lineEnd": 20
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "description": "States that he must help Dorothy get home before returning to the Emerald City.",
+        "targets": [
+          "Dorothy"
+        ],
+        "references": [
+          {
+            "lineStart": 11,
+            "lineEnd": 14
+          }
+        ]
+      },
+      {
+        "actor": "Scarecrow",
+        "description": "Discovers a possible passage beneath a large tree and tests it, but the tree throws him back.",
+        "targets": [],
+        "references": [
+          {
+            "lineStart": 54,
+            "lineEnd": 64
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Picks Scarecrow up after the tree throws him.",
+        "targets": [
+          "Scarecrow"
+        ],
+        "references": [
+          {
+            "lineStart": 59,
+            "lineEnd": 60
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Cuts through the attacking tree branch with his axe and later cuts off the branch holding Toto.",
+        "targets": [
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 69,
+            "lineEnd": 77
+          }
+        ]
+      },
+      {
+        "actor": "Dorothy",
+        "description": "Passes beneath the damaged tree and continues through the forest with the others.",
+        "targets": [
+          "Scarecrow",
+          "Tin Woodman",
+          "Lion",
+          "Toto"
+        ],
+        "references": [
+          {
+            "lineStart": 74,
+            "lineEnd": 83
+          }
+        ]
+      },
+      {
+        "actor": "Tin Woodman",
+        "description": "Proposes making a ladder so the travelers can climb over the white-china wall.",
+        "targets": [
+          "Dorothy",
+          "Scarecrow",
+          "Lion"
+        ],
+        "references": [
+          {
+            "lineStart": 86,
+            "lineEnd": 88
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "character": "Scarecrow",
+        "relatedCharacter": "Guardian of the Gate",
+        "description": "The Guardian of the Gate recognizes Scarecrow as the current ruler of the Emerald City.",
+        "references": [
+          {
+            "lineStart": 11,
+            "lineEnd": 12
+          }
+        ]
+      },
+      {
+        "character": "Scarecrow",
+        "relatedCharacter": "Dorothy",
+        "description": "Scarecrow is committed to helping Dorothy return home.",
+        "references": [
+          {
+            "lineStart": 13,
+            "lineEnd": 14
+          }
+        ]
+      },
+      {
+        "character": "Tin Woodman",
+        "relatedCharacter": "Toto",
+        "description": "Tin Woodman rescues Toto by cutting away the branch that has caught and shaken him.",
+        "references": [
+          {
+            "lineStart": 75,
+            "lineEnd": 77
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Scarecrow",
+        "description": "Dorothy travels with Scarecrow and helps him after the fighting trees throw him.",
+        "references": [
+          {
+            "lineStart": 54,
+            "lineEnd": 60
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Tin Woodman",
+        "description": "Tin Woodman and the other companions travel with Dorothy to help her return home.",
+        "references": [
+          {
+            "lineStart": 13,
+            "lineEnd": 14
+          },
+          {
+            "lineStart": 22,
+            "lineEnd": 25
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Lion",
+        "description": "Lion travels with Dorothy as one of her companions toward the Land of the South.",
+        "references": [
+          {
+            "lineStart": 22,
+            "lineEnd": 28
+          }
+        ]
+      },
+      {
+        "character": "Dorothy",
+        "relatedCharacter": "Oz",
+        "description": "Dorothy believes Oz did his best despite failing to keep his promise, and forgives him.",
+        "references": [
+          {
+            "lineStart": 42,
+            "lineEnd": 44
+          }
+        ]
+      }
+    ]
+  }
+}

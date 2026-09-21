@@ -1,3 +1,8 @@
+import {ensureDeathLedger} from './engine-access.js';
+import { playerControlsBeat } from "../../shared/turn-policy.js";
+import { sourceEventEntryEvidence } from './source-event-entry-evidence.js';
+import { assertGameSourceVersion } from "../../books/source-index/game-version.js";
+import { buildSourceEventChoiceBeatState, nextSignificantEventForCandidate } from "../../ai/engine/source-navigation.js";
 import { flowDiagnostic } from "../../util/flow-trace.js";
 import {
   addSourceContinuationAnchorChoice,
@@ -189,17 +194,24 @@ function sourceCursorPrecedes(
 }
 
 export function missingPresentSourceEventCharacters(
-  game: Pick<GameState, "playerName" | "scene">,
+  game: Pick<GameState, "playerName" | "scene"> & Partial<Pick<GameState, "sourceEventProgress">>,
   book: ImportedBook,
   candidate: SourceContinuationCandidate,
 ): string[] {
-  const actors = candidate.requiredEventActors
+  // Only the immediate remaining beat can require participants now. Whole-event
+  // actors include people who already left and people who have yet to arrive.
+  const event = nextSignificantEventForCandidate(candidate);
+  const nextBeat = buildSourceEventChoiceBeatState(event, game.sourceEventProgress).remainingEvent?.beats?.[0];
+  const actors = nextBeat ? (nextBeat.actor ? [nextBeat.actor] : []) : candidate.requiredEventActors
     ?? candidate.storyEvents?.[0]?.actors
     ?? [];
   const playerIdentities = canonicalPlayerIdentities(book, game.playerName);
   if (!actors.some((actor) => playerIdentities.has(normalizedCharacterIdentity(actor)))) {
     return [];
   }
+
+  // Automatic discovery/arrival establishes presence; it is not a player-choice prerequisite.
+  if (nextBeat && !playerControlsBeat(nextBeat, [...playerIdentities])) return [];
 
   const knownCharacters = new Map(
     canonicalStartCharacters(book).map((character) => [
@@ -213,7 +225,7 @@ export function missingPresentSourceEventCharacters(
   const coActors = actors.filter(
     (actor) => !playerIdentities.has(normalizedCharacterIdentity(actor)),
   );
-  const directTargets = candidate.requiredEventCategory === "arrival"
+  const directTargets = nextBeat ? nextBeat.targets : candidate.requiredEventCategory === "arrival"
       || candidate.requiredEventCategory === "departure"
     ? []
     : candidate.requiredEventTargets
@@ -228,106 +240,6 @@ export function missingPresentSourceEventCharacters(
     )
     .map((identity) => knownCharacters.get(identity)!)
     .filter(Boolean);
-}
-
-export function canonicallyDeadCharactersAtCursor(
-  book: ImportedBook,
-  cursor: SourceCursor,
-): Set<string> {
-  const currentEvent = cursor.eventId
-    ? book.storyEvents?.find((event) => event.eventId === cursor.eventId)
-    : storyEventAtCursor(book, cursor);
-  if (!currentEvent) return new Set();
-  const deadCharacters = new Set<string>();
-  for (const event of book.storyEvents ?? []) {
-    if (event.sequence > currentEvent.sequence || event.category !== "death") {
-      continue;
-    }
-    const narrative = [
-      event.description,
-      ...(event.beats ?? []).map((beat) => beat.action),
-    ].join("\n");
-    for (const participant of [...event.actors, ...event.targets]) {
-      const profile = book.worldBible?.characterProfiles?.find((candidate) =>
-        [candidate.name, ...candidate.aliases].some(
-          (identity) =>
-            normalizedCharacterIdentity(identity)
-              === normalizedCharacterIdentity(participant),
-        )
-      );
-      const identities = profile
-        ? [profile.name, ...profile.aliases]
-        : [participant];
-      if (!identities.some((identity) =>
-        textExplicitlyEstablishesCharacterDeath(narrative, identity)
-      )) {
-        continue;
-      }
-      for (const identity of identities) {
-        deadCharacters.add(normalizedCharacterIdentity(identity));
-      }
-    }
-  }
-  return deadCharacters;
-}
-
-function textExplicitlyEstablishesCharacterDeath(
-  text: string,
-  character: string,
-): boolean {
-  const normalizedText = text
-    .normalize("NFKC")
-    .replaceAll("’", "'")
-    // Separate facts/history entries must never become one death assertion.
-    .replace(/[\r\n]+/gu, ". ")
-    .replace(/\s+/gu, " ");
-  const normalizedCharacter = character
-    .normalize("NFKC")
-    .replaceAll("’", "'")
-    .trim();
-  if (!normalizedCharacter) return false;
-  const escapedCharacter = normalizedCharacter
-    .split(/\s+/u)
-    .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-    .join("\\s+");
-  const namedCharacter = `(?:the\\s+)?${escapedCharacter}`;
-  const interveningWord = "[\\p{L}\\p{N}'-]+";
-  return [
-    // Match the direct victim, not a name later in the clause (for example,
-    // "killed the witch and freed Dorothy" or "killed by Dorothy").
-    new RegExp(
-      `\\b(?:kills|killed|killing|murders|murdered|murdering|slays|slew|slain|slaying)`
-        + `\\b\\s+${namedCharacter}(?!['’]s\\b)(?=\\W|$)`,
-      "iu",
-    ),
-    new RegExp(
-      `\\b(?:attacks?|attacked)\\s+and\\s+kill\\s+${namedCharacter}(?=\\W|$)`,
-      "iu",
-    ),
-    new RegExp(
-      `\\b${namedCharacter}\\s+(?:suddenly\\s+)?(?:dies|died)(?=\\W|$)`,
-      "iu",
-    ),
-    new RegExp(
-      `\\b${namedCharacter}\\s+(?:is|was|lies|lay|has\\s+been|had\\s+been)`
-        + `\\s+(?:(?:found|declared|confirmed)\\s+)?(?:dead|killed|murdered|slain)(?=\\W|$)`,
-      "iu",
-    ),
-    new RegExp(
-      `\\b${namedCharacter}(?:'s|')\\s+(?:breathing|heartbeat|heart)`
-        + "\\s+(?:ceases|ceased|stops|stopped)(?=\\W|$)",
-      "iu",
-    ),
-    new RegExp(
-      `\\b${namedCharacter}(?:'s|')\\s+(?:murdered|lifeless|dead)\\s+body(?=\\W|$)`,
-      "iu",
-    ),
-    new RegExp(
-      `\\bcaus(?:es|ed|ing)\\s+${namedCharacter}\\s+to`
-        + `(?:\\s+${interveningWord}){0,5}\\s+(?:die|perish)(?=\\W|$)`,
-      "iu",
-    ),
-  ].some((pattern) => pattern.test(normalizedText));
 }
 
 function addProfileIdentityKeys(
@@ -354,31 +266,12 @@ export function sourceWorldStateForGame(
   book: ImportedBook,
   cursor: SourceCursor,
 ): SourceWorldStateContext {
-  const unavailable = canonicallyDeadCharactersAtCursor(book, cursor);
+  const unavailable = new Set<string>();
+  for (const name of game.confirmedDeadCharacters ?? []) addProfileIdentityKeys(unavailable, book, name);
   if (game.establishedEvent?.category === "death" && game.establishedEvent.target.trim()) {
     addProfileIdentityKeys(unavailable, book, game.establishedEvent.target);
   }
 
-  const interactiveNarrative = [
-    game.storyMemory?.summary ?? "",
-    ...(game.storyMemory?.canonFacts ?? []),
-    ...game.history
-      .filter((item) => item.kind === "scene")
-      .slice(-8)
-      .map((item) => item.text),
-    game.scene.text,
-  ].filter(Boolean).join("\n");
-  for (const profile of game.characterProfiles ?? book.worldBible?.characterProfiles ?? []) {
-    const identities = [profile.name, ...profile.aliases];
-    if (!identities.some((identity) =>
-      textExplicitlyEstablishesCharacterDeath(interactiveNarrative, identity)
-    )) {
-      continue;
-    }
-    for (const identity of identities) {
-      unavailable.add(normalizedCharacterIdentity(identity));
-    }
-  }
 
   return {
     irreversiblyUnavailableCharacterIdentities: [...unavailable],
@@ -403,7 +296,7 @@ export function sourceEventInvalidatingActors(
     : undefined;
   const completedThroughIndex = progress?.completedBeatIndexes.length
     ? Math.max(...progress.completedBeatIndexes.filter((index) => Number.isInteger(index)))
-    : -1;
+    : (progress?.startBeatIndex ?? 0) - 1;
   const remainingBeatActors = event.beats?.length
     ? event.beats
       .slice(Math.max(0, completedThroughIndex + 1))
@@ -430,9 +323,11 @@ export function refreshCanonicalFirstChoice(
   book: ImportedBook,
   cursor: SourceCursor,
   playerName?: string,
+  confirmedDeadCharacters: readonly string[] = [],
 ): Scene {
   if ((scene.outcome ?? "active") !== "active") return scene;
-  const deadCharacters = canonicallyDeadCharactersAtCursor(book, cursor);
+  const deadCharacters = new Set<string>();
+  for (const name of [...confirmedDeadCharacters, ...(scene.peopleKilledInScene ?? [])]) addProfileIdentityKeys(deadCharacters, book, name);
   const availableScene = {
     ...scene,
     choices: scene.choices.filter((choice) =>
@@ -482,59 +377,22 @@ export async function sourceContextForGame(
 ): Promise<{ book?: ImportedBook; candidates: SourceContinuationCandidate[] }> {
   const book = await getBook(game.book.bookId);
   if (!book) return { candidates: [] };
+  assertGameSourceVersion(game, book);
   const passage = findPassageContext(book, game.selectedText);
   const cursor = normalizeSourceProgress(book, game.sourceCursor ?? {
     chapterPosition: passage.chapterPosition ?? game.position?.chapterIndex ?? 0,
     textOffset: passage.passageEnd ?? 0,
   });
   if (game.sourceCursor) game.sourceCursor = cursor;
-  const playerHasCanonicalTimeline = hasCanonicalPlayerTimeline(
-    book,
-    game.playerName,
-  );
-  const worldState = sourceWorldStateForGame(game, book, cursor);
-  const candidates = buildSourceContextCandidates(
-    book,
-    cursor,
-    game.playerName,
-    worldState,
-  );
-  if (candidates.length > 0) {
-    const groundedCandidates = await selectGroundedSourceCandidates(
-      game,
-      book,
-      cursor,
-      candidates,
-      sourceEventId,
-    );
-    if (groundedCandidates.length > 0) {
-      return { book, candidates: groundedCandidates };
-    }
-    if (sourceEventId) {
-      flowDiagnostic(
-        "Source anchor no longer matches the interactive world state; rerouting to the next viable source event.",
-      );
-      return sourceContextForGame(game);
-    }
+  await ensureDeathLedger(game);
+  const candidate = buildCanonicalNextEventCandidate(book, cursor, game.playerName,
+    sourceWorldStateForGame(game, book, cursor));
+  if (sourceEventId) {
+    const exact = candidate?.requiredEventId === sourceEventId ? candidate : sourceCandidateForKnownEvent(book, game, sourceEventId);
+    // Never reinterpret a selected canonical choice as a different source event.
+    return {book, candidates: exact ? [exact] : []};
   }
-  if (playerHasCanonicalTimeline) {
-    return { book, candidates: [] };
-  }
-
-  const recoveryCandidates = await selectGroundedSourceCandidates(
-    game,
-    book,
-    cursor,
-    buildSourceRecoveryCandidates(book),
-    sourceEventId,
-  );
-  if (sourceEventId && recoveryCandidates.length === 0) {
-    return sourceContextForGame(game);
-  }
-  return {
-    book,
-    candidates: recoveryCandidates,
-  };
+  return {book, candidates: candidate ? [candidate] : []};
 }
 
 export function candidateStoryEvents(
@@ -635,7 +493,7 @@ export function storyEventCandidateContext(
   cursor?: SourceCursor,
 ): Pick<
   SourceContinuationCandidate,
-  "storyEvents" | "currentStoryEvent" | "sourceReferenceExcerpts"
+  "storyEvents" | "currentStoryEvent" | "sourceReferenceExcerpts" | "sourceEventEntries"
 > {
   const storyEvents = candidateStoryEvents(book, chapterPosition, cursor);
   const currentStoryEvent = cursor
@@ -649,8 +507,10 @@ export function storyEventCandidateContext(
     book,
     [...storyEvents, currentStoryEvent],
   );
+  const sourceEventEntries = sourceEventEntryEvidence(book, storyEvents.map(event => event.eventId));
   return {
     ...(storyEvents.length > 0 ? { storyEvents } : {}),
+    ...(Object.keys(sourceEventEntries).length ? {sourceEventEntries} : {}),
     ...(currentStoryEvent
       ? {
           currentStoryEvent: sourceCandidateStoryEvent(currentStoryEvent),
@@ -859,6 +719,43 @@ export function hasCanonicalPlayerTimeline(
   return playerRelevantEventIds(book, playerName).size > 0;
 }
 
+const CANONICAL_DECISION_LOOKAHEAD_MAX = 8;
+
+/**
+ * Keep ordinary source context compact, but for a player-specific canonical
+ * route look through automatic/NPC events until the first later event that
+ * contains a meaningful player-controlled beat. This gives the turn planner
+ * enough indexed material to build one cross-event execution window.
+ *
+ * Explicit source-entry gaps, legacy events without beats, chapter changes and
+ * the hard cap remain batching boundaries. The boundary event itself stays in
+ * context so the existing entry/menu flow can take over safely.
+ */
+function canonicalDecisionLookahead(
+  book: ImportedBook,
+  events: readonly BookStoryEvent[],
+  playerName?: string,
+): BookStoryEvent[] {
+  if (!playerName || events.length <= SOURCE_EVENT_LOOKAHEAD || !events[0]?.beats?.length) {
+    return events.slice(0, SOURCE_EVENT_LOOKAHEAD);
+  }
+  const aliases = [...canonicalPlayerIdentities(book, playerName)];
+  const bounded = events.slice(0, CANONICAL_DECISION_LOOKAHEAD_MAX);
+  const entries = sourceEventEntryEvidence(book, bounded.map((event) => event.eventId));
+  const firstChapter = bounded[0]?.chapterPosition;
+  const selected: BookStoryEvent[] = [];
+
+  for (const [index, event] of bounded.entries()) {
+    selected.push(event);
+    if (index === 0) continue;
+    if (event.chapterPosition !== firstChapter) break;
+    if (entries[event.eventId]) break;
+    if (!event.beats?.length) break;
+    if (event.beats.some((beat) => playerControlsBeat(beat, aliases))) break;
+  }
+  return selected;
+}
+
 export function buildCanonicalNextEventCandidate(
   book: ImportedBook,
   cursor: SourceCursor,
@@ -867,6 +764,11 @@ export function buildCanonicalNextEventCandidate(
 ): SourceContinuationCandidate | undefined {
   const orderedEvents = [...(book.storyEvents ?? [])]
     .sort((left, right) => left.sequence - right.sequence);
+  const progress = worldState?.sourceEventProgress;
+  const pendingEvent = progress ? orderedEvents.find(event => event.eventId === progress.eventId
+    && event.beats?.some((_beat, index) => index >= (progress.startBeatIndex ?? 0) && !progress.completedBeatIndexes.includes(index))) : undefined;
+  // A text offset inside an event locates the passage; it does not prove the event was played.
+  // Stored beat progress is authoritative until its remaining suffix is complete.
   const currentEvent = (
     cursor.eventId
       ? orderedEvents.find((event) => event.eventId === cursor.eventId)
@@ -877,7 +779,8 @@ export function buildCanonicalNextEventCandidate(
     : undefined;
   const relevantEvents = relevantEventIds?.size
     ? orderedEvents.filter((event) =>
-        relevantEventIds.has(event.eventId)
+        event.eventId === pendingEvent?.eventId
+        || relevantEventIds.has(event.eventId)
         || sourceEventInvalidatingActors(event, worldState).length > 0
       )
     : orderedEvents;
@@ -886,7 +789,9 @@ export function buildCanonicalNextEventCandidate(
     cursor.textOffset,
   );
   const futureEvents = relevantEvents.filter((event) =>
-    currentEvent
+    pendingEvent
+      ? event.sequence >= pendingEvent.sequence
+      : currentEvent
       ? event.sequence > currentEvent.sequence
       : event.chapterPosition > cursor.chapterPosition
         || (
@@ -953,7 +858,11 @@ export function buildCanonicalNextEventCandidate(
   const nextTextOffset = references.length > 0
     ? normalizedOffsetThroughSourceLine(chapter.text, lineEnd)
     : Math.min(normalizedText.length, excerptStart + SOURCE_CONTINUATION_EXCERPT_CHARS);
-  const lookaheadSourceEvents = compatibleFutureEvents.slice(0, SOURCE_EVENT_LOOKAHEAD);
+  const lookaheadSourceEvents = canonicalDecisionLookahead(
+    book,
+    compatibleFutureEvents,
+    playerName,
+  );
   const lookaheadEvents = lookaheadSourceEvents.map(sourceCandidateStoryEvent);
   const summary = lookaheadEvents.map((event) => event.description).join(" ");
   const sourceReferenceExcerpts = sourceReferenceExcerptsForEvents(
@@ -977,6 +886,7 @@ export function buildCanonicalNextEventCandidate(
       ? { currentStoryEvent: sourceCandidateStoryEvent(currentEvent) }
       : {}),
     storyEvents: lookaheadEvents,
+    sourceEventEntries: sourceEventEntryEvidence(book, lookaheadEvents.map(event => event.eventId)),
     ...(sourceReferenceExcerpts ? { sourceReferenceExcerpts } : {}),
     nextTextOffset,
   };
@@ -1095,12 +1005,69 @@ export async function generateWithSourceContext(
 
 export async function attemptSourceContinuation<T>(
   generate: () => Promise<T>,
+  onRejected?: (error: SceneGenerationError) => void,
 ): Promise<T | undefined> {
   try {
     return await generate();
   } catch (error) {
     if (!(error instanceof SceneGenerationError)) throw error;
     flowDiagnostic(error.message);
+    onRejected?.(error);
     return undefined;
   }
+}
+
+
+/** Exact ID lookup for a previously planned bridge. Never invokes AI discovery.
+ *
+ * The selected event stays pinned as requiredEvent, but the staged canonical
+ * engine still needs the same bounded lookahead as ordinary canonical play.
+ * Otherwise a bridge that completes its target event reaches an artificial
+ * end-of-window and cannot expose the next intentional player decision.
+ */
+export function sourceCandidateForKnownEvent(book: ImportedBook, game: GameState, eventId: string): SourceContinuationCandidate | undefined {
+  const orderedEvents = [...(book.storyEvents ?? [])].sort((left, right) => left.sequence - right.sequence);
+  const event = orderedEvents.find(e => e.eventId === eventId);
+  if (!event) return undefined;
+  assertGameSourceVersion(game, book);
+  const cursor = game.sourceCursor ?? {chapterPosition: 0, textOffset: 0};
+  const previous = orderedEvents.find(e => e.eventId === cursor.eventId);
+  if (previous && event.sequence <= previous.sequence && game.sourceEventProgress?.eventId !== eventId) return undefined;
+  const worldState = sourceWorldStateForGame(game, book, cursor);
+  if (sourceEventInvalidatingActors(event, worldState).length) return undefined;
+  const chapter = book.chapters[event.chapterPosition];
+  if (!chapter) return undefined;
+  const refs = event.sourceReferences.filter(r => r.chapterPosition === event.chapterPosition);
+  if (!refs.length) return undefined;
+  const start = Math.min(...refs.map(r => r.lineStart));
+  const end = Math.max(...refs.map(r => r.lineEnd));
+
+  const relevantEventIds = playerRelevantEventIds(book, game.playerName);
+  const laterCompatibleEvents = orderedEvents
+    .filter(candidate => candidate.sequence > event.sequence)
+    .filter(candidate =>
+      relevantEventIds.has(candidate.eventId)
+      || sourceEventInvalidatingActors(candidate, worldState).length > 0
+    )
+    .flatMap(candidate => {
+      const resolution = resolveSourceEventActorTakeover(candidate, book, game.playerName, worldState);
+      return resolution.invalidatingActors.length > 0 ? [] : [resolution.event];
+    });
+  const lookaheadSourceEvents = canonicalDecisionLookahead(
+    book,
+    [event, ...laterCompatibleEvents],
+    game.playerName,
+  );
+  const lookaheadEvents = lookaheadSourceEvents.map(sourceCandidateStoryEvent);
+  const sourceReferenceExcerpts = sourceReferenceExcerptsForEvents(book, lookaheadSourceEvents);
+
+  return {chapterPosition: event.chapterPosition, chapterTitle: chapter.title,
+    summary: lookaheadEvents.map(candidate => candidate.description).join(' '),
+    excerpt: chapter.text.trim().split(/\r?\n/).slice(start - 1, end).join('\n'),
+    nextTextOffset: normalizedOffsetThroughSourceLine(chapter.text, end),
+    requiredEvent: event.description, requiredEventId: event.eventId,
+    requiredEventCategory: event.category, requiredEventActors: event.actors, requiredEventTargets: event.targets,
+    requiredEventBeats: event.beats, storyEvents: lookaheadEvents,
+    sourceEventEntries: sourceEventEntryEvidence(book, lookaheadEvents.map(candidate => candidate.eventId)),
+    ...(sourceReferenceExcerpts ? {sourceReferenceExcerpts} : {})};
 }

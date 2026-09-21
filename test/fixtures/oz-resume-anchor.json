@@ -1,0 +1,156 @@
+{
+  "before": {
+    "title": "The Lion Brings Word (Turn 23)",
+    "text": "I left Oz’s Throne Room and went to find Dorothy, the Scarecrow, and the Tin Woodman. I was glad to see them again, for the great Ball of Fire had made me feel very small, though I had tried to stand bravely before it.\n\nWhen they were gathered around me, I told them what had passed. I had asked Oz for courage, so that I might become the King of Beasts. Oz had answered that I should have courage when I brought him proof that the Wicked Witch of the West was dead.\n\nThe others listened closely, and I told them that this was the condition of my wish. Then we understood that destroying the Witch was the only apparent way for any of us to obtain what we had asked of Oz, and for Dorothy to gain his help in returning home. Our wishes were still before us, but all of them now depended upon the dangerous task Oz had given us.",
+    "sceneScope": {
+      "currentLocation": "Oz's Palace",
+      "peoplePresent": [
+        "Cowardly Lion",
+        "Scarecrow",
+        "Tin Woodman"
+      ],
+      "peopleWithinSpeakingDistance": [
+        "Cowardly Lion",
+        "Scarecrow",
+        "Tin Woodman"
+      ]
+    },
+    "outcome": "active",
+    "outcomeReason": "The Lion has left Oz’s Throne Room and reported Oz’s condition to his companions. The journey and the task remain unfinished.",
+    "choices": [
+      {
+        "id": "__bookrpg_source_anchor__",
+        "type": "action",
+        "text": "Propose that we travel west to find and destroy the Wicked Witch.",
+        "requiredPresentCharacters": [
+          "Dorothy",
+          "Scarecrow",
+          "Tin Woodman"
+        ],
+        "requiredAbsentCharacters": [],
+        "sourceEventId": "event_f3044828b44f9f0dc9a9",
+        "sourceAnchorRoute": "event",
+        "stakes": "critical",
+        "sourceBeatSelection": {
+          "eventId": "event_f3044828b44f9f0dc9a9",
+          "beatIndex": 0,
+          "endBeatIndex": 0,
+          "kind": "player_action"
+        }
+      },
+      {
+        "id": "choice_1",
+        "type": "action",
+        "text": "Agree to try the journey west, despite not wanting to kill anyone.",
+        "requiredPresentCharacters": [
+          "Scarecrow",
+          "Tin Woodman",
+          "Tin Woodman",
+          "Scarecrow",
+          "Tin Woodman",
+          "Scarecrow"
+        ],
+        "requiredAbsentCharacters": [],
+        "stakes": "critical"
+      },
+      {
+        "id": "choice_2",
+        "type": "action",
+        "text": "Go with Dorothy and the others, even though I am too cowardly to kill the Witch.",
+        "requiredPresentCharacters": [
+          "Scarecrow",
+          "Tin Woodman",
+          "Tin Woodman",
+          "Scarecrow",
+          "Scarecrow"
+        ],
+        "requiredAbsentCharacters": [],
+        "stakes": "significant"
+      },
+      {
+        "id": "choice_3",
+        "type": "action",
+        "text": "Accompany Dorothy and the others, despite not wanting to harm the Witch, and prepare for departure.",
+        "requiredPresentCharacters": [
+          "Scarecrow",
+          "Tin Woodman",
+          "Tin Woodman",
+          "Scarecrow",
+          "Scarecrow"
+        ],
+        "requiredAbsentCharacters": [],
+        "stakes": "significant"
+      }
+    ]
+  },
+  "after": {
+    "title": "The Lion Brings Word (Turn 23)",
+    "text": "I left Oz’s Throne Room and went to find Dorothy, the Scarecrow, and the Tin Woodman. I was glad to see them again, for the great Ball of Fire had made me feel very small, though I had tried to stand bravely before it.\n\nWhen they were gathered around me, I told them what had passed. I had asked Oz for courage, so that I might become the King of Beasts. Oz had answered that I should have courage when I brought him proof that the Wicked Witch of the West was dead.\n\nThe others listened closely, and I told them that this was the condition of my wish. Then we understood that destroying the Witch was the only apparent way for any of us to obtain what we had asked of Oz, and for Dorothy to gain his help in returning home. Our wishes were still before us, but all of them now depended upon the dangerous task Oz had given us.",
+    "sceneScope": {
+      "currentLocation": "Oz's Palace",
+      "peoplePresent": [
+        "Cowardly Lion",
+        "Scarecrow",
+        "Tin Woodman"
+      ],
+      "peopleWithinSpeakingDistance": [
+        "Cowardly Lion",
+        "Scarecrow",
+        "Tin Woodman"
+      ]
+    },
+    "outcome": "active",
+    "outcomeReason": "The Lion has left Oz’s Throne Room and reported Oz’s condition to his companions. The journey and the task remain unfinished.",
+    "choices": [
+      {
+        "id": "choice_1",
+        "type": "action",
+        "text": "Agree to try the journey west, despite not wanting to kill anyone.",
+        "requiredPresentCharacters": [
+          "Scarecrow",
+          "Tin Woodman",
+          "Tin Woodman",
+          "Scarecrow",
+          "Tin Woodman",
+          "Scarecrow"
+        ],
+        "requiredAbsentCharacters": [],
+        "stakes": "critical"
+      },
+      {
+        "id": "choice_2",
+        "type": "action",
+        "text": "Go with Dorothy and the others, even though I am too cowardly to kill the Witch.",
+        "requiredPresentCharacters": [
+          "Scarecrow",
+          "Tin Woodman",
+          "Tin Woodman",
+          "Scarecrow",
+          "Scarecrow"
+        ],
+        "requiredAbsentCharacters": [],
+        "stakes": "significant"
+      },
+      {
+        "id": "choice_3",
+        "type": "action",
+        "text": "Accompany Dorothy and the others, despite not wanting to harm the Witch, and prepare for departure.",
+        "requiredPresentCharacters": [
+          "Scarecrow",
+          "Tin Woodman",
+          "Tin Woodman",
+          "Scarecrow",
+          "Scarecrow"
+        ],
+        "requiredAbsentCharacters": [],
+        "stakes": "significant"
+      }
+    ]
+  },
+  "turnNumber": 23,
+  "sourceCursor": {
+    "chapterPosition": 13,
+    "textOffset": 17002,
+    "eventId": "event_f6310ecd2457b26e5fc2"
+  }
+}
