@@ -10,6 +10,14 @@ This repository is a **sanitized public source snapshot** of the implementation.
 
 **Status:** experimental source snapshot, not a validated release. See [Validation of this snapshot](#validation-of-this-snapshot) for the recorded build and test limitations.
 
+## Why I started
+
+I started BookRPG after jailbreaking my e-reader. I wanted to try an interactive story on it while keeping the client as small as possible.
+
+That led to a client/server split: the client displays scenes, collects choices and sends requests over HTTP/JSON. Book import and indexing, AI calls, story progression and saved games stay on the server. A future device client should use that API rather than reimplement the story engine in Lua.
+
+The current clients are a browser interface and a Node.js terminal client. The terminal client exercises the API without a browser; a KOReader/Lua client is still a future step. This is a thin-client architecture in terms of responsibilities, not a claim that the current web interface is optimised or tested for an e-reader. New AI-generated turns require a connection to the server.
+
 ## Main components
 
 - EPUB ingestion and indexing into reusable story context;
@@ -53,6 +61,8 @@ The implementation deliberately separates **what the source says should happen**
 ## Where to start
 
 For a code review, start with [`src/books/`](src/books/) for book import and indexing, [`src/ai/`](src/ai/) for generation and review, and [`src/games/`](src/games/) for game state and persistence.
+
+For the client/server boundary, compare [`src/client/cli.ts`](src/client/cli.ts), [`src/server/index.ts`](src/server/index.ts) and [`src/shared/contracts.ts`](src/shared/contracts.ts).
 
 ## Project structure
 
